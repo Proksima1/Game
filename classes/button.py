@@ -29,7 +29,7 @@ class Button:
         else:
             pygame.draw.rect(self.screen, self.active_color, (x, y, self.width, self.height))
         # расчет размера текста и центрирование относительно кнопки
-        font = pygame.font.Font(None, self.width // len(message) + 20)
+        font = pygame.font.Font(None, self.width // len(message) + 5)
         text = font.render(message, True, (255, 0, 0))
         self.screen.blit(text, ((x + self.width / 2) - text.get_width() / 2,
                                 (y + self.height / 2) - font.get_height() / 2))
