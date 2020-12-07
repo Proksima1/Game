@@ -12,7 +12,6 @@ class Ship():
         self.pos_right = 50
         self.pos_left = 50
         self.shoots = []
-<<<<<<< Updated upstream
         self.velocity = 0.07
         self.enemy = []
 
@@ -22,16 +21,9 @@ class Ship():
 
     def make_an_enemy(self):
         self.enemy.append(pygame.draw.rect(self.screen, "red", [(200, 200), (50, 50)]))
-=======
-        self.enemy1 = 200
-        self.enemy2 = 200
-        self.enemy3 = 50
-        self.enemy4 = 50
 
     def make_a_ship(self):
         pygame.draw.rect(self.screen, "blue", [(self.pos_left, self.pos_top), (self.pos_right, self.pos_bottom)])
-        pygame.draw.rect(self.screen, "red", [(self.enemy1, self.enemy2), (self.enemy3, self.enemy4)])
->>>>>>> Stashed changes
 
     def down(self):
         # перемещение вниз
