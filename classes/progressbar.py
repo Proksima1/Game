@@ -17,6 +17,7 @@ class ProgressBar:
             pygame.draw.rect(screen, self.color, ((x + 5, y + 5),
                                                   (percent / (self.height - 5) * self.height + 5, y + self.width - 10)))
 
+
 # для тестов и показа работы, в последстие удалить
 if __name__ == '__main__':
     pygame.init()
