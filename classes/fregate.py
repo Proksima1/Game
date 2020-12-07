@@ -7,7 +7,7 @@ class Ship():
         self.pos_bottom = 50
         self.pos_top = 50
         self.screen = screen
-        self.width= width
+        self.width = width
         self.height = height
         self.pos_right = 50
         self.pos_left = 50
@@ -19,22 +19,22 @@ class Ship():
     def down(self):
         # перемещение вниз
         if self.pos_top <= self.height - self.pos_bottom:
-            self.pos_top += 1
+            self.pos_top += 0.07
 
     def up(self):
         # перемещение вверх
         if self.pos_top >= 0:
-            self.pos_top -= 1
+            self.pos_top -= 0.07
 
     def left(self):
         # перемещение налево
         if self.pos_left >= 0:
-            self.pos_left -= 1
+            self.pos_left -= 0.07
 
     def right(self):
         # перемещение направо
         if self.pos_left <= self.width - self.pos_right:
-            self.pos_left += 1
+            self.pos_left += 0.07
 
     def shoot(self):
         # выстрел
