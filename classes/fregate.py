@@ -12,6 +12,7 @@ class Ship():
         self.pos_right = 50
         self.pos_left = 50
         self.shoots = []
+        self.velocity = 0.07
 
     def make_a_ship(self):
         pygame.draw.rect(self.screen, "blue", [(self.pos_left, self.pos_top), (self.pos_right, self.pos_bottom)])
@@ -19,22 +20,22 @@ class Ship():
     def down(self):
         # перемещение вниз
         if self.pos_top <= self.height - self.pos_bottom:
-            self.pos_top += 0.07
+            self.pos_top += self.velocity
 
     def up(self):
         # перемещение вверх
         if self.pos_top >= 0:
-            self.pos_top -= 0.07
+            self.pos_top -= self.velocity
 
     def left(self):
         # перемещение налево
         if self.pos_left >= 0:
-            self.pos_left -= 0.07
+            self.pos_left -= self.velocity
 
     def right(self):
         # перемещение направо
         if self.pos_left <= self.width - self.pos_right:
-            self.pos_left += 0.07
+            self.pos_left += self.velocity
 
     def shoot(self):
         # выстрел
