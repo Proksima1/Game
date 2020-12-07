@@ -13,9 +13,14 @@ class Ship():
         self.pos_left = 50
         self.shoots = []
         self.velocity = 0.07
+        self.enemy = []
 
     def make_a_ship(self):
         pygame.draw.rect(self.screen, "blue", [(self.pos_left, self.pos_top), (self.pos_right, self.pos_bottom)])
+        pygame.draw.rect(self.screen, "red", [(200, 200), (50, 50)])
+
+    def make_an_enemy(self):
+        self.enemy.append(pygame.draw.rect(self.screen, "red", [(200, 200), (50, 50)]))
 
     def down(self):
         # перемещение вниз
@@ -39,6 +44,6 @@ class Ship():
 
     def shoot(self):
         # выстрел
-        pygame.draw.rect(self.screen, "yellow", ((self.pos_left + 51, self.pos_top + 25), (3, 2)))
+        pygame.draw.rect(self.screen, "yellow", [(self.pos_left + 51, self.pos_top + 25), (3, 2)])
         self.shoots.append([len(self.shoots) - 1, (self.pos_left + 51, self.pos_top + 25), 1, 1])
 

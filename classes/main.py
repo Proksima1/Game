@@ -8,7 +8,6 @@ if __name__ == '__main__':
     screen = pygame.display.set_mode(size)
     a = Ship(screen, width, height)
     running = True
-    drive_down = False
     while running:
         moving = pygame.key.get_pressed()
         for event in pygame.event.get():
@@ -33,8 +32,12 @@ if __name__ == '__main__':
                 a.shoots[i] = [i, (a.shoots[i][1][0] + velocity * x_pos, a.shoots[i][1][1]), x_pos, 1]
                 if a.shoots[i][1][0] > width:
                     del (a.shoots[i])
+                if a.shoots[i][1][1] >= a.enemy[0].top and a.shoots[i][1][1] <= a.enemy[0].bottom and a.shoots[i][1][
+                    0] >= a.enemy[0].left and a.shoots[i][1][0] <= a.enemy[0].right:
+                    del (a.shoots[i])
             except IndexError:
                 pass
+        a.make_an_enemy()
         a.make_a_ship()
         pygame.display.flip()
         screen.fill((0, 0, 0))
