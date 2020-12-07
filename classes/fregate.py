@@ -2,7 +2,7 @@ import pygame
 from pygame.locals import *
 
 
-class Ship():
+class Ship:
     def __init__(self, screen, width, height):
         self.pos_bottom = 50
         self.pos_top = 200
@@ -46,4 +46,3 @@ class Ship():
         # выстрел
         pygame.draw.rect(self.screen, "yellow", [(self.pos_left + 51, self.pos_top + 25), (3, 2)])
         self.shoots.append([len(self.shoots) - 1, (self.pos_left + 51, self.pos_top + 25), 1, 1])
-
