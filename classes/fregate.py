@@ -5,7 +5,7 @@ from pygame.locals import *
 class Ship():
     def __init__(self, screen, width, height):
         self.pos_bottom = 50
-        self.pos_top = 50
+        self.pos_top = 200
         self.screen = screen
         self.width = width
         self.height = height
@@ -20,10 +20,7 @@ class Ship():
         pygame.draw.rect(self.screen, "red", [(200, 200), (50, 50)])
 
     def make_an_enemy(self):
-        self.enemy.append(pygame.draw.rect(self.screen, "red", [(200, 200), (50, 50)]))
-
-    def make_a_ship(self):
-        pygame.draw.rect(self.screen, "blue", [(self.pos_left, self.pos_top), (self.pos_right, self.pos_bottom)])
+        self.enemy.append([pygame.draw.rect(self.screen, "red", [(200, 200), (50, 50)]), 100])
 
     def down(self):
         # перемещение вниз

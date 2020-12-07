@@ -32,13 +32,17 @@ if __name__ == '__main__':
                 a.shoots[i] = [i, (a.shoots[i][1][0] + velocity * x_pos, a.shoots[i][1][1]), x_pos, 1]
                 if a.shoots[i][1][0] > width:
                     del (a.shoots[i])
-                if a.shoots[i][1][1] >= a.enemy[0].top and a.shoots[i][1][1] <= a.enemy[0].bottom and \
-                        a.shoots[i][1][0] >= a.enemy[0].left and a.shoots[i][1][0] <= a.enemy[0].right:
+                if a.shoots[i][1][1] >= a.enemy[0][0].top and a.shoots[i][1][1] <= a.enemy[0][0].bottom and \
+                        a.shoots[i][1][0] >= a.enemy[0][0].left and a.shoots[i][1][0] <= a.enemy[0][0].right:
                     del (a.shoots[i])
+                    if a.enemy[0][1] > 0:
+                        a.enemy[0][1] -= 20
+                    if a.enemy[0][1] <= 0:
+                        del(a.enemy[0])
             except IndexError:
                 pass
-        a.make_an_enemy()
         a.make_a_ship()
+        print(a.enemy)
         pygame.display.flip()
         screen.fill((0, 0, 0))
     pygame.quit()
