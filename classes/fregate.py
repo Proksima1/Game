@@ -2,12 +2,13 @@ import pygame
 from pygame.locals import *
 
 
-class Generel_ship():
-    def __init__(self, screen, width, height, pos_left, pos_top, pos_right, pos_bottom):
-        self.pos_right = pos_right
-        self.pos_left = pos_left
-        self.pos_bottom = pos_bottom
-        self.pos_top = pos_top
+class Generel_ship(pygame.sprite.Sprite):
+    def __init__(self, screen, width, height, x, y, filename):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load(filename).convert_alpha()
+        self.rect = self.image.get_rect(center=(x, y))
+        self.x = x
+        self.y = y
         self.screen = screen
         self.width = width
         self.height = height
@@ -16,35 +17,36 @@ class Generel_ship():
 
     def down(self):
         # перемещение вниз
-        if self.pos_top <= self.height - self.pos_bottom:
-            self.pos_top += self.velocity
+        if self.y - 16 <= self.height - self.y + 16:
+            self.rect.y += self.velocity
+        self.screen.blit(self.image, self.rect)
 
     def up(self):
         # перемещение вверх
-        if self.pos_top >= 0:
-            self.pos_top -= self.velocity
+        if self.y >= 0:
+            self.rect.y += self.velocity
+        self.screen.blit(self.image, self.rect)
 
     def left(self):
         # перемещение налево
-        if self.pos_left >= 0:
-            self.pos_left -= self.velocity
+        if self.x >= 0:
+            self.rect.x += self.velocity
+        self.screen.blit(self.image, self.rect)
 
     def right(self):
         # перемещение направо
-        if self.pos_left <= self.width - self.pos_right:
-            self.pos_left += self.velocity
+        if self.x <= self.width - self.x + 16:
+            self.rect.x += self.velocity
+        self.screen.blit(self.image, self.rect)
 
 
-class Enemy_ship(Generel_ship, pygame.sprite.Sprite):
+class Enemy_ship(Generel_ship):
     pass
 
 
-class Player_ship(Generel_ship, pygame.sprite.Sprite):
-    def __init__(self, screen, width, height, pos_left, pos_top, pos_right, pos_bottom):
-        super().__init__(screen, width, height, pos_left, pos_top, pos_right, pos_bottom)
-        pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load('../sprites/player_ship.png').convert_alpha()
-        self.rect = self.image.get_rect(center=(16, 16))
+class Player_ship(Generel_ship):
+    def __init__(self, screen, width, height, x, y, filename):
+        super().__init__(screen, width, height, x, y, filename)
         self.enemy = []
 
     def make_a_ship(self):
@@ -82,12 +84,13 @@ if __name__ == '__main__':
     pygame.init()
     size = width, height = 400, 400
     screen = pygame.display.set_mode(size)
-    a = Player_ship(screen, width, height, 50, 50, 50, 50)
+    a = Player_ship(screen, width, height, 32, 32, '../sprites/player_ship.png')
     running = True
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+
         a.make_a_ship()
         pygame.display.flip()
         screen.fill((0, 0, 0))
