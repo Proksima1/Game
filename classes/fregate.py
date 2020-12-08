@@ -44,11 +44,12 @@ class Player_ship(Generel_ship, pygame.sprite.Sprite):
         super().__init__(screen, width, height, pos_left, pos_top, pos_right, pos_bottom)
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load('../sprites/player_ship.png').convert_alpha()
-        self.rect = self.image.get_rect(center=(40, 50))
+        self.rect = self.image.get_rect(center=(16, 16))
         self.enemy = []
 
     def make_a_ship(self):
-        pygame.draw.rect(self.screen, "blue", [(self.pos_left, self.pos_top), (self.pos_right, self.pos_bottom)])
+        self.screen.blit(self.image, self.rect)
+        #pygame.draw.rect(self.screen, "blue", [(self.pos_left, self.pos_top), (self.pos_right, self.pos_bottom)])
 
     def draw_shoot(self):
         # рисование выстрела, его исчезновение и урон по врагам
@@ -75,3 +76,19 @@ class Player_ship(Generel_ship, pygame.sprite.Sprite):
         # выстрел
         pygame.draw.rect(self.screen, "yellow", [(self.pos_left + 51, self.pos_top + 25), (3, 2)])
         self.shoots.append([len(self.shoots) - 1, (self.pos_left + 51, self.pos_top + 25), 1, 1])
+
+
+if __name__ == '__main__':
+    pygame.init()
+    size = width, height = 400, 400
+    screen = pygame.display.set_mode(size)
+    a = Player_ship(screen, width, height, 50, 50, 50, 50)
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+        a.make_a_ship()
+        pygame.display.flip()
+        screen.fill((0, 0, 0))
+    pygame.quit()
