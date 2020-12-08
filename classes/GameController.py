@@ -6,7 +6,7 @@ if __name__ == '__main__':
     pygame.init()
     size = width, height = 400, 400
     screen = pygame.display.set_mode(size)
-    a = Player_ship(screen, width, height)
+    a = Player_ship(screen, width, height, 50, 50, 50, 50)
     running = True
     while running:
         moving = pygame.key.get_pressed()

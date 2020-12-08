@@ -1,17 +1,50 @@
 import pygame
 from pygame.locals import *
 
-class Player_ship():
-    def __init__(self, screen, width, height):
-        self.pos_bottom = 50
-        self.pos_top = 200
+
+class Generel_ship():
+    def __init__(self, screen, width, height, pos_left, pos_top, pos_right, pos_bottom):
+        self.pos_right = pos_right
+        self.pos_left = pos_left
+        self.pos_bottom = pos_bottom
+        self.pos_top = pos_top
         self.screen = screen
         self.width = width
         self.height = height
-        self.pos_right = 50
-        self.pos_left = 50
         self.shoots = []
         self.velocity = 0.07
+
+    def down(self):
+        # перемещение вниз
+        if self.pos_top <= self.height - self.pos_bottom:
+            self.pos_top += self.velocity
+
+    def up(self):
+        # перемещение вверх
+        if self.pos_top >= 0:
+            self.pos_top -= self.velocity
+
+    def left(self):
+        # перемещение налево
+        if self.pos_left >= 0:
+            self.pos_left -= self.velocity
+
+    def right(self):
+        # перемещение направо
+        if self.pos_left <= self.width - self.pos_right:
+            self.pos_left += self.velocity
+
+
+class Enemy_ship(Generel_ship, pygame.sprite.Sprite):
+    pass
+
+
+class Player_ship(Generel_ship, pygame.sprite.Sprite):
+    def __init__(self, screen, width, height, pos_left, pos_top, pos_right, pos_bottom):
+        super().__init__(screen, width, height, pos_left, pos_top, pos_right, pos_bottom)
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load('../sprites/player_ship.png').convert_alpha()
+        self.rect = self.image.get_rect(center=(40, 50))
         self.enemy = []
 
     def make_a_ship(self):
@@ -37,26 +70,6 @@ class Player_ship():
                         del (self.enemy[0])
             except IndexError:
                 pass
-
-    def down(self):
-        # перемещение вниз
-        if self.pos_top <= self.height - self.pos_bottom:
-            self.pos_top += self.velocity
-
-    def up(self):
-        # перемещение вверх
-        if self.pos_top >= 0:
-            self.pos_top -= self.velocity
-
-    def left(self):
-        # перемещение налево
-        if self.pos_left >= 0:
-            self.pos_left -= self.velocity
-
-    def right(self):
-        # перемещение направо
-        if self.pos_left <= self.width - self.pos_right:
-            self.pos_left += self.velocity
 
     def shoot(self):
         # выстрел
