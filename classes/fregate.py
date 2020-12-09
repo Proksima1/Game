@@ -15,25 +15,25 @@ class Generel_ship(pygame.sprite.Sprite):
 
     def down(self):
         # перемещение вниз
-        if int(self.rect.y) + 33 <= self.screen.get_height():
+        if int(self.rect.y) + 59 <= self.screen.get_height():
             self.y += self.velocity
             self.rect.y = self.y
 
     def up(self):
         # перемещение вверх
-        if int(self.y) - 1 >= 0:
+        if int(self.y) + 5 >= 0:
             self.y -= self.velocity
             self.rect.y = self.y
 
     def left(self):
         # перемещение налево
-        if int(self.x) - 1 >= 0:
+        if int(self.x) + 2 >= 0:
             self.x -= self.velocity
             self.rect.x = self.x
 
     def right(self):
         # перемещение направо
-        if int(self.rect.x) + 33 <= self.screen.get_width():
+        if int(self.rect.x) + 64 <= self.screen.get_width():
             self.x += self.velocity
             self.rect.x = self.x
 
@@ -82,7 +82,7 @@ if __name__ == '__main__':
     pygame.init()
     size = width, height = 400, 400
     screen = pygame.display.set_mode(size)
-    a = Player_ship(screen, 32, 32, '../sprites/player_ship.png')
+    a = Player_ship(screen, 32, 32, '../sprites/fregate/player_ship.png')
     running = True
     while running:
         moving = pygame.key.get_pressed()
