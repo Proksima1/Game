@@ -71,11 +71,12 @@ class Player_ship(Generel_ship):
                         del (self.enemy[0])
             except IndexError:
                 pass
+        print(self.rect)
 
     def shoot(self):
         # выстрел
-        pygame.draw.rect(self.screen, "yellow", [(self.pos_left + 51, self.pos_top + 25), (3, 2)])
-        self.shoots.append([len(self.shoots) - 1, (self.pos_left + 51, self.pos_top + 25), 1, 1])
+        pygame.draw.rect(self.screen, "yellow", [(self.rect.x + 20, self.rect.y + 20), (3, 2)])
+        self.shoots.append([len(self.shoots) - 1, (self.rect.y + 20, self.rect.y + 20), 1, 1])
 
 
 if __name__ == '__main__':

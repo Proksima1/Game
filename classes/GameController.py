@@ -6,7 +6,7 @@ if __name__ == '__main__':
     pygame.init()
     size = width, height = 400, 400
     screen = pygame.display.set_mode(size)
-    a = Player_ship(screen, 32, 32, '../sprites/player_ship.png')
+    a = Player_ship(screen, 32, 32, '../sprites/fregate/player_ship.png')
     running = True
     while running:
         moving = pygame.key.get_pressed()
@@ -14,8 +14,7 @@ if __name__ == '__main__':
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
-                #a.shoot()
-                pass
+                a.shoot()
         if moving[pygame.K_LEFT] or moving[pygame.K_a]:
             a.left()
         if moving[pygame.K_RIGHT] or moving[pygame.K_d]:
@@ -25,6 +24,8 @@ if __name__ == '__main__':
         if moving[pygame.K_DOWN] or moving[pygame.K_s]:
             a.down()
         a.make_a_ship()
+        a.draw_shoot()
+        pygame.draw.rect(screen, 'red', a.rect)
         pygame.display.flip()
         screen.fill((0, 0, 0))
     pygame.quit()
