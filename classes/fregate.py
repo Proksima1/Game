@@ -83,7 +83,7 @@ if __name__ == '__main__':
     pygame.init()
     size = width, height = 400, 400
     screen = pygame.display.set_mode(size)
-    a = Player_ship(screen, 32, 32, '../sprites/fregate/player_ship.png')
+    a = Player_ship(screen, 32, 32, '../sprites/fregate/player/player_ship.png')
     running = True
     while running:
         moving = pygame.key.get_pressed()
@@ -99,6 +99,7 @@ if __name__ == '__main__':
         if moving[pygame.K_DOWN] or moving[pygame.K_s]:
             a.down()
         a.make_a_ship()
+        print(a.rect)
         pygame.display.flip()
         screen.fill((0, 0, 0))
     pygame.quit()
