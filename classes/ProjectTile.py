@@ -1,6 +1,7 @@
 import threading
 import time
 from typing import Tuple
+from fregate import Player_ship, Enemy_ship
 
 import pygame
 
@@ -22,7 +23,7 @@ class TileController:
     def append(self, value):
         # добавляет в список класса переданное значение
         self.bullets.append(value)
-        print(self.bullets)
+        #print(self.bullets)
 
     def __getitem__(self, item):
         try:
@@ -55,15 +56,20 @@ class TileController:
                     bullet.y += self.velocity
                     bullet.x -= self.velocity
                 elif bullet.dir == 'E':
-                    bullet.y -= self.velocity
+                    bullet.x -= self.velocity
                 elif bullet.dir == 'NE':
                     bullet.y -= self.velocity
                     bullet.x -= self.velocity
                 bullet.rect.y = bullet.y
                 bullet.rect.x = bullet.x
-                print(bullet)
+                #print(bullet)
                 #print(1)
             time.sleep(0.1)
+
+    def check_all_collision(self):
+        for bullet in self.bullets:
+            if bullet.check_collision(ship):
+                del self[self[bullet]]
 
     def __str__(self):
         return f'<TileController: {self.bullets}>'
@@ -78,12 +84,11 @@ class Tile(pygame.sprite.Sprite):
         self.image = pygame.image.load('../sprites/bullet/base/base.png').convert_alpha(screen)
         self.screen = screen
         self.rect = self.image.get_rect(center=pos)
-        print(self.rect)
         self.x = self.rect.x
         self.y = self.rect.y
         self.dir = dir
         self.team = team
-        self.count_anim = 0
+        self.count_anim = 1
         self.list_of_sprites = [pygame.image.load('../sprites/bullet/anim/1.png'),
                                 pygame.image.load('../sprites/bullet/anim/2.png'),
                                 pygame.image.load('../sprites/bullet/anim/3.png'),
@@ -91,35 +96,42 @@ class Tile(pygame.sprite.Sprite):
                                 pygame.image.load('../sprites/bullet/anim/5.png')]
 
     def draw_animation(self):
-        # while True:
-        # screen.fill((0, 0, 0))
-        self.screen.blit(self.list_of_sprites[self.count_anim], self.rect)
-        # print(self.count_anim)
-        # self.now_image = self.list_of_sprites[self.count_anim]
-        if self.count_anim < len(self.list_of_sprites) - 1:
+        """Рисует кадр анимации и считает следующий."""
+        if self.dir == 'N':
+            self.screen.blit(pygame.transform.rotate(pygame.image.load(f'../sprites/bullet/anim/{self.count_anim}.png'), 90), self.rect)
+        elif self.dir == 'W':
+            self.screen.blit(pygame.transform.rotate(pygame.image.load(f'../sprites/bullet/anim/{self.count_anim}.png'), 0), self.rect)
+        if self.count_anim < 10:
             self.count_anim += 1
         else:
-            self.count_anim = 0
-        # time.sleep(0.1)
+            self.count_anim = 1
+        print(self.count_anim)
 
-    # возвращает True, если одна из координат больше соответсвующие координаты в кортеже, иначе False
+    def check_collision(self, other_object):
+        if self.team == 1:
+            if self.rect.colliderect(other_object.rect):
+                print('collided')  # исправить на смерть от пули, или нанесение урона
+                return True
+        return False
+
     def __gt__(self, other_pos: Tuple[int, int]):
+        """Возвращает True, если одна из координат больше соответсвующие координаты в кортеже, иначе False."""
         if self.x > other_pos[0] + self.image.get_width() or self.y > other_pos[1] + self.image.get_height():
             return True
         return False
 
-    # возвращает True, если одна из координат меньше соответсвующие координаты в кортеже, иначе False
     def __lt__(self, other_pos: Tuple[int, int]):
+        """Возвращает True, если одна из координат меньше соответсвующие координаты в кортеже, иначе False."""
         if self.x < 0 - self.image.get_width() or self.y < 0 - self.image.get_height():
             return True
         return False
 
-    # форматирует вывод
     def __str__(self):
+        """Форматирует вывод."""
         return f'<Tile x={self.x}, y={self.y}, team={self.team}>'
 
-    # форматирует вывод
     def __repr__(self):
+        """Форматирует вывод."""
         return f'<Tile x={self.x}, y={self.y}, team={self.team}>'
 
 
@@ -128,23 +140,31 @@ if __name__ == '__main__':
     size = width, height = 400, 400
     screen = pygame.display.set_mode(size)
     a = TileController(screen)
-    b = Tile(screen, (32, 32), 1, 'W')
-    c = Tile(screen, (70, 60), 1, 'SW')
+    b = Tile(screen, (80, 32), 1, 'W')
+    c = Tile(screen, (90, 60), 1, 'N')
     a.append(b)
     a.append(c)
+    ship = Player_ship(screen, 32, 32, '../sprites/fregate/player/player_ship.png')
     running = True
-    clock = pygame.time.Clock()
     anim = threading.Thread(target=a.draw_all)
     anim.setDaemon(True)
     anim.start()
     while running:
+        moving = pygame.key.get_pressed()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-        print(a.bullets)
+        if moving[pygame.K_LEFT] or moving[pygame.K_a]:
+            ship.left()
+        if moving[pygame.K_RIGHT] or moving[pygame.K_d]:
+            ship.right()
+        if moving[pygame.K_UP] or moving[pygame.K_w]:
+            ship.up()
+        if moving[pygame.K_DOWN] or moving[pygame.K_s]:
+            ship.down()
+        ship.make_a_ship()
+        a.check_all_collision()
         # screen.fill('black')
-
-
         # pygame.draw.rect(screen, 'red', c.rect)
         pygame.display.flip()
     pygame.quit()
