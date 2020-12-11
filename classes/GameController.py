@@ -25,7 +25,7 @@ if __name__ == '__main__':
             a.down()
         a.make_a_ship()
         a.draw_shoot()
-        pygame.draw.rect(screen, 'red', a.rect)
+        #pygame.draw.rect(screen, 'red', a.rect)
         pygame.display.flip()
         screen.fill((0, 0, 0))
     pygame.quit()

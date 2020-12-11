@@ -7,11 +7,11 @@ class Generel_ship(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load(filename).convert_alpha()
         self.rect = self.image.get_rect(center=(x, y))
-        self.x = x
-        self.y = y
+        self.x = 0
+        self.y = 0
         self.screen = screen
         self.shoots = []
-        self.velocity = 0.07
+        self.velocity = 0.05
 
     def down(self):
         # перемещение вниз
@@ -37,6 +37,9 @@ class Generel_ship(pygame.sprite.Sprite):
             self.x += self.velocity
             self.rect.x = self.x
 
+    def make_a_ship(self):
+        self.screen.blit(self.image, self.rect)
+
 
 class Enemy_ship(Generel_ship):
     pass
@@ -46,10 +49,7 @@ class Player_ship(Generel_ship):
     def __init__(self, screen, x, y, filename):
         super().__init__(screen, x, y, filename)
         self.enemy = []
-
-    def make_a_ship(self):
-        self.screen.blit(self.image, self.rect)
-        #pygame.draw.rect(self.screen, "blue", [(self.pos_left, self.pos_top), (self.pos_right, self.pos_bottom)])
+        self.count = 0
 
     def draw_shoot(self):
         # рисование выстрела, его исчезновение и урон по врагам
@@ -71,34 +71,14 @@ class Player_ship(Generel_ship):
                         del (self.enemy[0])
             except IndexError:
                 pass
-        print(self.rect)
 
     def shoot(self):
         # выстрел
-        pygame.draw.rect(self.screen, "yellow", [(self.rect.x + 20, self.rect.y + 20), (3, 2)])
-        self.shoots.append([len(self.shoots) - 1, (self.rect.y + 20, self.rect.y + 20), 1, 1])
-
-
-if __name__ == '__main__':
-    pygame.init()
-    size = width, height = 400, 400
-    screen = pygame.display.set_mode(size)
-    a = Player_ship(screen, 32, 32, '../sprites/fregate/player_ship.png')
-    running = True
-    while running:
-        moving = pygame.key.get_pressed()
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-        if moving[pygame.K_LEFT] or moving[pygame.K_a]:
-            a.left()
-        if moving[pygame.K_RIGHT] or moving[pygame.K_d]:
-            a.right()
-        if moving[pygame.K_UP] or moving[pygame.K_w]:
-            a.up()
-        if moving[pygame.K_DOWN] or moving[pygame.K_s]:
-            a.down()
-        a.make_a_ship()
-        pygame.display.flip()
-        screen.fill((0, 0, 0))
-    pygame.quit()
+        if self.count == 0:
+            pygame.draw.rect(self.screen, "yellow", [(self.rect.x + 35, self.rect.y + 7), (3, 2)])
+            self.shoots.append([len(self.shoots) - 1, (self.rect.x + 35, self.rect.y + 7), 1, 1])
+            self.count = 1
+        else:
+            pygame.draw.rect(self.screen, "yellow", [(self.rect.x + 35, self.rect.y + 77), (3, 2)])
+            self.shoots.append([len(self.shoots) - 1, (self.rect.x + 35, self.rect.y + 55), 1, 1])
+            self.count = 0
