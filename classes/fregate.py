@@ -11,7 +11,7 @@ class Generel_ship(pygame.sprite.Sprite):
         self.y = 0
         self.screen = screen
         self.shoots = []
-        self.velocity = 0.05
+        self.velocity = 0.01
 
     def down(self):
         # перемещение вниз
@@ -79,6 +79,6 @@ class Player_ship(Generel_ship):
             self.shoots.append([len(self.shoots) - 1, (self.rect.x + 35, self.rect.y + 7), 1, 1])
             self.count = 1
         else:
-            pygame.draw.rect(self.screen, "yellow", [(self.rect.x + 35, self.rect.y + 77), (3, 2)])
+            pygame.draw.rect(self.screen, "yellow", [(self.rect.x + 35, self.rect.y + 55), (3, 2)])
             self.shoots.append([len(self.shoots) - 1, (self.rect.x + 35, self.rect.y + 55), 1, 1])
             self.count = 0
