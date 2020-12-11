@@ -1,12 +1,13 @@
 import pygame
 import threading
-from fregate import Player_ship
+from fregate import Player_ship, Enemy_ship
 
 if __name__ == '__main__':
     pygame.init()
     size = width, height = 400, 400
     screen = pygame.display.set_mode(size)
     a = Player_ship(screen, 32, 32, '../sprites/fregate/player/player_ship.png')
+    b = Player_ship(screen, 350, 320, '../sprites/fregate/enemy/enemy_ship1.png')
     running = True
     while running:
         moving = pygame.key.get_pressed()
@@ -25,6 +26,8 @@ if __name__ == '__main__':
             a.down()
         a.make_a_ship()
         a.draw_shoot()
+        b.make_a_ship()
+        b.random_move()
         #pygame.draw.rect(screen, 'red', a.rect)
         pygame.display.flip()
         screen.fill((0, 0, 0))

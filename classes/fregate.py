@@ -1,4 +1,5 @@
 import pygame
+from random import randint
 from pygame.locals import *
 
 
@@ -11,7 +12,8 @@ class Generel_ship(pygame.sprite.Sprite):
         self.y = 0
         self.screen = screen
         self.shoots = []
-        self.velocity = 0.01
+        self.velocity = 0.05
+        self.enemy = []
 
     def down(self):
         # перемещение вниз
@@ -42,14 +44,29 @@ class Generel_ship(pygame.sprite.Sprite):
 
 
 class Enemy_ship(Generel_ship):
-    pass
+    def __init__(self, screen, x, y, filename):
+        super().__init__(screen, x, y, filename)
+        self.enemy_count = 0
 
 
 class Player_ship(Generel_ship):
     def __init__(self, screen, x, y, filename):
         super().__init__(screen, x, y, filename)
-        self.enemy = []
         self.count = 0
+
+    def random_move(self):
+        a = randint(1, 4)
+        for i in range(randint(30, 100)):
+            if a == 1:
+                self.left()
+            elif a == 2:
+                self.right()
+            elif a == 3:
+                self.up()
+            elif a == 4:
+                self.down()
+
+
 
     def draw_shoot(self):
         # рисование выстрела, его исчезновение и урон по врагам
