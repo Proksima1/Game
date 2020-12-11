@@ -1,6 +1,8 @@
 import pygame
 from random import randint
 from pygame.locals import *
+from time import sleep
+from progressbar import ProgressBar
 
 
 class Generel_ship(pygame.sprite.Sprite):
@@ -8,8 +10,8 @@ class Generel_ship(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load(filename).convert_alpha()
         self.rect = self.image.get_rect(center=(x, y))
-        self.x = 0
-        self.y = 0
+        self.x = self.rect.x
+        self.y = self.rect.y
         self.screen = screen
         self.shoots = []
         self.velocity = 0.05
@@ -46,27 +48,50 @@ class Generel_ship(pygame.sprite.Sprite):
 class Enemy_ship(Generel_ship):
     def __init__(self, screen, x, y, filename):
         super().__init__(screen, x, y, filename)
-        self.enemy_count = 0
+        self.shoot_count = 0
+        self.velocity = 0.3
+        self.stop = 1
+        self.bar = ProgressBar(self.screen, "red", self.rect.x, self.rect.y + 10, 25, 5)
+
+    def random_shoot(self):
+        while self.stop:
+            print(1)
+
+    def hp_bar(self):
+        self.bar.width -= 0.001
+        self.bar.left = self.rect.x
+        self.bar.top = self.rect.y
+        self.bar.draw()
+
+    def random_move(self):
+        while True:
+            a = randint(1, 4)
+            if a == 1:
+                for _ in range(randint(30, 70)):
+                    if self.screen.get_width() // 2 <= self.rect.x:
+                        sleep(0.001)
+                        self.left()
+            if a == 2:
+                for _ in range(randint(30, 70)):
+                    if self.screen.get_width() - 100 >= self.rect.x:
+                        sleep(0.001)
+                        self.right()
+            if a == 3:
+                for _ in range(randint(80, 100)):
+                    if 150 <= self.rect.y:
+                        sleep(0.001)
+                        self.up()
+            if a == 4:
+                for _ in range(randint(80, 100)):
+                    if self.screen.get_width() - 150 >= self.rect.y:
+                        sleep(0.001)
+                        self.down()
 
 
 class Player_ship(Generel_ship):
     def __init__(self, screen, x, y, filename):
         super().__init__(screen, x, y, filename)
-        self.count = 0
-
-    def random_move(self):
-        a = randint(1, 4)
-        for i in range(randint(30, 100)):
-            if a == 1:
-                self.left()
-            elif a == 2:
-                self.right()
-            elif a == 3:
-                self.up()
-            elif a == 4:
-                self.down()
-
-
+        self.shoot_count = 0
 
     def draw_shoot(self):
         # рисование выстрела, его исчезновение и урон по врагам
@@ -91,11 +116,11 @@ class Player_ship(Generel_ship):
 
     def shoot(self):
         # выстрел
-        if self.count == 0:
+        if self.shoot_count == 0:
             pygame.draw.rect(self.screen, "yellow", [(self.rect.x + 35, self.rect.y + 7), (3, 2)])
             self.shoots.append([len(self.shoots) - 1, (self.rect.x + 35, self.rect.y + 7), 1, 1])
-            self.count = 1
+            self.shoot_count = 1
         else:
             pygame.draw.rect(self.screen, "yellow", [(self.rect.x + 35, self.rect.y + 55), (3, 2)])
             self.shoots.append([len(self.shoots) - 1, (self.rect.x + 35, self.rect.y + 55), 1, 1])
-            self.count = 0
+            self.shoot_count = 0
