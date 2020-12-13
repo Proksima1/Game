@@ -1,8 +1,7 @@
 import threading
 import time
 from typing import Tuple
-from fregate import Player_ship, Enemy_ship
-
+from fregate import Player_ship
 import pygame
 
 
@@ -14,24 +13,25 @@ class TileController:
         """
         self.screen = screen
         self.bullets = []
-        self.velocity = 0.05
+        self.velocity = 0.001
 
     def __delitem__(self, index):
-        # удаляет из списка класса значение по переданному индексу
+        """удаляет из списка класса значение по переданному индексу"""
         del self.bullets[index]
 
     def append(self, value):
-        # добавляет в список класса переданное значение
+        """добавляет в список класса переданное значение"""
         self.bullets.append(value)
-        #print(self.bullets)
 
     def __getitem__(self, item):
+        """возвращает индекс переданного значения"""
         try:
-            return self.bullets.index(item)  # возвращает индекс переданного значения
+            return self.bullets.index(item)
         except ValueError:
             return None
 
     def draw_all(self):
+        speed_in_gradus = 1.5
         if self.bullets is not bool:
             for bullet in self.bullets:
                 # print(bullet)
@@ -42,23 +42,23 @@ class TileController:
                 if bullet.dir == 'N':
                     bullet.y -= self.velocity
                 elif bullet.dir == 'NW':
-                    bullet.y -= self.velocity
-                    bullet.x += self.velocity
+                    bullet.y -= self.velocity / speed_in_gradus
+                    bullet.x += self.velocity / speed_in_gradus
                 elif bullet.dir == 'W':
                     bullet.x += self.velocity
                 elif bullet.dir == 'SW':
-                    bullet.y += self.velocity
-                    bullet.x += self.velocity
+                    bullet.y += self.velocity / speed_in_gradus
+                    bullet.x += self.velocity / speed_in_gradus
                 elif bullet.dir == 'S':
                     bullet.y += self.velocity
                 elif bullet.dir == 'SE':
-                    bullet.y += self.velocity
-                    bullet.x -= self.velocity
+                    bullet.y += self.velocity / speed_in_gradus
+                    bullet.x -= self.velocity / speed_in_gradus
                 elif bullet.dir == 'E':
                     bullet.x -= self.velocity
                 elif bullet.dir == 'NE':
-                    bullet.y -= self.velocity
-                    bullet.x -= self.velocity
+                    bullet.y -= self.velocity / speed_in_gradus
+                    bullet.x -= self.velocity / speed_in_gradus
                 bullet.rect.y = bullet.y
                 bullet.rect.x = bullet.x
 
@@ -85,17 +85,18 @@ class Tile(pygame.sprite.Sprite):
         self.dir = dir
         self.team = team
         self.count_anim = 1
+        self.list_of_sprites = [pygame.image.load(f'../sprites/bullet/anim/{i + 1}.png') for i in range(10)]
 
     def draw_animation(self):
         """Рисует кадр анимации и считает следующий."""
-        if self.dir == 'N':
-            self.screen.blit(pygame.transform.rotate(pygame.image.load(f'../sprites/bullet/anim/{self.count_anim}.png'), 90), self.rect)
+        if self.dir == 'SW':
+            self.screen.blit(pygame.transform.rotate(self.list_of_sprites[self.count_anim], -45), self.rect)
         elif self.dir == 'W':
-            self.screen.blit(pygame.transform.rotate(pygame.image.load(f'../sprites/bullet/anim/{self.count_anim}.png'), 0), self.rect)
-        if self.count_anim < 10:
+            self.screen.blit(pygame.transform.rotate(self.list_of_sprites[self.count_anim], 0), self.rect)
+        if self.count_anim < 9:
             self.count_anim += 1
         else:
-            self.count_anim = 1
+            self.count_anim = 0
 
     def check_collision(self, other_object):
         if self.team == 1:
@@ -131,8 +132,9 @@ if __name__ == '__main__':
     screen = pygame.display.set_mode(size)
     a = TileController(screen)
     b = Tile(screen, (80, 32), 1, 'W')
-    c = Tile(screen, (90, 60), 1, 'N')
+    c = Tile(screen, (90, 60), 1, 'SW')
     a.append(b)
+    a.append(c)
     ship = Player_ship(screen, 32, 32, '../sprites/fregate/player/player_ship.png')
     running = True
     while running:
@@ -150,7 +152,7 @@ if __name__ == '__main__':
         if moving[pygame.K_DOWN] or moving[pygame.K_s]:
             ship.down()
         ship.make_a_ship()
-        a.check_all_collision()
+        #a.check_all_collision()
         a.draw_all()
         # pygame.draw.rect(screen, 'red', c.rect)
         pygame.display.flip()

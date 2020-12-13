@@ -6,18 +6,22 @@ from progressbar import ProgressBar
 
 
 class Generel_ship(pygame.sprite.Sprite):
-    def __init__(self, screen, x, y, filename, hp):
+    def __init__(self, screen, x, y, filename):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load(filename).convert_alpha()
         self.rect = self.image.get_rect(center=(x, y))
         self.x = self.rect.x
         self.y = self.rect.y
         self.screen = screen
-        self.hp = hp
+        self.hp = 100
         self.shoots = []
         self.velocity = 0.05
-        self.enemy = []
         self.movement = ""
+        self.bar = ProgressBar(self.screen, "red", self.rect.x, self.rect.y + 10, 25, 5)
+
+    def update_bar(self):
+        pass
+
 
     def down(self):
         # перемещение вниз
@@ -46,15 +50,18 @@ class Generel_ship(pygame.sprite.Sprite):
     def make_a_ship(self):
         self.screen.blit(self.image, self.rect)
 
+    def get_damage(self, amount_number):
+        self.hp -= amount_number
+        self.update_bar()
+
+
 
 class Enemy_ship(Generel_ship):
-    def __init__(self, screen, x, y, filename, hp):
-        super().__init__(screen, x, y, filename, hp)
+    def __init__(self, screen, x, y, filename):
+        super().__init__(screen, x, y, filename)
         self.shoot_count = 0
         self.velocity = 0.3
         self.stop = 1
-        self.bar = ProgressBar(self.screen, "red", self.rect.x, self.rect.y + 10, 25, 5)
-        self.enemy.append(self.rect)
 
     def hp_bar(self):
         self.bar.left = self.rect.x
@@ -96,8 +103,8 @@ class Enemy_ship(Generel_ship):
 
 
 class Player_ship(Generel_ship):
-    def __init__(self, screen, x, y, filename, hp):
-        super().__init__(screen, x, y, filename, hp)
+    def __init__(self, screen, x, y, filename):
+        super().__init__(screen, x, y, filename)
         self.shoot_count = 0
 
     def draw_shoot(self):
@@ -111,14 +118,6 @@ class Player_ship(Generel_ship):
                 self.shoots[i] = [i, (self.shoots[i][1][0] + velocity * x_pos, self.shoots[i][1][1]), x_pos, 1]
                 if self.shoots[i][1][0] > self.screen.get_width():
                     del (self.shoots[i])
-                for enem in self.enemy:
-                    if enem[0].y <= self.shoots[i][1][1] <= enem[0].y and \
-                            enem[0].x <= self.shoots[i][1][0] <= enem[0].x:
-                        del (self.shoots[i])
-                        if enem[-1] > 0:
-                            enem[-1] -= 20
-                        if enem[-1] <= 0:
-                            del (enem)
             except IndexError:
                 pass
 
