@@ -14,7 +14,7 @@ class TileController:
         """
         self.screen = screen
         self.bullets = []
-        self.velocity = 1
+        self.velocity = 0.05
 
     def __delitem__(self, index):
         # удаляет из списка класса значение по переданному индексу
@@ -32,8 +32,7 @@ class TileController:
             return None
 
     def draw_all(self):
-        while True:
-            screen.fill((0, 0, 0))
+        if self.bullets is not bool:
             for bullet in self.bullets:
                 # print(bullet)
                 if bullet > self.screen.get_size() or bullet < self.screen.get_size():
@@ -62,9 +61,6 @@ class TileController:
                     bullet.x -= self.velocity
                 bullet.rect.y = bullet.y
                 bullet.rect.x = bullet.x
-                #print(bullet)
-                #print(1)
-            time.sleep(0.1)
 
     def check_all_collision(self):
         for bullet in self.bullets:
@@ -89,11 +85,6 @@ class Tile(pygame.sprite.Sprite):
         self.dir = dir
         self.team = team
         self.count_anim = 1
-        self.list_of_sprites = [pygame.image.load('../sprites/bullet/anim/1.png'),
-                                pygame.image.load('../sprites/bullet/anim/2.png'),
-                                pygame.image.load('../sprites/bullet/anim/3.png'),
-                                pygame.image.load('../sprites/bullet/anim/4.png'),
-                                pygame.image.load('../sprites/bullet/anim/5.png')]
 
     def draw_animation(self):
         """Рисует кадр анимации и считает следующий."""
@@ -105,7 +96,6 @@ class Tile(pygame.sprite.Sprite):
             self.count_anim += 1
         else:
             self.count_anim = 1
-        print(self.count_anim)
 
     def check_collision(self, other_object):
         if self.team == 1:
@@ -143,13 +133,10 @@ if __name__ == '__main__':
     b = Tile(screen, (80, 32), 1, 'W')
     c = Tile(screen, (90, 60), 1, 'N')
     a.append(b)
-    a.append(c)
     ship = Player_ship(screen, 32, 32, '../sprites/fregate/player/player_ship.png')
     running = True
-    anim = threading.Thread(target=a.draw_all)
-    anim.setDaemon(True)
-    anim.start()
     while running:
+        screen.fill('black')
         moving = pygame.key.get_pressed()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -164,7 +151,7 @@ if __name__ == '__main__':
             ship.down()
         ship.make_a_ship()
         a.check_all_collision()
-        # screen.fill('black')
+        a.draw_all()
         # pygame.draw.rect(screen, 'red', c.rect)
         pygame.display.flip()
     pygame.quit()

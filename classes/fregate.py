@@ -16,6 +16,7 @@ class Generel_ship(pygame.sprite.Sprite):
         self.shoots = []
         self.velocity = 0.05
         self.enemy = []
+        self.movement = ""
 
     def down(self):
         # перемещение вниз
@@ -52,30 +53,32 @@ class Enemy_ship(Generel_ship):
         self.velocity = 0.3
         self.stop = 1
         self.bar = ProgressBar(self.screen, "red", self.rect.x, self.rect.y + 10, 25, 5)
-
-    def random_shoot(self):
-        while self.stop:
-            print(1)
+        self.enemy.append(self.rect)
 
     def hp_bar(self):
-        self.bar.width -= 0.001
         self.bar.left = self.rect.x
         self.bar.top = self.rect.y
         self.bar.draw()
 
     def random_move(self):
         while True:
-            a = randint(1, 4)
+            a = randint(1, 6)
             if a == 1:
-                for _ in range(randint(30, 70)):
-                    if self.screen.get_width() // 2 <= self.rect.x:
-                        sleep(0.001)
-                        self.left()
+                if self.movement != "right":
+                    for _ in range(randint(50, 70)):
+                        if self.screen.get_width() // 2 <= self.rect.x:
+                            sleep(0.001)
+                            self.left()
+                self.movement = "left"
+
             if a == 2:
-                for _ in range(randint(30, 70)):
-                    if self.screen.get_width() - 100 >= self.rect.x:
-                        sleep(0.001)
-                        self.right()
+                if self.movement != "left":
+                    for _ in range(randint(50, 70)):
+                        if self.screen.get_width() - 100 >= self.rect.x:
+                            sleep(0.001)
+                            self.right()
+                self.movement = "right"
+
             if a == 3:
                 for _ in range(randint(80, 100)):
                     if 150 <= self.rect.y:
@@ -86,6 +89,9 @@ class Enemy_ship(Generel_ship):
                     if self.screen.get_width() - 150 >= self.rect.y:
                         sleep(0.001)
                         self.down()
+
+            if a == 5 or a == 6:
+                sleep(0.025)
 
 
 class Player_ship(Generel_ship):
