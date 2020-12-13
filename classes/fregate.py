@@ -6,13 +6,14 @@ from progressbar import ProgressBar
 
 
 class Generel_ship(pygame.sprite.Sprite):
-    def __init__(self, screen, x, y, filename):
+    def __init__(self, screen, x, y, filename, hp):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load(filename).convert_alpha()
         self.rect = self.image.get_rect(center=(x, y))
         self.x = self.rect.x
         self.y = self.rect.y
         self.screen = screen
+        self.hp = hp
         self.shoots = []
         self.velocity = 0.05
         self.enemy = []
@@ -47,8 +48,8 @@ class Generel_ship(pygame.sprite.Sprite):
 
 
 class Enemy_ship(Generel_ship):
-    def __init__(self, screen, x, y, filename):
-        super().__init__(screen, x, y, filename)
+    def __init__(self, screen, x, y, filename, hp):
+        super().__init__(screen, x, y, filename, hp)
         self.shoot_count = 0
         self.velocity = 0.3
         self.stop = 1
@@ -95,8 +96,8 @@ class Enemy_ship(Generel_ship):
 
 
 class Player_ship(Generel_ship):
-    def __init__(self, screen, x, y, filename):
-        super().__init__(screen, x, y, filename)
+    def __init__(self, screen, x, y, filename, hp):
+        super().__init__(screen, x, y, filename, hp)
         self.shoot_count = 0
 
     def draw_shoot(self):
@@ -110,13 +111,14 @@ class Player_ship(Generel_ship):
                 self.shoots[i] = [i, (self.shoots[i][1][0] + velocity * x_pos, self.shoots[i][1][1]), x_pos, 1]
                 if self.shoots[i][1][0] > self.screen.get_width():
                     del (self.shoots[i])
-                if self.enemy[0][0].top <= self.shoots[i][1][1] <= self.enemy[0][0].bottom and \
-                        self.enemy[0][0].left <= self.shoots[i][1][0] <= self.enemy[0][0].right:
-                    del (self.shoots[i])
-                    if self.enemy[0][1] > 0:
-                        self.enemy[0][1] -= 20
-                    if self.enemy[0][1] <= 0:
-                        del (self.enemy[0])
+                for enem in self.enemy:
+                    if enem[0].y <= self.shoots[i][1][1] <= enem[0].y and \
+                            enem[0].x <= self.shoots[i][1][0] <= enem[0].x:
+                        del (self.shoots[i])
+                        if enem[-1] > 0:
+                            enem[-1] -= 20
+                        if enem[-1] <= 0:
+                            del (enem)
             except IndexError:
                 pass
 
