@@ -15,6 +15,7 @@ def start_game():
     size = width, height = 800, 400
     screen = pygame.display.set_mode(size)
     main = MainMenu(screen, height, width)
+    clock = pygame.time.Clock()
 
     def play():
         global show_menu
@@ -48,7 +49,9 @@ def start_game():
                 show_menu = False
                 show_setting = False
         main.show_menu(play, settings, quit)
+        pygame.display.set_caption(str(clock.get_fps()))
         pygame.display.flip()
+        clock.tick(144)
 
 
 start_game()

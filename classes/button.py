@@ -11,11 +11,17 @@ class Button:
 
     def draw(self, x: int, y: int, message: str, action=None):
         button = pygame.Rect(x, y, self.width, self.height)
+        #sc = pygame.Surface((self.width, self.height))
+        #sc.blit(button, (x, y))
+        #sc.fill(self.active_color)
+        #self.screen.blit(sc, (x, y))
+
         pygame.draw.rect(self.screen, self.active_color, button)
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
         if button.collidepoint(mouse):
-            pygame.draw.rect(self.screen, self.inactive_color, (x, y, self.width, self.height))
+            #sc.fill(self.inactive_color)
+            #pygame.draw.rect(self.screen, self.inactive_color, (x, y, self.width, self.height))
             if click[0] == 1:
                 pygame.time.delay(150)
                 if action is not None:
@@ -39,8 +45,10 @@ if __name__ == '__main__':
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-        screen.fill((0, 0, 0))
+        #screen.fill((0, 0, 0))
+        pygame.display.set_caption(str(clock.get_fps()))
         a.draw(40, 40, 'HELLO')
         pygame.display.flip()
-        clock.tick(10)
+        clock.tick(144)
+        #clock.tick(10)
     pygame.quit()

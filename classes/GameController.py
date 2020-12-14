@@ -1,6 +1,6 @@
 import pygame
 import threading
-from fregate import Player_ship, Enemy_ship
+from fregate import *
 from ProjectTile import Tile
 
 if __name__ == '__main__':
@@ -10,14 +10,16 @@ if __name__ == '__main__':
     a = Player_ship(screen, 32, 32, '../sprites/fregate/player/player_ship.png')
     b = Enemy_ship(screen, 350, 320, '../sprites/fregate/enemy/enemy_ship1.png')
     c = Enemy_ship(screen, 300, 320, '../sprites/fregate/enemy/enemy_ship1.png')
+    controller = Enemy_controller()
+    controller.append(b)
+    controller.append(c)
+    print(controller.list_of_enemies)
     bullet = Tile(screen, (a.rect.x + 35, a.rect.y + 7), 0, "W")
     running = True
-    t = threading.Thread(target=b.random_move)
+    t = threading.Thread(target=controller.update_all, args=(screen,))
     t.setDaemon(True)
     t.start()
-    t1 = threading.Thread(target=c.random_move)
-    t1.setDaemon(True)
-    t1.start()
+    clock = pygame.time.Clock()
     while running:
         moving = pygame.key.get_pressed()
         for event in pygame.event.get():
@@ -36,11 +38,10 @@ if __name__ == '__main__':
             a.down()
         a.make_a_ship()
         a.draw_shoot()
-        b.make_a_ship()
-        c.make_a_ship()
-        b.update_bar()
+        #b.make_a_ship()
+        #c.make_a_ship()
         # pygame.draw.rect(screen, 'red', a.rect)
         pygame.display.flip()
-        screen.fill((0, 0, 0))
+        #screen.fill((0, 0, 0))
         #print(a.rect.top, b.rect.top)
     pygame.quit()
