@@ -13,7 +13,7 @@ class TileController:
         """
         self.screen = screen
         self.bullets = []
-        self.velocity = 0.001
+        self.velocity = 0.05
 
     def __delitem__(self, index):
         """удаляет из списка класса значение по переданному индексу"""
@@ -30,7 +30,7 @@ class TileController:
         except ValueError:
             return None
 
-    def draw_all(self):
+    def update_all(self):
         speed_in_gradus = 1.5
         if self.bullets is not bool:
             for bullet in self.bullets:
@@ -153,7 +153,7 @@ if __name__ == '__main__':
             ship.down()
         ship.make_a_ship()
         #a.check_all_collision()
-        a.draw_all()
+        a.update_all()
         # pygame.draw.rect(screen, 'red', c.rect)
         pygame.display.flip()
     pygame.quit()

@@ -20,8 +20,9 @@ class Generel_ship(pygame.sprite.Sprite):
         self.bar = ProgressBar(self.screen, "red", self.rect.x, self.rect.y + 10, 25, 5)
 
     def update_bar(self):
-        pass
-
+        self.bar.left = self.rect.x
+        self.bar.top = self.rect.y
+        self.bar.draw(self.hp)
 
     def down(self):
         # перемещение вниз
@@ -55,18 +56,12 @@ class Generel_ship(pygame.sprite.Sprite):
         self.update_bar()
 
 
-
 class Enemy_ship(Generel_ship):
     def __init__(self, screen, x, y, filename):
         super().__init__(screen, x, y, filename)
         self.shoot_count = 0
         self.velocity = 0.3
         self.stop = 1
-
-    def hp_bar(self):
-        self.bar.left = self.rect.x
-        self.bar.top = self.rect.y
-        self.bar.draw()
 
     def random_move(self):
         while True:
@@ -131,3 +126,14 @@ class Player_ship(Generel_ship):
             pygame.draw.rect(self.screen, "yellow", [(self.rect.x + 35, self.rect.y + 55), (3, 2)])
             self.shoots.append([len(self.shoots) - 1, (self.rect.x + 35, self.rect.y + 55), 1, 1])
             self.shoot_count = 0
+
+
+class Enemy_controller:
+    def __init__(self):
+        self.list_of_enemies = []
+
+    def append(self, value: Enemy_ship):
+        self.list_of_enemies.append(value)
+
+    def update_all(self):
+        pass
