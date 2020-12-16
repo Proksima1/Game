@@ -1,4 +1,6 @@
 import pygame
+from time import sleep
+import threading
 
 
 class ProgressBar:
@@ -6,6 +8,7 @@ class ProgressBar:
         self.screen = screen
         self.x = x
         self.y = y
+        self.rect = pygame.Rect(x, y, width, height)
         self.height = height
         self.width = width
         self.width2 = width
@@ -40,6 +43,8 @@ if __name__ == '__main__':
                 running = False
         screen.fill((0, 255, 0))
         a.draw(per)
+        a.x += 0.1
+        #a.y += 0.01
         #per -= 0.008
-        pygame.display.flip()
+        pygame.display.update(a.rect)
     pygame.quit()

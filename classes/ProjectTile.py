@@ -1,74 +1,8 @@
 import threading
 import time
 from typing import Tuple
-from fregate import Player_ship
+#from fregate import Player_ship
 import pygame
-
-
-class TileController:
-    def __init__(self, screen: pygame.Surface):  # screen: pygame.Surface
-        """
-        Класс контроллер, обладает данными о всех пулях, имеет возможность передвигать, удалять,
-        добавлять новые пули.
-        """
-        self.screen = screen
-        self.bullets = []
-        self.velocity = 0.05
-
-    def __delitem__(self, index):
-        """удаляет из списка класса значение по переданному индексу"""
-        del self.bullets[index]
-
-    def append(self, value):
-        """добавляет в список класса переданное значение"""
-        self.bullets.append(value)
-
-    def __getitem__(self, item):
-        """возвращает индекс переданного значения"""
-        try:
-            return self.bullets.index(item)
-        except ValueError:
-            return None
-
-    def update_all(self):
-        speed_in_gradus = 1.5
-        if self.bullets is not bool:
-            for bullet in self.bullets:
-                # print(bullet)
-                if bullet > self.screen.get_size() or bullet < self.screen.get_size():
-                    del self[self[bullet]]
-                else:
-                    bullet.draw_animation()
-                if bullet.dir == 'N':
-                    bullet.y -= self.velocity
-                elif bullet.dir == 'NW':
-                    bullet.y -= self.velocity / speed_in_gradus
-                    bullet.x += self.velocity / speed_in_gradus
-                elif bullet.dir == 'W':
-                    bullet.x += self.velocity
-                elif bullet.dir == 'SW':
-                    bullet.y += self.velocity / speed_in_gradus
-                    bullet.x += self.velocity / speed_in_gradus
-                elif bullet.dir == 'S':
-                    bullet.y += self.velocity
-                elif bullet.dir == 'SE':
-                    bullet.y += self.velocity / speed_in_gradus
-                    bullet.x -= self.velocity / speed_in_gradus
-                elif bullet.dir == 'E':
-                    bullet.x -= self.velocity
-                elif bullet.dir == 'NE':
-                    bullet.y -= self.velocity / speed_in_gradus
-                    bullet.x -= self.velocity / speed_in_gradus
-                bullet.rect.y = bullet.y
-                bullet.rect.x = bullet.x
-
-    def check_all_collision(self):
-        for bullet in self.bullets:
-            if bullet.check_collision(ship):
-                del self[self[bullet]]
-
-    def __str__(self):
-        return f'<TileController: {self.bullets}>'
 
 
 class Tile(pygame.sprite.Sprite):
@@ -126,6 +60,72 @@ class Tile(pygame.sprite.Sprite):
         return f'<Tile x={self.x}, y={self.y}, team={self.team}>'
 
 
+class TileController:
+    def __init__(self, screen: pygame.Surface):  # screen: pygame.Surface
+        """
+        Класс контроллер, обладает данными о всех пулях, имеет возможность передвигать, удалять,
+        добавлять новые пули.
+        """
+        self.screen = screen
+        self.bullets = []
+        self.velocity = 0.09
+
+    def __delitem__(self, index):
+        """удаляет из списка класса значение по переданному индексу"""
+        del self.bullets[index]
+
+    def append(self, value: Tile):
+        """добавляет в список класса переданное значение"""
+        self.bullets.append(value)
+
+    def __getitem__(self, item):
+        """возвращает индекс переданного значения"""
+        try:
+            return self.bullets.index(item)
+        except ValueError:
+            return None
+
+    def update_all(self):
+        speed_in_gradus = 1.5
+        if self.bullets is not bool:
+            for bullet in self.bullets:
+                # print(bullet)
+                if bullet > self.screen.get_size() or bullet < self.screen.get_size():
+                    del self[self[bullet]]
+                else:
+                    bullet.draw_animation()
+                if bullet.dir == 'N':
+                    bullet.y -= self.velocity
+                elif bullet.dir == 'NW':
+                    bullet.y -= self.velocity / speed_in_gradus
+                    bullet.x += self.velocity / speed_in_gradus
+                elif bullet.dir == 'W':
+                    bullet.x += self.velocity
+                elif bullet.dir == 'SW':
+                    bullet.y += self.velocity / speed_in_gradus
+                    bullet.x += self.velocity / speed_in_gradus
+                elif bullet.dir == 'S':
+                    bullet.y += self.velocity
+                elif bullet.dir == 'SE':
+                    bullet.y += self.velocity / speed_in_gradus
+                    bullet.x -= self.velocity / speed_in_gradus
+                elif bullet.dir == 'E':
+                    bullet.x -= self.velocity
+                elif bullet.dir == 'NE':
+                    bullet.y -= self.velocity / speed_in_gradus
+                    bullet.x -= self.velocity / speed_in_gradus
+                bullet.rect.y = bullet.y
+                bullet.rect.x = bullet.x
+
+    def check_all_collision(self):
+        for bullet in self.bullets:
+            if bullet.check_collision(ship):
+                del self[self[bullet]]
+
+    def __str__(self):
+        return f'<TileController: {self.bullets}>'
+
+
 if __name__ == '__main__':
     pygame.init()
     size = width, height = 400, 400
@@ -135,7 +135,7 @@ if __name__ == '__main__':
     c = Tile(screen, (90, 60), 1, 'SW')
     a.append(b)
     a.append(c)
-    ship = Player_ship(screen, 32, 32, '../sprites/fregate/player/player_ship.png')
+    """ship = Player_ship(screen, 32, 32, '../sprites/fregate/player/player_ship.png')
     running = True
     while running:
         screen.fill('black')
@@ -157,3 +157,4 @@ if __name__ == '__main__':
         # pygame.draw.rect(screen, 'red', c.rect)
         pygame.display.flip()
     pygame.quit()
+"""

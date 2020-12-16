@@ -1,7 +1,7 @@
 import pygame
 import threading
 from fregate import *
-from ProjectTile import Tile
+from ProjectTile import *
 
 if __name__ == '__main__':
     pygame.init()
@@ -13,10 +13,8 @@ if __name__ == '__main__':
     controller = Enemy_controller()
     controller.append(b)
     controller.append(c)
-    print(controller.list_of_enemies)
-    bullet = Tile(screen, (a.rect.x + 35, a.rect.y + 7), 0, "W")
     running = True
-    t = threading.Thread(target=controller.update_all, args=(screen,))
+    t = threading.Thread(target=controller.update_all)
     t.setDaemon(True)
     t.start()
     clock = pygame.time.Clock()
