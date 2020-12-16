@@ -29,28 +29,24 @@ class Generel_ship(pygame.sprite.Sprite):
         if int(self.rect.y) + 59 <= self.screen.get_height():
             self.y += self.velocity
             self.rect.y = self.y
-        self.make_a_ship()
 
     def up(self):
         # перемещение вверх
         if int(self.y) + 5 >= 0:
             self.y -= self.velocity
             self.rect.y = self.y
-        self.make_a_ship()
 
     def left(self):
         # перемещение налево
         if int(self.x) + 2 >= 0:
             self.x -= self.velocity
             self.rect.x = self.x
-        self.make_a_ship()
 
     def right(self):
         # перемещение направо
         if int(self.rect.x) + 64 <= self.screen.get_width():
             self.x += self.velocity
             self.rect.x = self.x
-        self.make_a_ship()
 
     def make_a_ship(self):
         self.screen.blit(self.image, self.rect)
@@ -71,17 +67,15 @@ class Enemy_ship(Generel_ship):
     def update_all_systems(self):
         self.update_bar()
         self.make_a_ship()
-        sleep(0.001)
-        self.screen.fill('black')
+        #self.screen.fill('black')
 
     def random_move(self):
-        while True:
             a = randint(1, 6)
             if a == 1:
                 if self.movement != "right":
                     for _ in range(randint(50, 70)):
                         if self.screen.get_width() // 2 <= self.rect.x:
-                            #sleep(0.025)
+                            sleep(0.00001)
                             self.left()
                             self.update_all_systems()
                 self.movement = "left"
@@ -90,7 +84,7 @@ class Enemy_ship(Generel_ship):
                 if self.movement != "left":
                     for _ in range(randint(50, 70)):
                         if self.screen.get_width() - 100 >= self.rect.x:
-                            #sleep(0.025)
+                            sleep(0.00001)
                             self.right()
                             self.update_all_systems()
                 self.movement = "right"
@@ -98,18 +92,18 @@ class Enemy_ship(Generel_ship):
             if a == 3:
                 for _ in range(randint(80, 100)):
                     if 150 <= self.rect.y:
-                        #sleep(0.025)
+                        sleep(0.00001)
                         self.up()
                         self.update_all_systems()
             if a == 4:
                 for _ in range(randint(80, 100)):
                     if self.screen.get_width() - 150 >= self.rect.y:
-                        #sleep(0.025)
+                        sleep(0.00001)
                         self.down()
                         self.update_all_systems()
 
             if a == 5 or a == 6:
-                #sleep(0.025)
+                sleep(0.00001)
                 self.update_all_systems()
 
 
@@ -147,15 +141,22 @@ class Player_ship(Generel_ship):
 
 
 class Enemy_controller:
-    def __init__(self):
+    def __init__(self, screen):
         self.list_of_enemies = []
+        self.screen = screen
+        self.all_sprites = pygame.sprite.Group()
 
     def append(self, value: Enemy_ship):
-        self.list_of_enemies.append(value)
+        self.all_sprites.add(value)
+        print(self.all_sprites.sprites())
 
     def update_all(self):
-        for enemy in self.list_of_enemies:
-            thread = Thread(target=enemy.random_move)
-            thread.start()
-            # enemy.random_move()
-            # creen.fill((0, 0, 0))
+        while self.all_sprites is not bool:
+            for enemy in self.all_sprites:
+                self.all_sprites.draw(self.screen)
+                enemy.random_move()
+                #self.all_sprites.random_move()
+                # enemy.random_move()
+                # creen.fill((0, 0, 0))
+           # sleep(0.0001)
+            #self.screen.fill('black')

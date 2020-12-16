@@ -10,10 +10,12 @@ if __name__ == '__main__':
     a = Player_ship(screen, 32, 32, '../sprites/fregate/player/player_ship.png')
     b = Enemy_ship(screen, 350, 320, '../sprites/fregate/enemy/enemy_ship1.png')
     c = Enemy_ship(screen, 300, 320, '../sprites/fregate/enemy/enemy_ship1.png')
-    controller = Enemy_controller()
+    b.get_damage(20)
+    controller = Enemy_controller(screen)
     controller.append(b)
     controller.append(c)
     running = True
+    #controller.update_all()
     t = threading.Thread(target=controller.update_all)
     t.setDaemon(True)
     t.start()

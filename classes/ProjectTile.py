@@ -35,7 +35,7 @@ class Tile(pygame.sprite.Sprite):
     def check_collision(self, other_object):
         if self.team == 1:
             if self.rect.colliderect(other_object.rect):
-                print('collided')  # исправить на смерть от пули, или нанесение урона
+                print('collided')
                 return True
         return False
 
@@ -152,9 +152,8 @@ if __name__ == '__main__':
         if moving[pygame.K_DOWN] or moving[pygame.K_s]:
             ship.down()
         ship.make_a_ship()
-        #a.check_all_collision()
+        a.check_all_collision()
         a.update_all()
         # pygame.draw.rect(screen, 'red', c.rect)
         pygame.display.flip()
-    pygame.quit()
-"""
+    pygame.quit()"""
