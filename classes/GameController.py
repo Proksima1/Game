@@ -2,6 +2,7 @@ import pygame
 import threading
 from fregate import *
 from ProjectTile import *
+from SpriteController import *
 
 if __name__ == '__main__':
     pygame.init()
@@ -11,14 +12,24 @@ if __name__ == '__main__':
     b = Enemy_ship(screen, 350, 320, '../sprites/fregate/enemy/enemy_ship1.png')
     c = Enemy_ship(screen, 300, 320, '../sprites/fregate/enemy/enemy_ship1.png')
     b.get_damage(20)
+    cont = SpriteController(screen)
+    cont.append(a)
+    cont.append(b)
+    cont.append(c)
     controller = Enemy_controller(screen)
     controller.append(b)
     controller.append(c)
     running = True
+    #t = threading.Thread(target=cont.draw_all)
+    #t.start()
     #controller.update_all()
-    t = threading.Thread(target=controller.update_all)
+    #g = multiprocessing.Process(target=controller.update_all)
+    #g.start()
+    #controller.update_all()
+    """t = threading.Thread(target=controller.update_all)
     t.setDaemon(True)
-    t.start()
+    t.start()"""
+    controller.update_all()
     clock = pygame.time.Clock()
     while running:
         moving = pygame.key.get_pressed()
@@ -36,12 +47,14 @@ if __name__ == '__main__':
             a.up()
         if moving[pygame.K_DOWN] or moving[pygame.K_s]:
             a.down()
-        a.make_a_ship()
+        #a.make_a_ship()
+        cont.draw_all()
+        #b.random_move()
         a.draw_shoot()
         #b.make_a_ship()
         #c.make_a_ship()
         # pygame.draw.rect(screen, 'red', a.rect)
         pygame.display.flip()
-        #screen.fill((0, 0, 0))
+        screen.fill((0, 0, 0))
         #print(a.rect.top, b.rect.top)
     pygame.quit()
