@@ -26,25 +26,25 @@ class Generel_ship(pygame.sprite.Sprite):
         self.bar.draw(self.hp)
 
     def down(self):
-        # перемещение вниз
+        """Перемещение вниз."""
         if int(self.rect.y) + 59 <= self.screen.get_height():
             self.y += self.velocity
             self.rect.y = self.y
 
     def up(self):
-        # перемещение вверх
+        """Перемещение вверх."""
         if int(self.y) + 5 >= 0:
             self.y -= self.velocity
             self.rect.y = self.y
 
     def left(self):
-        # перемещение налево
+        """Перемещение налево."""
         if int(self.x) + 2 >= 0:
             self.x -= self.velocity
             self.rect.x = self.x
 
     def right(self):
-        # перемещение направо
+        """Перемещение направо."""
         if int(self.rect.x) + 64 <= self.screen.get_width():
             self.x += self.velocity
             self.rect.x = self.x
@@ -71,53 +71,61 @@ class Enemy_ship(Generel_ship):
         #self.screen.fill('black')
 
     def random_move(self):
-        while True:
-            try:
-                a = randint(1, 6)
-                if a == 1:
-                    if self.movement != "right":
-                        for _ in range(randint(50, 70)):
-                            if self.screen.get_width() // 2 <= self.rect.x:
+        while self.hp > 0:
+            if self.hp <= 0:
+                self.__del__()
+            else:
+                try:
+                    a = randint(1, 6)
+                    if a == 1:
+                        if self.movement != "right":
+                            for _ in range(randint(50, 70)):
+                                if self.screen.get_width() // 2 <= self.rect.x:
+                                    sleep(0.00001)
+                                    self.left()
+                                    self.update_all_systems()
+                        self.movement = "left"
+                    if a == 2:
+                        if self.movement != "left":
+                            for _ in range(randint(50, 70)):
+                                if self.screen.get_width() - 100 >= self.rect.x:
+                                    sleep(0.00001)
+                                    self.right()
+                                    self.update_all_systems()
+                        self.movement = "right"
+                    if a == 3:
+                        for _ in range(randint(80, 100)):
+                            if 150 <= self.rect.y:
                                 sleep(0.00001)
-                                self.left()
+                                self.up()
                                 self.update_all_systems()
-                    self.movement = "left"
-                if a == 2:
-                    if self.movement != "left":
-                        for _ in range(randint(50, 70)):
-                            if self.screen.get_width() - 100 >= self.rect.x:
+                    if a == 4:
+                        for _ in range(randint(80, 100)):
+                            if self.screen.get_width() - 150 >= self.rect.y:
                                 sleep(0.00001)
-                                self.right()
+                                self.down()
                                 self.update_all_systems()
-                    self.movement = "right"
-                if a == 3:
-                    for _ in range(randint(80, 100)):
-                        if 150 <= self.rect.y:
-                            sleep(0.00001)
-                            self.up()
-                            self.update_all_systems()
-                if a == 4:
-                    for _ in range(randint(80, 100)):
-                        if self.screen.get_width() - 150 >= self.rect.y:
-                            sleep(0.00001)
-                            self.down()
-                            self.update_all_systems()
-                if a == 5 or a == 6:
-                    sleep(0.00001)
-                    self.update_all_systems()
-            except pygame.error:
-                sys.exit()
+                    if a == 5 or a == 6:
+                        sleep(0.00001)
+                        self.update_all_systems()
+                except pygame.error:
+                    sys.exit()
+
+    def __del__(self):
+        del self
 
 
 class Player_ship(Generel_ship):
     def __init__(self, screen, x, y, filename):
+        """Главный корабль игрока."""
         super().__init__(screen, x, y, filename)
         self.shoot_count = 0
         self.bullet_controller = TileController(screen)
 
-    def draw_shoot(self):
-        # рисование выстрела, его исчезновение и урон по врагам
+    def draw_shoot(self, list_of_enemies):
+        """Рисование выстрела, его исчезновение и урон по врагам."""
         self.bullet_controller.update_all()
+        self.bullet_controller.check_all_collision(list_of_enemies)
 
     def shoot(self):
         # выстрел
@@ -133,11 +141,10 @@ class Enemy_controller:
     def __init__(self, screen):
         self.list_of_enemies = []
         self.screen = screen
-        self.all_sprites = pygame.sprite.Group()
 
     def append(self, value: Enemy_ship):
         self.list_of_enemies.append(value)
-        print(self.all_sprites.sprites())
+        #print(self.all_sprites.sprites())
 
     def update_all(self):
         for enemy in self.list_of_enemies:
@@ -149,3 +156,15 @@ class Enemy_controller:
             # creen.fill((0, 0, 0))
        # sleep(0.0001)
         #self.screen.fill('black')
+
+    def get_enemies(self):
+        for i in self.list_of_enemies:
+            if i.hp <= 0:
+                del self[i]
+        return self.list_of_enemies
+
+    def __delitem__(self, key):
+        del self.list_of_enemies[self[key]]
+
+    def __getitem__(self, item):
+        return self.list_of_enemies.index(item)

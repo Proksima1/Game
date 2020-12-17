@@ -38,7 +38,7 @@ if __name__ == '__main__':
         if moving[pygame.K_DOWN] or moving[pygame.K_s]:
             a.down()
         cont.draw_all()
-        a.draw_shoot()
+        a.draw_shoot(controller.get_enemies())
         pygame.display.flip()
         screen.fill((0, 0, 0))
     pygame.quit()

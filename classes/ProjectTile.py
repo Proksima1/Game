@@ -14,6 +14,7 @@ class Tile(pygame.sprite.Sprite):
         self.image = pygame.image.load('../sprites/bullet/base/base.png').convert_alpha(screen)
         self.screen = screen
         self.rect = self.image.get_rect(center=pos)
+        self.damage_of_bullet = 10
         self.x = self.rect.x
         self.y = self.rect.y
         self.dir = dir
@@ -32,11 +33,13 @@ class Tile(pygame.sprite.Sprite):
         else:
             self.count_anim = 0
 
-    def check_collision(self, other_object):
-        if self.team == 0:
-            if self.rect.colliderect(other_object.rect):
-                print('collided')
-                return True
+    def check_collision(self, other_objects: list):
+        for object in other_objects:
+            if self.team == 0:
+                if self.rect.colliderect(object.rect):
+                    #print('collided')
+                    object.get_damage(self.damage_of_bullet)
+                    return True
         return False
 
     def __gt__(self, other_pos: Tuple[int, int]):
@@ -117,7 +120,7 @@ class TileController:
                 bullet.rect.y = bullet.y
                 bullet.rect.x = bullet.x
 
-    def check_all_collision(self, ship):
+    def check_all_collision(self, ship: list):
         for bullet in self.bullets:
             if bullet.check_collision(ship):
                 del self[self[bullet]]
