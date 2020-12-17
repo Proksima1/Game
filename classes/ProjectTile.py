@@ -33,7 +33,7 @@ class Tile(pygame.sprite.Sprite):
             self.count_anim = 0
 
     def check_collision(self, other_object):
-        if self.team == 1:
+        if self.team == 0:
             if self.rect.colliderect(other_object.rect):
                 print('collided')
                 return True
@@ -117,7 +117,7 @@ class TileController:
                 bullet.rect.y = bullet.y
                 bullet.rect.x = bullet.x
 
-    def check_all_collision(self):
+    def check_all_collision(self, ship):
         for bullet in self.bullets:
             if bullet.check_collision(ship):
                 del self[self[bullet]]
