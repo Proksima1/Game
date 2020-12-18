@@ -1,7 +1,6 @@
 import threading
 import time
 from typing import Tuple
-#from fregate import Player_ship
 import pygame
 
 
@@ -37,7 +36,6 @@ class Tile(pygame.sprite.Sprite):
         for object in other_objects:
             if self.team == 0:
                 if self.rect.colliderect(object.rect):
-                    #print('collided')
                     object.get_damage(self.damage_of_bullet)
                     return True
         return False
