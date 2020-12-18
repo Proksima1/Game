@@ -18,7 +18,7 @@ if __name__ == '__main__':
     controller = Enemy_controller(screen)
     controller.append(b)
     controller.append(c)
-    controller.update_all()
+    controller.update_all(a)
     running = True
     clock = pygame.time.Clock()
     while running:
