@@ -58,8 +58,10 @@ class Generel_ship(pygame.sprite.Sprite):
 
 
 class Enemy_ship(Generel_ship):
-    def __init__(self, screen, x, y, filename):
-        super().__init__(screen, x, y, filename)
+    filename = '../sprites/fregate/enemy/enemy_ship1.png'
+
+    def __init__(self, screen, x, y):
+        super().__init__(screen, x, y, Enemy_ship.filename)
         self.shoot_count = 0
         self.velocity = 0.3
         self.stop = 1
@@ -116,9 +118,11 @@ class Enemy_ship(Generel_ship):
 
 
 class Player_ship(Generel_ship):
-    def __init__(self, screen, x, y, filename):
+    filename = '../sprites/fregate/player/player_ship.png'
+
+    def __init__(self, screen, x, y):
         """Главный корабль игрока."""
-        super().__init__(screen, x, y, filename)
+        super().__init__(screen, x, y, Player_ship.filename)
         self.shoot_count = 0
         self.bullet_controller = TileController(screen)
 

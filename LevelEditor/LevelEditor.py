@@ -50,9 +50,12 @@ class Editor(QMainWindow):
                 msg.setText("Один из настроек равен 0! Измените, и попробуйте снова!")
                 okButton = msg.addButton(QMessageBox.Ok)
                 msg.exec()  # вызов диалога
-        elif self.tabWidget.currentIndex() == 1:
-            for level in range(1, int(self.spinBox_5.value()) + 1):
-                print(level * self.spinBox_6.value())
+        #elif self.tabWidget.currentIndex() == 1:
+           # x = 1
+           # for level in range(1, int(self.spinBox_5.value()) + 1):
+              #  print(x)
+              #  x += self.spinBox_6.value()
+
 
 
 if __name__ == '__main__':

@@ -8,9 +8,9 @@ if __name__ == '__main__':
     pygame.init()
     size = width, height = 400, 400
     screen = pygame.display.set_mode(size)
-    a = Player_ship(screen, 32, 32, '../sprites/fregate/player/player_ship.png')
-    b = Enemy_ship(screen, 350, 320, '../sprites/fregate/enemy/enemy_ship1.png')
-    c = Enemy_ship(screen, 300, 320, '../sprites/fregate/enemy/enemy_ship1.png')
+    a = Player_ship(screen, 32, 32)
+    b = Enemy_ship(screen, 350, 320)
+    c = Enemy_ship(screen, 300, 320)
     cont = SpriteController(screen)
     cont.append(a)
     cont.append(b)
