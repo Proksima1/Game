@@ -13,6 +13,7 @@ class Tile(pygame.sprite.Sprite):
         self.image = pygame.image.load('../sprites/bullet/base/base.png').convert_alpha(screen)
         self.screen = screen
         self.rect = self.image.get_rect(center=pos)
+        self.mask = pygame.mask.from_surface(self.image)
         self.damage_of_bullet = 10
         self.x = self.rect.x
         self.y = self.rect.y
@@ -35,7 +36,7 @@ class Tile(pygame.sprite.Sprite):
     def check_collision(self, other_objects: list):
         for object in other_objects:
             if self.team == 0:
-                if self.rect.colliderect(object.rect):
+                if pygame.sprite.collide_mask(self, object):
                     object.get_damage(self.damage_of_bullet)
                     return True
         return False

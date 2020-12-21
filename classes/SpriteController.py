@@ -1,5 +1,5 @@
 import pygame
-from fregate import Enemy_ship
+from fregate import *
 
 
 class SpriteController:
@@ -15,8 +15,10 @@ class SpriteController:
         for sprite in self.sprites:
             if sprite.hp <= 0:
                 del self[sprite]
-            if type(sprite) == Enemy_ship:
+            if isinstance(sprite, Enemy_ship):
                 sprite.update_bar()
+            elif isinstance(sprite, Player_ship):
+                sprite.draw_heart()
             self.screen.blit(sprite.image, sprite.rect)
 
     def __delitem__(self, key):

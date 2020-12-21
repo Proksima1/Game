@@ -1,8 +1,5 @@
-import pygame
-import threading
-from fregate import *
-from ProjectTile import *
 from SpriteController import *
+from fregate import *
 
 if __name__ == '__main__':
     pygame.init()
