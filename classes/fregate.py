@@ -62,32 +62,36 @@ class Enemy_ship(Generel_ship):
 
     def __init__(self, screen, x, y):
         super().__init__(screen, x, y, Enemy_ship.filename)
-        self.shoot_count = 0
-        self.velocity = 0.004 
-        self.stop = 1
+        self.velocity = 999999999
         self.movement = ""
 
     def update_all_systems(self):
         self.update_bar()
-        #self.make_a_ship()s
-        #self.screen.fill('black')
 
     def random_move(self, player_ship):
-        while self.hp > 0:
+        player_ship = player_ship.rect
+
+        def isValid(value: pygame.Surface):
+            try:
+                value.get_size()
+            except pygame.error:
+                return False
+            else:
+                return True
+
+        while self.hp > 0 and isValid(self.screen):
             if self.hp <= 0:
                 self.__del__()
             else:
                 try:
-                    if player_ship.y < self.rect.y:
-                        self.y -= self.velocity
-                        self.rect.y = self.y
-                        print(1)
-                    elif player_ship.y > self.rect.y:
-                        self.y += self.velocity
-                        self.rect.y = self.y
-                        print(10)
-                    elif player_ship.y == self.rect.y:
+                    if player_ship.y + player_ship.h // 2 < self.rect.y:
+                        self.rect.y -= self.velocity
+                    if player_ship.y > self.rect.y + self.rect.h // 2:
+                        self.rect.y += self.velocity
+                    if player_ship.y + player_ship.h // 2 == self.rect.y + self.rect.h // 2:
                         pass
+                    sleep(0.00001)
+                    print(self.rect.y + self.rect.w // 2)
                 except pygame.error:
                     sys.exit()
 
