@@ -1,5 +1,6 @@
 import sys
 from time import sleep
+from random import randint
 
 from ProjectTile import *
 from progressbar import ProgressBar
@@ -64,7 +65,7 @@ class Enemy_ship(Generel_ship):
 
     def __init__(self, screen, x, y):
         super().__init__(screen, x, y, Enemy_ship.filename)
-        self.velocity = 0
+        self.velocity = 0.2
         self.movement = ""
 
     def update_all_systems(self):
@@ -73,6 +74,8 @@ class Enemy_ship(Generel_ship):
 
     def random_move(self, player_ship):
         player_ship = player_ship.rect
+        a = 3
+        flag = False
 
         def isValid(value: pygame.Surface):
             try:
@@ -87,14 +90,42 @@ class Enemy_ship(Generel_ship):
                 self.__del__()
             else:
                 try:
-                    if player_ship.y + player_ship.h // 2 < self.rect.y:
-                        self.rect.y -= self.velocity
-                    if player_ship.y > self.rect.y + self.rect.h // 2:
-                        self.rect.y += self.velocity
-                    if player_ship.y + player_ship.h // 2 == self.rect.y + self.rect.h // 2:
-                        pass
+                    if a == 1:
+                        if player_ship.x + player_ship.w + 20 <= self.rect.x:
+                            self.x -= self.velocity
+                            self.rect.x = self.x
+                        if player_ship.y + player_ship.h < self.rect.y:
+                            self.y -= self.velocity
+                            self.rect.y = self.y
+                        if player_ship.y > self.rect.y + self.rect.h:
+                            self.y += self.velocity
+                            self.rect.y = self.y
+                        if player_ship.x + player_ship.w + 20 > self.rect.x:
+                            self.x += self.velocity
+                            self.rect.x = self.x
+                    elif a == 2:
+                        if player_ship.y + player_ship.h // 2 < self.rect.y:
+                            self.y -= self.velocity
+                            self.rect.y = self.y
+                        if player_ship.y > self.rect.y + self.rect.h // 2:
+                            self.y += self.velocity
+                            self.rect.y = self.y
+                        if player_ship.y + player_ship.h // 2 == self.rect.y + self.rect.h // 2:
+                            pass
+                    print(self.rect)
+                    if a == 3:
+                        if not flag:
+                            self.y -= self.velocity
+                            self.rect.y = self.y
+                            if self.rect.y <= 0:
+                                flag = True
+                        else:
+                            self.y += self.velocity
+                            self.rect.y = self.y
+
+                            if self.rect.y + self.rect.h >= self.screen.get_width():
+                                flag = False
                     sleep(0.00001)
-                    # print(self.rect.y + self.rect.w // 2)
                 except pygame.error:
                     sys.exit()
 
@@ -125,7 +156,6 @@ class Player_ship(Generel_ship):
         def draw_hearts(self):
             for i in range(1, 4):
                 a = pygame.Rect(25 * i, 30, 19, 32)
-                print(a)
                 self.screen.blit(self.hearts[0], a)
 
     def draw_shoot(self, list_of_enemies):
