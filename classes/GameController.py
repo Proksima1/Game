@@ -3,7 +3,7 @@ from fregate import *
 
 if __name__ == '__main__':
     pygame.init()
-    size = width, height = 400, 400
+    size = width, height = 1280, 720
     screen = pygame.display.set_mode(size)
     a = Player_ship(screen, 32, 32)
     b = Enemy_ship(screen, 350, 320)
@@ -36,6 +36,7 @@ if __name__ == '__main__':
             a.down()
         cont.draw_all()
         a.draw_shoot(controller.get_enemies())
-        pygame.display.flip()
+        pygame.display.update([i.rect for i in controller.list_of_enemies])
+        pygame.display.update(a.rect)
         screen.fill((0, 0, 0))
     pygame.quit()

@@ -1,7 +1,7 @@
 import sys
 from time import sleep
 from random import randint
-
+from settings import *
 from ProjectTile import *
 from progressbar import ProgressBar
 
@@ -15,7 +15,7 @@ class Generel_ship(pygame.sprite.Sprite):
         self.x = self.rect.x
         self.y = self.rect.y
         self.screen = screen
-        self.hp = 100
+        self.hp = hp
         self.shoots = []
         self.velocity = 0.05
         self.bar = ProgressBar(self.screen, "red", self.rect.x, self.rect.y + 10, 25, 5)
@@ -65,7 +65,7 @@ class Enemy_ship(Generel_ship):
 
     def __init__(self, screen, x, y):
         super().__init__(screen, x, y, Enemy_ship.filename)
-        self.velocity = 0.2
+        self.velocity = enemy_speed
         self.movement = ""
 
     def update_all_systems(self):
@@ -74,7 +74,7 @@ class Enemy_ship(Generel_ship):
 
     def random_move(self, player_ship):
         player_ship = player_ship.rect
-        a = 3
+        a = randint(1, 2)
         flag = False
 
         def isValid(value: pygame.Surface):
@@ -112,8 +112,8 @@ class Enemy_ship(Generel_ship):
                             self.rect.y = self.y
                         if player_ship.y + player_ship.h // 2 == self.rect.y + self.rect.h // 2:
                             pass
-                    print(self.rect)
-                    if a == 3:
+
+                    """elif a == 3:
                         if not flag:
                             self.y -= self.velocity
                             self.rect.y = self.y
@@ -122,9 +122,9 @@ class Enemy_ship(Generel_ship):
                         else:
                             self.y += self.velocity
                             self.rect.y = self.y
-
                             if self.rect.y + self.rect.h >= self.screen.get_width():
-                                flag = False
+                                flag = False"""
+                    # print(self.rect)
                     sleep(0.00001)
                 except pygame.error:
                     sys.exit()
@@ -141,6 +141,7 @@ class Player_ship(Generel_ship):
         """Главный корабль игрока."""
         super().__init__(screen, x, y, Player_ship.filename)
         self.shoot_count = 0
+        self.velocity = player_speed
         self.bullet_controller = TileController(screen)
         self.heart_drawer = self.Heart(screen)
 
@@ -148,15 +149,18 @@ class Player_ship(Generel_ship):
         def __init__(self, screen: pygame.Surface):
             super().__init__()
             # 0 - полное сердце, 1 - половинка сердца, 2 - пустое сердце
+            s = screen.get_size()
             self.hearts = [pygame.transform.scale(pygame.image.load(f'../sprites/heart/heart{i + 1}.png'),
-                                                  (32, 32)) for
+                                                  (16, 16)) for
                            i in range(3)]
             self.screen = screen
 
         def draw_hearts(self):
-            for i in range(1, 4):
-                a = pygame.Rect(25 * i, 30, 19, 32)
+            x = 5
+            for i in range(5):
+                a = pygame.Rect(x, 5, 19, 32)
                 self.screen.blit(self.hearts[0], a)
+                x += 20
 
     def draw_shoot(self, list_of_enemies):
         """Рисование выстрела, его исчезновение и урон по врагам."""

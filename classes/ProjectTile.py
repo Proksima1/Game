@@ -1,7 +1,7 @@
-import threading
-import time
 from typing import Tuple
 import pygame
+import threading
+from settings import *
 
 
 class Tile(pygame.sprite.Sprite):
@@ -14,7 +14,7 @@ class Tile(pygame.sprite.Sprite):
         self.screen = screen
         self.rect = self.image.get_rect(center=pos)
         self.mask = pygame.mask.from_surface(self.image)
-        self.damage_of_bullet = 10
+        self.damage_of_bullet = bullet_damage
         self.x = self.rect.x
         self.y = self.rect.y
         self.dir = dir
@@ -70,7 +70,7 @@ class TileController:
         """
         self.screen = screen
         self.bullets = []
-        self.velocity = 0.09
+        self.velocity = tile_speed
 
     def __delitem__(self, index):
         """удаляет из списка класса значение по переданному индексу"""
@@ -88,7 +88,7 @@ class TileController:
             return None
 
     def update_all(self):
-        speed_in_gradus = 1.5
+        speed_in_gradus = speed_when_driving_at_45_degrees
         if self.bullets is not bool:
             for bullet in self.bullets:
                 # print(bullet)
