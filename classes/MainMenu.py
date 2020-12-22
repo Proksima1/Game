@@ -15,15 +15,15 @@ class MainMenu:
         play = Button(self.screen, 100, 50)
         self.screen.blit(backgroung, (0, 0))  # рисуем задний фон
         # рисуем кнопки
-        play.draw(self.width / 2 - 100, self.height / 2 - 150, 'PLAY', action[0])
+        play.draw((self.width / 2 - 100, self.height / 2 - 150), 'PLAY', 20, action[0])
         settings = Button(self.screen, 100, 50)
-        settings.draw(self.width / 2 - 100, self.height / 2 - 50, 'SETTINGS', action[1])
+        settings.draw((self.width / 2 - 100, self.height / 2 - 50), 'SETTINGS', 13, action[1])
         quit = Button(self.screen, 100, 50)
-        quit.draw(self.width / 2 - 100, self.height / 2 + 50, 'QUIT', action[2])
+        quit.draw((self.width / 2 - 100, self.height / 2 + 50), 'QUIT', 20, action[2])
 
     def show_settings(self, *action):
         a = Button(self.screen, 100, 50)
-        a.draw(self.width / 2 - 100, self.height / 2 - 50, 'Hai', action[0])
+        a.draw((self.width / 2 - 100, self.height / 2 - 50), 'Hai', 30,  action[0])
 
 
 # потом можно удалить

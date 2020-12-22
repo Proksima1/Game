@@ -11,8 +11,18 @@ class LevelReader:
         self.sp_cont = SpriteController(self.screen)
         self.en_cont = Enemy_controller(self.screen)
         self.present_wave = 1
-        self.bd = pygame.image.tostring(pygame.transform.scale(pygame.image.load('../sprites/bg.png'),
-                                                               size), 'RGB')
+        # self.bd = pygame.image.tostring(pygame.transform.scale(pygame.image.load('../sprites/bg1.png'),
+        #                                                       size), 'RGB')
+        self.list_of_bd = [pygame.image.tostring(
+            pygame.transform.scale(pygame.image.load('../sprites/bg/bg1.png'),
+                                   size), 'RGB'),
+            pygame.image.tostring(
+                pygame.transform.scale(pygame.image.load('../sprites/bg/bg2.png'),
+                                       size), 'RGB'),
+            pygame.image.tostring(
+                pygame.transform.scale(pygame.image.load('../sprites/bg/bg3.png'),
+                                       size), 'RGB')]
+        self.count = 0
 
     def read_json(self, filename):
         with open(filename, 'r', encoding='utf-8') as gen:
@@ -23,7 +33,11 @@ class LevelReader:
             self.max_speed = int(text[0]['max_speed'])
 
     def draw_background(self):
-        self.screen.blit(pygame.image.frombuffer(self.bd, size, 'RGB'), (0, 0))
+        if self.count < len(self.list_of_bd):
+            self.screen.blit(pygame.image.frombuffer(self.list_of_bd[int(self.count)], size, 'RGB'), (0, 0))
+            self.count += 0.01
+        else:
+            self.count = 0
 
     def generate_enemies(self):
         if self.present_wave < self.amount_of_waves + 1:
@@ -77,6 +91,7 @@ if __name__ == '__main__':
             a.generate_enemies()
         # print(a.en_cont)
         # a.en_cont.update_all(pl)
+        a.en_cont.draw_bullets([pl])
         pl.draw_shoot(a.en_cont.get_enemies())
         pygame.display.flip()
         a.draw_background()

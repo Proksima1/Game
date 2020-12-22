@@ -95,7 +95,7 @@ class Enemy_ship(Generel_ship):
                 self.__del__()
             else:
                 try:
-                    if self.rect.y == player_ship.y:
+                    if self.rect.top == player_ship.bottom or self.rect.y == player_ship.y or self.rect.bottom == player_ship.top:
                         self.enemy_shoot()
                         sleep(0.6)
                     if a == 1:
@@ -184,12 +184,23 @@ class Player_ship(Generel_ship):
                            i in range(3)]
             self.screen = screen
 
-        def draw_hearts(self):
+        def draw_hearts(self, hp):
             x = 5
-            for i in range(5):
-                a = pygame.Rect(x, 5, 19, 32)
-                self.screen.blit(self.hearts[0], a)
+            #print((hp // 10) // 2)
+            #print((hp // 10 - 1) // 2 if hp // 10 // 2 % 2 == 0 else hp // 10 // 2)
+            #print(hp // 10 // 2)
+            for i in range(hp // 10 // 2):
+                self.screen.blit(self.hearts[0], pygame.Rect(x, 5, 19, 32))
                 x += 20
+            #print(hp // 10)
+            if not hp // 10 % 2 == 0:
+                self.screen.blit(self.hearts[1], pygame.Rect(x, 5, 19, 32))
+                x += 20
+            print(5 - hp // 20 - 1)
+            for i in range(5 - hp // 20 - 1):
+                self.screen.blit(self.hearts[2], pygame.Rect(x, 5, 19, 32))
+                x += 20
+                #print((hp // 20 - copy_hp) * 2)
 
     def draw_shoot(self, list_of_enemies):
         """Рисование выстрела, его исчезновение и урон по врагам."""
@@ -197,7 +208,7 @@ class Player_ship(Generel_ship):
         self.bullet_controller.check_all_collision(list_of_enemies)
 
     def shoot(self):
-        """Добавление выстреда в список и смена выстрела пушки"""
+        """Добавление выстреда в список и смена выстрела пушки."""
         if self.shoot_count == 0:
             self.bullet_controller.append(Tile(self.screen, (self.rect.x + 38, self.rect.y + 7), 'W'))
             self.shoot_count = 1
@@ -207,7 +218,7 @@ class Player_ship(Generel_ship):
 
     def draw_heart(self):
         """Рисует хп игрока"""
-        self.heart_drawer.draw_hearts()
+        self.heart_drawer.draw_hearts(self.hp)
 
     def __repr__(self):
         return f'<Player ship: hp-{self.hp}>'
@@ -240,7 +251,7 @@ class Enemy_controller:
                 del self[i]
         return self.list_of_enemies
 
-    def draw_bullets(self, player: Player_ship):
+    def draw_bullets(self, player: list):
         for i in self.list_of_enemies:
             i.player_damage(player)
 
