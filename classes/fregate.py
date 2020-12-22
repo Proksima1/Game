@@ -59,13 +59,18 @@ class Generel_ship(pygame.sprite.Sprite):
         self.hp -= amount_number
         self.update_bar()
 
+    def get_pos(self):
+        return self.x, self.y
+
 
 class Enemy_ship(Generel_ship):
     filename = '../sprites/fregate/enemy/enemy_ship1.png'
 
     def __init__(self, screen, x, y):
         super().__init__(screen, x, y, Enemy_ship.filename)
+        self.enemy_bullet_controller = TileController(screen)
         self.velocity = enemy_speed
+        self.enemy_shoot_count = 0
         self.movement = ""
 
     def update_all_systems(self):
@@ -90,19 +95,22 @@ class Enemy_ship(Generel_ship):
                 self.__del__()
             else:
                 try:
+                    if self.rect.y == player_ship.y:
+                        self.enemy_shoot()
+                        sleep(0.6)
                     if a == 1:
-                        if player_ship.x + player_ship.w + 20 <= self.rect.x:
+                        if player_ship.x + player_ship.w + 200 <= self.rect.x:
                             self.x -= self.velocity
                             self.rect.x = self.x
-                        if player_ship.y + player_ship.h < self.rect.y:
-                            self.y -= self.velocity
-                            self.rect.y = self.y
-                        if player_ship.y > self.rect.y + self.rect.h:
-                            self.y += self.velocity
-                            self.rect.y = self.y
-                        if player_ship.x + player_ship.w + 20 > self.rect.x:
+                        if player_ship.x + player_ship.w + 200 >= self.rect.x:
                             self.x += self.velocity
                             self.rect.x = self.x
+                        if player_ship.y + player_ship.h - 50 < self.rect.y:
+                            self.y -= self.velocity
+                            self.rect.y = self.y
+                        if player_ship.y + 50 > self.rect.y + self.rect.h:
+                            self.y += self.velocity
+                            self.rect.y = self.y
                     elif a == 2:
                         if player_ship.y + player_ship.h // 2 < self.rect.y:
                             self.y -= self.velocity
@@ -112,8 +120,7 @@ class Enemy_ship(Generel_ship):
                             self.rect.y = self.y
                         if player_ship.y + player_ship.h // 2 == self.rect.y + self.rect.h // 2:
                             pass
-
-                    """elif a == 3:
+                    elif a == 3:
                         if not flag:
                             self.y -= self.velocity
                             self.rect.y = self.y
@@ -122,12 +129,31 @@ class Enemy_ship(Generel_ship):
                         else:
                             self.y += self.velocity
                             self.rect.y = self.y
-                            if self.rect.y + self.rect.h >= self.screen.get_width():
-                                flag = False"""
+                            if self.rect.y + self.rect.h >= self.screen.get_height():
+                                flag = False
                     # print(self.rect)
                     sleep(0.00001)
                 except pygame.error:
                     sys.exit()
+
+    def player_damage(self, player_ship):
+        self.enemy_bullet_controller.update_all()
+        self.enemy_bullet_controller.check_all_collision(player_ship)
+
+    def enemy_shoot(self):
+        """Добавление выстреда в список и смена выстрела пушки"""
+        if self.enemy_shoot_count == 0:
+            self.enemy_bullet_controller.append(Tile(self.screen, (self.rect.x + 7, self.rect.y + 9), 'E'))
+            self.enemy_shoot_count = 1
+        elif self.enemy_shoot_count == 1:
+            self.enemy_bullet_controller.append(Tile(self.screen, (self.rect.x + 7, self.rect.y + 13), 'E'))
+            self.enemy_shoot_count = 2
+        elif self.enemy_shoot_count == 2:
+            self.enemy_bullet_controller.append(Tile(self.screen, (self.rect.x + 7, self.rect.y + 51), 'E'))
+            self.enemy_shoot_count = 3
+        else:
+            self.enemy_bullet_controller.append(Tile(self.screen, (self.rect.x + 7, self.rect.y + 55), 'E'))
+            self.enemy_shoot_count = 0
 
     def __del__(self):
         """Переназначение метода __del___ на удаление себя."""
@@ -173,10 +199,10 @@ class Player_ship(Generel_ship):
     def shoot(self):
         """Добавление выстреда в список и смена выстрела пушки"""
         if self.shoot_count == 0:
-            self.bullet_controller.append(Tile(self.screen, (self.rect.x + 38, self.rect.y + 7), 0, 'W'))
+            self.bullet_controller.append(Tile(self.screen, (self.rect.x + 38, self.rect.y + 7), 'W'))
             self.shoot_count = 1
         else:
-            self.bullet_controller.append(Tile(self.screen, (self.rect.x + 38, self.rect.y + 55), 0, 'W'))
+            self.bullet_controller.append(Tile(self.screen, (self.rect.x + 38, self.rect.y + 55), 'W'))
             self.shoot_count = 0
 
     def draw_heart(self):
@@ -213,6 +239,10 @@ class Enemy_controller:
             if i.hp <= 0:
                 del self[i]
         return self.list_of_enemies
+
+    def draw_bullets(self, player: Player_ship):
+        for i in self.list_of_enemies:
+            i.player_damage(player)
 
     def __delitem__(self, key):
         del self.list_of_enemies[self[key]]

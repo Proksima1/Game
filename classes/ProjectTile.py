@@ -5,10 +5,8 @@ from settings import *
 
 
 class Tile(pygame.sprite.Sprite):
-    def __init__(self, screen: pygame.Surface, pos: Tuple[int, int], team: int, dir: str):
-        """Аттрибут team означает игрока или врага
-        где игрок это 0, а враг это 1.
-        Аттрибут dir означает направление пули в сторонах света."""
+    def __init__(self, screen: pygame.Surface, pos: Tuple[int, int], dir: str):
+        """Аттрибут dir означает направление пули в сторонах света."""
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load('../sprites/bullet/base/base.png').convert_alpha(screen)
         self.screen = screen
@@ -18,7 +16,6 @@ class Tile(pygame.sprite.Sprite):
         self.x = self.rect.x
         self.y = self.rect.y
         self.dir = dir
-        self.team = team
         self.count_anim = 1
         self.list_of_sprites = [pygame.image.load(f'../sprites/bullet/anim/{i + 1}.png') for i in range(10)]
 
@@ -28,6 +25,8 @@ class Tile(pygame.sprite.Sprite):
             self.screen.blit(pygame.transform.rotate(self.list_of_sprites[self.count_anim], -45), self.rect)
         elif self.dir == 'W':
             self.screen.blit(pygame.transform.rotate(self.list_of_sprites[self.count_anim], 0), self.rect)
+        elif self.dir == 'E':
+            self.screen.blit(pygame.transform.rotate(self.list_of_sprites[self.count_anim], 180), self.rect)
         if self.count_anim < 9:
             self.count_anim += 1
         else:
@@ -35,10 +34,9 @@ class Tile(pygame.sprite.Sprite):
 
     def check_collision(self, other_objects: list):
         for object in other_objects:
-            if self.team == 0:
-                if pygame.sprite.collide_mask(self, object):
-                    object.get_damage(self.damage_of_bullet)
-                    return True
+            if pygame.sprite.collide_mask(self, object):
+                object.get_damage(self.damage_of_bullet)
+                return True
         return False
 
     def __gt__(self, other_pos: Tuple[int, int]):
@@ -55,11 +53,11 @@ class Tile(pygame.sprite.Sprite):
 
     def __str__(self):
         """Форматирует вывод."""
-        return f'<Tile x={self.x}, y={self.y}, team={self.team}>'
+        return f'<Tile x={self.x}, y={self.y}>'
 
     def __repr__(self):
         """Форматирует вывод."""
-        return f'<Tile x={self.x}, y={self.y}, team={self.team}>'
+        return f'<Tile x={self.x}, y={self.y}>'
 
 
 class TileController:
@@ -133,8 +131,8 @@ if __name__ == '__main__':
     size = width, height = 400, 400
     screen = pygame.display.set_mode(size)
     a = TileController(screen)
-    b = Tile(screen, (80, 32), 1, 'W')
-    c = Tile(screen, (90, 60), 1, 'SW')
+    b = Tile(screen, (80, 32), 'W')
+    c = Tile(screen, (90, 60), 'SW')
     a.append(b)
     a.append(c)
     """ship = Player_ship(screen, 32, 32, '../sprites/fregate/player/player_ship.png')
