@@ -26,3 +26,13 @@ class SpriteController:
 
     def __getitem__(self, item):
         return self.sprites.index(item)
+
+    def __len__(self):
+        return len(self.sprites)
+
+    def __bool__(self):
+        print(self.sprites)
+        return True if self.sprites else False
+
+    def __repr__(self):
+        return f'<Sprite controller: {self.sprites}>'

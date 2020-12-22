@@ -3,7 +3,7 @@ from fregate import *
 
 if __name__ == '__main__':
     pygame.init()
-    size = width, height = 1280, 720
+    size = width, height = size
     screen = pygame.display.set_mode(size)
     a = Player_ship(screen, 32, 32)
     b = Enemy_ship(screen, 350, 320)

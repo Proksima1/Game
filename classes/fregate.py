@@ -9,7 +9,7 @@ from progressbar import ProgressBar
 class Generel_ship(pygame.sprite.Sprite):
     def __init__(self, screen: pygame.Surface, x, y, filename):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load(filename).convert_alpha()
+        self.image = (pygame.image.load(filename))
         self.rect = self.image.get_rect(center=(x, y))
         self.mask = pygame.mask.from_surface(self.image)
         self.x = self.rect.x
@@ -133,6 +133,9 @@ class Enemy_ship(Generel_ship):
         """Переназначение метода __del___ на удаление себя."""
         del self
 
+    def __repr__(self):
+        return f'<Enemy ship: hp-{self.hp}>'
+
 
 class Player_ship(Generel_ship):
     filename = '../sprites/fregate/player/player_ship.png'
@@ -180,6 +183,9 @@ class Player_ship(Generel_ship):
         """Рисует хп игрока"""
         self.heart_drawer.draw_hearts()
 
+    def __repr__(self):
+        return f'<Player ship: hp-{self.hp}>'
+
 
 class Enemy_controller:
     def __init__(self, screen):
@@ -213,3 +219,9 @@ class Enemy_controller:
 
     def __getitem__(self, item):
         return self.list_of_enemies.index(item)
+
+    def __repr__(self):
+        return f'<Enemy controller: {self.list_of_enemies}>'
+
+    def __bool__(self):
+        return True if len(self.list_of_enemies) else False
