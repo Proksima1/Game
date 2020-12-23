@@ -1,0 +1,65 @@
+import pygame
+from fregate import Player_ship
+from settings import *
+from SpriteController import *
+
+
+class Item(pygame.sprite.Sprite):
+    def __init__(self, screen: pygame.Surface, pos: Tuple[int, int], filename: str):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = (pygame.image.load(filename))
+        self.rect = self.image.get_rect(center=pos)
+        self.mask = pygame.mask.from_surface(self.image)
+        self.x = self.rect.x
+        self.y = self.rect.y
+        self.screen = screen
+
+    def pickup(self, player: Player_ship):
+        if pygame.sprite.collide_mask(self, player):
+            print(1)
+
+
+class Coin(Item):
+    filename = '../sprites/items/coin/coin.png'
+
+    def __init__(self, screen: pygame.Surface, pos: Tuple[int, int], player: Player_ship):
+        super().__init__(screen, pos, Coin.filename)
+        self.player = player
+
+    def update(self):
+        self.screen.blit(self.image, self.rect)
+        self.pickup(self.player)
+
+
+if __name__ == '__main__':
+    pygame.init()
+    size = width, height = size
+    screen = pygame.display.set_mode(size)
+    running = True
+    pl = Player_ship(screen, 32, 32)
+    clock = pygame.time.Clock()
+    cont = SpriteController(screen)
+    cont.append(pl)
+    coin = Coin(screen, (50, 50), pl)
+    while running:
+        moving = pygame.key.get_pressed()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    pl.shoot()
+        coin.update()
+        if moving[pygame.K_LEFT] or moving[pygame.K_a]:
+            pl.left()
+        if moving[pygame.K_RIGHT] or moving[pygame.K_d]:
+            pl.right()
+        if moving[pygame.K_UP] or moving[pygame.K_w]:
+            pl.up()
+        if moving[pygame.K_DOWN] or moving[pygame.K_s]:
+            pl.down()
+        cont.draw_all()
+        #pl.draw_shoot(a.en_cont.get_enemies())
+        pygame.display.flip()
+        screen.fill((0, 0, 0))
+    pygame.quit()

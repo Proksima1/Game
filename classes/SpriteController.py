@@ -14,6 +14,7 @@ class SpriteController:
     def draw_all(self):
         for sprite in self.sprites:
             if sprite.hp <= 0:
+                sprite.dead = True
                 del self[sprite]
             if isinstance(sprite, Enemy_ship):
                 sprite.update_bar()

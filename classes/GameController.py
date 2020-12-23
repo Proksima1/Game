@@ -3,6 +3,7 @@ from fregate import *
 
 if __name__ == '__main__':
     pygame.init()
+    #pygame.mixer.init()
     size = width, height = size
     screen = pygame.display.set_mode(size)
     a = Player_ship(screen, 32, 32)
@@ -15,6 +16,7 @@ if __name__ == '__main__':
     controller = Enemy_controller(screen)
     #controller.append(b)
     controller.append(c)
+    #shoot = pygame.mixer.Sound('../sounds/shoot/shoot1.wav')
     controller.update_all(a)
     running = True
     clock = pygame.time.Clock()
@@ -24,16 +26,18 @@ if __name__ == '__main__':
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1:
+                if event.button == 1 and not a.dead:
                     a.shoot()
-        if moving[pygame.K_LEFT] or moving[pygame.K_a]:
-            a.left()
-        if moving[pygame.K_RIGHT] or moving[pygame.K_d]:
-            a.right()
-        if moving[pygame.K_UP] or moving[pygame.K_w]:
-            a.up()
-        if moving[pygame.K_DOWN] or moving[pygame.K_s]:
-            a.down()
+                    #shoot.play()
+        if not a.dead:
+            if moving[pygame.K_LEFT] or moving[pygame.K_a]:
+                a.left()
+            if moving[pygame.K_RIGHT] or moving[pygame.K_d]:
+                a.right()
+            if moving[pygame.K_UP] or moving[pygame.K_w]:
+                a.up()
+            if moving[pygame.K_DOWN] or moving[pygame.K_s]:
+                a.down()
         cont.draw_all()
         a.draw_shoot(controller.get_enemies())
         controller.draw_bullets([a])

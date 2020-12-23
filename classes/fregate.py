@@ -1,9 +1,12 @@
 import sys
+from random import randint, choice
 from time import sleep
-from random import randint
-from settings import *
+
 from ProjectTile import *
 from progressbar import ProgressBar
+
+
+# pygame.mixer.init()
 
 
 class Generel_ship(pygame.sprite.Sprite):
@@ -16,6 +19,9 @@ class Generel_ship(pygame.sprite.Sprite):
         self.y = self.rect.y
         self.screen = screen
         self.hp = hp
+        self.piy = [pygame.mixer.Sound('../sounds/shoot/shoot1.wav'),
+                    pygame.mixer.Sound('../sounds/shoot/shoot3.mp3')]
+        self.exp = [pygame.mixer.Sound('../sounds/explosion/expl1.wav')]
         self.shoots = []
         self.velocity = 0.05
         self.bar = ProgressBar(self.screen, "red", self.rect.x, self.rect.y + 10, 25, 5)
@@ -135,6 +141,12 @@ class Enemy_ship(Generel_ship):
                     sleep(0.00001)
                 except pygame.error:
                     sys.exit()
+        try:
+            sou = choice(self.exp)
+            sou.set_volume(0.1)
+            sou.play()
+        except pygame.error:
+            sys.exit()
 
     def player_damage(self, player_ship):
         self.enemy_bullet_controller.update_all()
@@ -154,6 +166,9 @@ class Enemy_ship(Generel_ship):
         else:
             self.enemy_bullet_controller.append(Tile(self.screen, (self.rect.x + 7, self.rect.y + 55), 'E'))
             self.enemy_shoot_count = 0
+        sou = choice(self.piy)
+        sou.set_volume(0.1)
+        sou.play()
 
     def __del__(self):
         """Переназначение метода __del___ на удаление себя."""
@@ -173,6 +188,8 @@ class Player_ship(Generel_ship):
         self.velocity = player_speed
         self.bullet_controller = TileController(screen)
         self.heart_drawer = self.Heart(screen)
+        self.dead = False
+        # self.shoot = pygame.mixer.Sound('../sounds/shoot/shoot1.mp3')
 
     class Heart(pygame.sprite.Sprite):
         def __init__(self, screen: pygame.Surface):
@@ -186,21 +203,18 @@ class Player_ship(Generel_ship):
 
         def draw_hearts(self, hp):
             x = 5
-            #print((hp // 10) // 2)
-            #print((hp // 10 - 1) // 2 if hp // 10 // 2 % 2 == 0 else hp // 10 // 2)
-            #print(hp // 10 // 2)
+            # рисовка полных сердечек
             for i in range(hp // 10 // 2):
                 self.screen.blit(self.hearts[0], pygame.Rect(x, 5, 19, 32))
                 x += 20
-            #print(hp // 10)
+            # если нужно рисовка неполного сердечка
             if not hp // 10 % 2 == 0:
                 self.screen.blit(self.hearts[1], pygame.Rect(x, 5, 19, 32))
                 x += 20
-            print(5 - hp // 20 - 1)
-            for i in range(5 - hp // 20 - 1):
+            # рисовка пустых сердечек
+            for i in range(int(5 - hp / 20)):
                 self.screen.blit(self.hearts[2], pygame.Rect(x, 5, 19, 32))
                 x += 20
-                #print((hp // 20 - copy_hp) * 2)
 
     def draw_shoot(self, list_of_enemies):
         """Рисование выстрела, его исчезновение и урон по врагам."""
@@ -215,6 +229,10 @@ class Player_ship(Generel_ship):
         else:
             self.bullet_controller.append(Tile(self.screen, (self.rect.x + 38, self.rect.y + 55), 'W'))
             self.shoot_count = 0
+
+        sou = choice(self.piy)
+        sou.set_volume(0.1)
+        sou.play()
 
     def draw_heart(self):
         """Рисует хп игрока"""

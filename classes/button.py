@@ -20,9 +20,9 @@ class Button:
         if button.collidepoint(mouse):
             pygame.draw.rect(self.screen, self.inactive_color, (pos, (self.width, self.height)))
             if click[0] == 1:
-                pygame.time.delay(150)
+                pygame.time.delay(50)
                 if action is not None:
-                    pygame.time.delay(150)
+                    pygame.time.delay(50)
                     action()
         font = pygame.font.Font(font_path, font_size)
         text = font.render(message, True, (255, 0, 0))
