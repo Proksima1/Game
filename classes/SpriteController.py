@@ -1,5 +1,6 @@
 import pygame
 from fregate import *
+from items import Coin
 
 
 class SpriteController:
@@ -20,6 +21,8 @@ class SpriteController:
                 sprite.update_bar()
             elif isinstance(sprite, Player_ship):
                 sprite.draw_heart()
+            elif isinstance(sprite, Coin) and sprite.picked:
+                del self[sprite]
             self.screen.blit(sprite.image, sprite.rect)
 
     def __delitem__(self, key):

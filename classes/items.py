@@ -13,10 +13,19 @@ class Item(pygame.sprite.Sprite):
         self.x = self.rect.x
         self.y = self.rect.y
         self.screen = screen
+        self.picked = False
 
     def pickup(self, player: Player_ship):
         if pygame.sprite.collide_mask(self, player):
-            print(1)
+            self.picked = True
+            self.__del__()
+            return True
+        return False
+
+    def __del__(self):
+        del self.image
+        del self.rect
+        del self.mask
 
 
 class Coin(Item):
@@ -28,7 +37,15 @@ class Coin(Item):
 
     def update(self):
         self.screen.blit(self.image, self.rect)
-        self.pickup(self.player)
+        if self.pickup(self.player):
+            return True
+        return False
+
+
+def plus(count):
+    font = pygame.font.Font(font_path, 40)
+    text = font.render(f'{count}', True, (255, 0, 0))
+    screen.blit(text, pygame.Rect((80, 80), (90, 90)))
 
 
 if __name__ == '__main__':
@@ -40,7 +57,8 @@ if __name__ == '__main__':
     clock = pygame.time.Clock()
     cont = SpriteController(screen)
     cont.append(pl)
-    coin = Coin(screen, (50, 50), pl)
+    coin = Coin(screen, (200, 200), pl)
+    counting = 0
     while running:
         moving = pygame.key.get_pressed()
         for event in pygame.event.get():
@@ -49,7 +67,9 @@ if __name__ == '__main__':
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
                     pl.shoot()
-        coin.update()
+        if coin.update():
+            counting += 1
+        plus(counting)
         if moving[pygame.K_LEFT] or moving[pygame.K_a]:
             pl.left()
         if moving[pygame.K_RIGHT] or moving[pygame.K_d]:
