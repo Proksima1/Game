@@ -23,9 +23,12 @@ class Item(pygame.sprite.Sprite):
         return False
 
     def __del__(self):
-        del self.image
-        del self.rect
-        del self.mask
+        try:
+            del self.image
+            del self.rect
+            del self.mask
+        except AttributeError:
+            pass
 
 
 class Coin(Item):
@@ -36,10 +39,13 @@ class Coin(Item):
         self.player = player
 
     def update(self):
-        self.screen.blit(self.image, self.rect)
-        if self.pickup(self.player):
-            return True
-        return False
+        try:
+            self.screen.blit(self.image, self.rect)
+            if self.pickup(self.player) and self.picked:
+                return True
+            return False
+        except AttributeError:
+            pass
 
 
 def plus(count):
