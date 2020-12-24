@@ -1,6 +1,7 @@
 import pygame
 from fregate import *
 from items import Coin
+from random import choice
 
 
 class SpriteController:
@@ -16,11 +17,15 @@ class SpriteController:
         for sprite in self.sprites:
             if sprite.hp <= 0:
                 sprite.dead = True
+                sou = choice(sprite.exp)
+                sou.set_volume(0.1)
+                sou.play()
                 del self[sprite]
             if isinstance(sprite, Enemy_ship):
                 sprite.update_bar()
             elif isinstance(sprite, Player_ship):
                 sprite.draw_heart()
+                #sprite.make_a_particle()
             elif isinstance(sprite, Coin) and sprite.picked:
                 del self[sprite]
             self.screen.blit(sprite.image, sprite.rect)
