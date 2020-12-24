@@ -65,6 +65,22 @@ class Generel_ship(pygame.sprite.Sprite):
         self.hp -= amount_number
         self.update_bar()
 
+    def enemy_particle_up(self):
+        # self.particles.append([[self.rect.x + 70, self.rect.centery], [2, randint(0, 10) / 7 - 1], randint(4, 8)])
+        pass
+
+    def enemy_particle_down(self):
+        # self.particles.append([[self.rect.x + 70, self.rect.centery], [2, randint(0, 10) / 7 - 1], randint(4, 8)])
+        pass
+
+    def enemy_particle_left(self):
+        # self.particles.append([[self.rect.x + 70, self.rect.centery], [4, randint(0, 10) / 10 - 1], randint(5, 10)])
+        pass
+
+    def enemy_particle_right(self):
+        # self.particles.append([[self.rect.x + 70, self.rect.centery], [2, 0, randint(4, 8)])
+        pass
+
     def get_pos(self):
         return self.x, self.y
 
@@ -85,7 +101,7 @@ class Enemy_ship(Generel_ship):
 
     def random_move(self, player):
         player_ship = player.rect
-        a = randint(1, 2)
+        a = 1
         flag = False
 
         def isValid(value: pygame.Surface):
@@ -101,45 +117,90 @@ class Enemy_ship(Generel_ship):
                 self.__del__()
             else:
                 try:
-                    if self.rect.top == player_ship.bottom or self.rect.y == player_ship.y or self.rect.bottom == player_ship.top:
-                        if not player.dead:
-                            self.enemy_shoot()
-                        sleep(0.6)
-                    if a == 1:
-                        if player_ship.x + player_ship.w + 200 <= self.rect.x:
-                            self.x -= self.velocity
-                            self.rect.x = self.x
-                        if player_ship.x + player_ship.w + 200 >= self.rect.x:
-                            self.x += self.velocity
-                            self.rect.x = self.x
-                        if player_ship.y + player_ship.h - 50 < self.rect.y:
-                            self.y -= self.velocity
-                            self.rect.y = self.y
-                        if player_ship.y + 50 > self.rect.y + self.rect.h:
-                            self.y += self.velocity
-                            self.rect.y = self.y
-                    elif a == 2:
-                        if player_ship.y + player_ship.h // 2 < self.rect.y:
-                            self.y -= self.velocity
-                            self.rect.y = self.y
-                        if player_ship.y > self.rect.y + self.rect.h // 2:
-                            self.y += self.velocity
-                            self.rect.y = self.y
-                        if player_ship.y + player_ship.h // 2 == self.rect.y + self.rect.h // 2:
-                            pass
-                    elif a == 3:
-                        if not flag:
-                            self.y -= self.velocity
-                            self.rect.y = self.y
-                            if self.rect.y <= 0:
-                                flag = True
-                        else:
-                            self.y += self.velocity
-                            self.rect.y = self.y
-                            if self.rect.y + self.rect.h >= self.screen.get_height():
-                                flag = False
-                    # print(self.rect)
-                    sleep(0.00001)
+                    if not player.dead:
+                        if a != 2:
+                            if self.enemy_shoot_count == 0:
+                                if player_ship.y + 20 < self.rect.y + 30 < player_ship.y + player_ship.h + 10 and self.rect.x > player_ship.right:
+                                    if not player.dead:
+                                        self.enemy_shoot()
+                                    sleep(0.6)
+                                else:
+                                    if player_ship.bottom < self.rect.y:
+                                        self.up()
+                                    if player_ship.y > self.rect.bottom:
+                                        self.down()
+                            if self.enemy_shoot_count == 1:
+                                if player_ship.y + 10 < self.rect.y + 34 < player_ship.y + player_ship.h + 20 and self.rect.x > player_ship.right:
+                                    if not player.dead:
+                                        self.enemy_shoot()
+                                    sleep(0.6)
+                                else:
+                                    if player_ship.bottom < self.rect.y:
+                                        self.up()
+                                    if player_ship.y > self.rect.bottom:
+                                        self.down()
+                            if self.enemy_shoot_count == 2:
+                                if player_ship.y + 10 < self.rect.y + 68 < player_ship.y + player_ship.h + 20 and self.rect.x > player_ship.right:
+                                    if not player.dead:
+                                        self.enemy_shoot()
+                                    sleep(0.6)
+                                else:
+                                    if player_ship.bottom < self.rect.y:
+                                        self.up()
+                                    if player_ship.y > self.rect.bottom:
+                                        self.down()
+                            if self.enemy_shoot_count == 3:
+                                if player_ship.y - 20 < self.rect.y + 72 < player_ship.y + player_ship.h + 10 and self.rect.x > player_ship.right:
+                                    if not player.dead:
+                                        self.enemy_shoot()
+                                    sleep(0.6)
+                                else:
+                                    if player_ship.bottom < self.rect.y:
+                                        self.up()
+                                    if player_ship.y > self.rect.bottom:
+                                        self.down()
+                        if a == 1:
+                            if player_ship.x + player_ship.w + 200 <= self.rect.x:
+                                self.x -= self.velocity
+                                self.rect.x = self.x
+                                self.enemy_particle_left()
+                            if player_ship.x + player_ship.w + 200 >= self.rect.x:
+                                self.x += self.velocity
+                                self.rect.x = self.x
+                                self.enemy_particle_right()
+                        elif a == 2:
+                            if self.enemy_shoot_count == 0:
+                                if player_ship.y + 30 < self.rect.y + 30 < player_ship.y + player_ship.h + 10 and self.rect.x > player_ship.right:
+                                    if not player.dead:
+                                        self.enemy_shoot()
+                                        sleep(0.3)
+                            if self.enemy_shoot_count == 1:
+                                if player_ship.y + 30 < self.rect.y + 34 < player_ship.y + player_ship.h + 10 and self.rect.x > player_ship.right:
+                                    if not player.dead:
+                                        self.enemy_shoot()
+                                        sleep(0.3)
+                            if self.enemy_shoot_count == 2:
+                                if player_ship.y - 10 < self.rect.y + 68 < player_ship.y + player_ship.h - 10 and self.rect.x > player_ship.right:
+                                    if not player.dead:
+                                        self.enemy_shoot()
+                                        sleep(0.3)
+                            if self.enemy_shoot_count == 3:
+                                if player_ship.y - 10 < self.rect.y + 72 < player_ship.y + player_ship.h - 10 and self.rect.x > player_ship.right:
+                                    if not player.dead:
+                                        self.enemy_shoot()
+                                        sleep(0.3)
+                            if not flag:
+                                self.y -= self.velocity
+                                self.rect.y = self.y
+                                if self.rect.y <= 0:
+                                    flag = True
+                            else:
+                                self.y += self.velocity
+                                self.rect.y = self.y
+                                if self.rect.y + self.rect.h >= self.screen.get_height():
+                                    flag = False
+                        # print(self.rect)
+                        sleep(0.00001)
                 except pygame.error:
                     sys.exit()
         try:
@@ -244,12 +305,23 @@ class Player_ship(Generel_ship):
         return f'<Player ship: hp-{self.hp}>'
 
     def make_a_particle(self):
-        self.particles.append([[self.rect.x + 3, self.rect.centery], [-2, randint(0, 20) / 10 - 1], randint(4, 8)])
+        moving = pygame.key.get_pressed()
+        if moving[pygame.K_LEFT] or moving[pygame.K_a]:
+            self.particles.append([[self.rect.x + 3, self.rect.centery], [-2, 0], randint(4, 8)])
+        if moving[pygame.K_RIGHT] or moving[pygame.K_d]:
+            self.particles.append(
+                [[self.rect.x + 3, self.rect.centery], [-4, randint(10, 20) / 10 - 1], randint(5, 10)])
+        if moving[pygame.K_UP] or moving[pygame.K_w]:
+            self.particles.append([[self.rect.x + 3, self.rect.centery], [-2, randint(0, 10) / 7 - 1], randint(4, 8)])
+        if moving[pygame.K_DOWN] or moving[pygame.K_s]:
+            self.particles.append([[self.rect.x + 3, self.rect.centery], [-2, randint(0, 10) / 7 - 1], randint(4, 8)])
+        if moving:
+            self.particles.append([[self.rect.x + 3, self.rect.centery], [-0.5, 0], randint(2, 6)])
         for particle in self.particles:
             particle[0][0] += particle[1][0]
             particle[0][1] += particle[1][1]
             particle[2] -= 0.2
-            #particle[1][0] -= 0.1
+            # particle[1][0] -= 0.1
             a = randint(50, 255), randint(0, 80), randint(0, 40)
             pygame.draw.circle(self.screen, a, [int(particle[0][0]), int(particle[0][1])], int(particle[2]))
             if particle[2] <= 0:

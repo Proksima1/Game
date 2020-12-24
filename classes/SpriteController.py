@@ -25,7 +25,7 @@ class SpriteController:
                 sprite.update_bar()
             elif isinstance(sprite, Player_ship):
                 sprite.draw_heart()
-                #sprite.make_a_particle()
+                sprite.make_a_particle()
             elif isinstance(sprite, Coin) and sprite.picked:
                 del self[sprite]
             self.screen.blit(sprite.image, sprite.rect)
