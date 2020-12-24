@@ -83,8 +83,8 @@ class Enemy_ship(Generel_ship):
         """Обновляет все заданные 'системы' корабля."""
         self.update_bar()
 
-    def random_move(self, player):
-        player_ship = player.rect
+    def random_move(self, player_ship):
+        player_ship = player_ship.rect
         a = randint(1, 2)
         flag = False
 
@@ -102,8 +102,7 @@ class Enemy_ship(Generel_ship):
             else:
                 try:
                     if self.rect.top == player_ship.bottom or self.rect.y == player_ship.y or self.rect.bottom == player_ship.top:
-                        if not player.dead:
-                            self.enemy_shoot()
+                        self.enemy_shoot()
                         sleep(0.6)
                     if a == 1:
                         if player_ship.x + player_ship.w + 200 <= self.rect.x:
@@ -190,8 +189,7 @@ class Player_ship(Generel_ship):
         self.bullet_controller = TileController(screen)
         self.heart_drawer = self.Heart(screen)
         self.dead = False
-        self.particles = []
-        self.coins_count = 0
+        # self.shoot = pygame.mixer.Sound('../sounds/shoot/shoot1.mp3')
 
     class Heart(pygame.sprite.Sprite):
         def __init__(self, screen: pygame.Surface):
@@ -242,18 +240,6 @@ class Player_ship(Generel_ship):
 
     def __repr__(self):
         return f'<Player ship: hp-{self.hp}>'
-
-    def make_a_particle(self):
-        self.particles.append([[self.rect.x + 3, self.rect.centery], [-2, randint(0, 20) / 10 - 1], randint(4, 8)])
-        for particle in self.particles:
-            particle[0][0] += particle[1][0]
-            particle[0][1] += particle[1][1]
-            particle[2] -= 0.2
-            #particle[1][0] -= 0.1
-            a = randint(50, 255), randint(0, 80), randint(0, 40)
-            pygame.draw.circle(self.screen, a, [int(particle[0][0]), int(particle[0][1])], int(particle[2]))
-            if particle[2] <= 0:
-                self.particles.remove(particle)
 
 
 class Enemy_controller:
