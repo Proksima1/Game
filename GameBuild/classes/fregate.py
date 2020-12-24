@@ -1,7 +1,7 @@
 import sys
 from random import randint, choice
 from time import sleep
-#from items import *
+
 from ProjectTile import *
 from progressbar import ProgressBar
 
@@ -300,14 +300,14 @@ class Player_ship(Generel_ship):
         moving = pygame.key.get_pressed()
         if moving[pygame.K_LEFT] or moving[pygame.K_a]:
             self.particles.append([[self.rect.x + 3, self.rect.centery], [-2, 0], randint(4, 8)])
-        elif moving[pygame.K_RIGHT] or moving[pygame.K_d]:
+        if moving[pygame.K_RIGHT] or moving[pygame.K_d]:
             self.particles.append(
                 [[self.rect.x + 3, self.rect.centery], [-4, 0], randint(5, 10)])
-        elif moving[pygame.K_UP] or moving[pygame.K_w]:
+        if moving[pygame.K_UP] or moving[pygame.K_w]:
             self.particles.append([[self.rect.x + 3, self.rect.centery], [-2, randint(0, 10) / 7 - 1], randint(4, 8)])
-        elif moving[pygame.K_DOWN] or moving[pygame.K_s]:
+        if moving[pygame.K_DOWN] or moving[pygame.K_s]:
             self.particles.append([[self.rect.x + 3, self.rect.centery], [-2, randint(0, 10) / 7 - 1], randint(4, 8)])
-        elif moving:
+        if moving:
             self.particles.append([[self.rect.x + 3, self.rect.centery], [-0.5, 0], randint(2, 6)])
         # обновляет каждую частицу
         for particle in self.particles:
@@ -329,10 +329,6 @@ class Enemy_controller:
     def append(self, value: Enemy_ship):
         """Добавляет врага в список врагов."""
         self.list_of_enemies.append(value)
-
-    def append_list(self, value: list):
-        for i in value:
-            self.list_of_enemies.append(i)
 
     def update_all(self, player_ship):
         """Запускает движение всех врагов."""

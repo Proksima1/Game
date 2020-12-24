@@ -55,9 +55,6 @@ class LevelReader:
             return False
         return True
 
-    def get_enemies(self):
-        return self.enemies
-
 
 if __name__ == '__main__':
     pygame.init()
@@ -68,11 +65,10 @@ if __name__ == '__main__':
     a = LevelReader(screen)
     a.read_json('../LevelEditor/1.json')
     a.sp_cont.append(pl)
-    b = Enemy_controller(screen)
-    b.update_all(pl)
+    a.en_cont.update_all(pl)
+    # print(a.check_wave())
     clock = pygame.time.Clock()
     while running:
-        b.append_list(a.get_enemies())
         moving = pygame.key.get_pressed()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -88,11 +84,18 @@ if __name__ == '__main__':
             pl.up()
         if moving[pygame.K_DOWN] or moving[pygame.K_s]:
             pl.down()
+        # print(a.check_wave())
         a.sp_cont.draw_all()
+        # print(a.check_wave())
         if a.check_wave():
             a.generate_enemies()
-        b.draw_bullets([pl])
-        pl.draw_shoot(b.get_enemies())
+        # print(a.en_cont)
+        # a.en_cont.update_all(pl)
+        a.en_cont.draw_bullets([pl])
+        pl.draw_shoot(a.en_cont.get_enemies())
         pygame.display.flip()
         a.draw_background()
+        # pygame.display.set_caption("fps: " + str(clock.get_fps()))
+        # clock.tick(120)
+        # screen.fill((0, 0, 0))
     pygame.quit()
