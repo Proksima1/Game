@@ -85,6 +85,9 @@ class TileController:
         except ValueError:
             return None
 
+    def clear(self):
+        self.bullets.clear()
+
     def update_all(self):
         speed_in_gradus = speed_when_driving_at_45_degrees
         if self.bullets is not bool:

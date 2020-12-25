@@ -17,10 +17,9 @@ class SpriteController:
         for sprite in self.sprites:
             if sprite.hp <= 0:
                 sprite.dead = True
-                sou = choice(sprite.exp)
+                sou = sprite.exp
                 sou.set_volume(0.1)
                 sou.play()
-                print(1)
                 del self[sprite]
             elif isinstance(sprite, Enemy_ship):
                 sprite.update_bar()

@@ -22,7 +22,7 @@ class Generel_ship(pygame.sprite.Sprite):
         self.hp = hp
         self.piy = [pygame.mixer.Sound('../sounds/shoot/shoot1.wav'),
                     pygame.mixer.Sound('../sounds/shoot/shoot3.mp3')]
-        self.exp = [pygame.mixer.Sound('../sounds/explosion/expl1.wav')]
+        self.exp = pygame.mixer.Sound('../sounds/explosion/expl1.wav')
         self.shoots = []
         self.velocity = 0.05
         self.bar = ProgressBar(self.screen, "red", self.rect.x, self.rect.y + 10, 25, 5)
@@ -101,7 +101,6 @@ class Enemy_ship(Generel_ship):
             else:
                 return True
         # запуск движения врага
-        #print(1)
         while self.hp > 0 and isValid(self.screen):
             if self.hp <= 0:
                 self.__del__()
@@ -191,17 +190,14 @@ class Enemy_ship(Generel_ship):
                         sleep(0.00001)
                 except pygame.error:
                     sys.exit()
-        try:
-            sou = choice(self.exp)
-            sou.set_volume(0.1)
-            sou.play()
-        except pygame.error:
-            sys.exit()
 
     def player_damage(self, player_ship):
         """Проверка коллизии с кораблём и движение пули."""
-        self.enemy_bullet_controller.update_all()
-        self.enemy_bullet_controller.check_all_collision(player_ship)
+        if not player_ship[0].dead:
+            self.enemy_bullet_controller.update_all()
+            self.enemy_bullet_controller.check_all_collision(player_ship)
+        else:
+            self.enemy_bullet_controller.clear()
 
     def enemy_shoot(self):
         """Добавление выстреда в список и смена выстрела пушки"""
@@ -227,6 +223,7 @@ class Enemy_ship(Generel_ship):
         del self
 
     def __repr__(self):
+        """Форматирует вывод."""
         return f'<Enemy ship: hp-{self.hp}>'
 
 
@@ -272,8 +269,11 @@ class Player_ship(Generel_ship):
 
     def draw_shoot(self, list_of_enemies):
         """Рисование выстрела, его исчезновение и урон по врагам."""
-        self.bullet_controller.update_all()
-        self.bullet_controller.check_all_collision(list_of_enemies)
+        if not self.dead:
+            self.bullet_controller.update_all()
+            self.bullet_controller.check_all_collision(list_of_enemies)
+        else:
+            self.bullet_controller.clear()
 
     def shoot(self):
         """Добавление выстреда в список и смена выстрела пушки."""
