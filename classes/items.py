@@ -1,6 +1,8 @@
 from SpriteController import *
 from typing import Tuple
-from fregate import Player_ship
+from random import randint
+from settings import *
+#from fregate import Player_ship
 #pygame.mixer.init()
 
 
@@ -15,7 +17,7 @@ class Item(pygame.sprite.Sprite):
         self.screen = screen
         self.picked = False
 
-    def pickup(self, player: Player_ship):
+    def pickup(self, player):
         if pygame.sprite.collide_mask(self, player):
             self.picked = True
             self.__del__()
@@ -34,10 +36,10 @@ class Item(pygame.sprite.Sprite):
 class Coin(Item):
     filename = '../sprites/items/coin/coin.png'
 
-    def __init__(self, screen: pygame.Surface, pos: Tuple[int, int], player: Player_ship):
+    def __init__(self, screen: pygame.Surface, pos: Tuple[int, int], player):
         super().__init__(screen, pos, Coin.filename)
         self.player = player
-        self.coin_amount = coin_amount
+        self.coin_amount = randint(coin_amount[0], coin_amount[1])
         self.pick_sound = pygame.mixer.Sound('../sounds/pickcoin/pick.mp3')
 
     def update(self):
@@ -56,7 +58,7 @@ class Coin(Item):
 class Heal(Item):
     filename = ''
 
-    def __init__(self, screen: pygame.Surface, pos: Tuple[int, int], player: Player_ship):
+    def __init__(self, screen: pygame.Surface, pos: Tuple[int, int], player):
         super().__init__(screen, pos, Heal.filename)
         self.player = player
         self.heal_amount = heal_amount

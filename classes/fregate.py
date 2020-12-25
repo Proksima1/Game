@@ -1,7 +1,7 @@
 import sys
-from random import randint, choice
+from random import randint,choice
 from time import sleep
-#from items import *
+from items import *
 from ProjectTile import *
 from progressbar import ProgressBar
 
@@ -81,6 +81,7 @@ class Enemy_ship(Generel_ship):
         self.velocity = enemy_speed
         self.enemy_shoot_count = 0
         self.movement = ""
+
 
     def update_all_systems(self):
         """Обновляет все заданные 'системы' корабля."""
@@ -195,7 +196,7 @@ class Enemy_ship(Generel_ship):
         """Проверка коллизии с кораблём и движение пули."""
         if not player_ship[0].dead:
             self.enemy_bullet_controller.update_all()
-            self.enemy_bullet_controller.check_all_collision(player_ship)
+            self.enemy_bullet_controller.check_all_collision(player_ship, enemy_damage)
         else:
             self.enemy_bullet_controller.clear()
 
@@ -235,6 +236,7 @@ class Player_ship(Generel_ship):
         super().__init__(screen, x, y, Player_ship.filename)
         self.shoot_count = 0
         self.velocity = player_speed
+        #self.
         self.bullet_controller = TileController(screen)
         self.heart_drawer = self.Heart(screen)
         self.dead = False
@@ -271,7 +273,7 @@ class Player_ship(Generel_ship):
         """Рисование выстрела, его исчезновение и урон по врагам."""
         if not self.dead:
             self.bullet_controller.update_all()
-            self.bullet_controller.check_all_collision(list_of_enemies)
+            self.bullet_controller.check_all_collision(list_of_enemies, player_damage)
         else:
             self.bullet_controller.clear()
 
@@ -299,6 +301,7 @@ class Player_ship(Generel_ship):
     def make_a_particle(self):
         """Рисует след за ракетой по направлению движения."""
         moving = pygame.key.get_pressed()
+        print(self.coins_count)
         if moving[pygame.K_LEFT] or moving[pygame.K_a]:
             self.particles.append([[self.rect.x + 3, self.rect.centery], [-2, 0], randint(4, 8)])
         elif moving[pygame.K_RIGHT] or moving[pygame.K_d]:
@@ -334,10 +337,12 @@ class Player_ship(Generel_ship):
 
 
 class Enemy_controller:
-    def __init__(self, screen):
+    def __init__(self, screen, player: Player_ship):
         """Контроллирует всех врагов."""
         self.list_of_enemies = []
+        self.player = player
         self.screen = screen
+        self.CoinController = ItemController(self.screen)
 
     def append(self, value: Enemy_ship):
         """Добавляет врага в список врагов."""
@@ -348,10 +353,10 @@ class Enemy_controller:
             #print(value)
             self.list_of_enemies.append(i)
 
-    def update_all(self, player_ship):
+    def update_all(self):
         """Запускает движение всех врагов."""
         for enemy in self.list_of_enemies:
-            thread = threading.Thread(target=enemy.random_move, args=(player_ship,))
+            thread = threading.Thread(target=enemy.random_move, args=(self.player,))
             thread.start()
 
     def get_enemies(self):
@@ -367,6 +372,7 @@ class Enemy_controller:
         for i in self.list_of_enemies:
             if i.hp <= 0:
                 del self[i]
+                self.CoinController.append(Coin(self.screen, i.get_pos(), self.player))
             else:
                 i.player_damage(player)
 

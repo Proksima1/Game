@@ -1,6 +1,5 @@
 import pygame
 from fregate import *
-from items import Coin
 from random import choice
 
 
@@ -8,6 +7,7 @@ class SpriteController:
     def __init__(self, screen: pygame.Surface):
         self.screen = screen
         self.sprites = []
+
 
     def append(self, value):
         self.sprites.append(value)

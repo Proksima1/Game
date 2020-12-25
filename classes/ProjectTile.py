@@ -12,7 +12,6 @@ class Tile(pygame.sprite.Sprite):
         self.screen = screen
         self.rect = self.image.get_rect(center=pos)
         self.mask = pygame.mask.from_surface(self.image)
-        self.damage_of_bullet = bullet_damage
         self.x = self.rect.x
         self.y = self.rect.y
         self.dir = dir
@@ -32,10 +31,10 @@ class Tile(pygame.sprite.Sprite):
         else:
             self.count_anim = 0
 
-    def check_collision(self, other_objects: list):
+    def check_collision(self, other_objects: list, damage: int):
         for object in other_objects:
             if pygame.sprite.collide_mask(self, object):
-                object.get_damage(self.damage_of_bullet)
+                object.get_damage(damage)
                 return True
         return False
 
@@ -120,9 +119,9 @@ class TileController:
                 bullet.rect.y = bullet.y
                 bullet.rect.x = bullet.x
 
-    def check_all_collision(self, ship: list):
+    def check_all_collision(self, ship: list, damage: int):
         for bullet in self.bullets:
-            if bullet.check_collision(ship):
+            if bullet.check_collision(ship, damage):
                 del self[self[bullet]]
 
     def __str__(self):

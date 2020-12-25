@@ -1,15 +1,14 @@
 import json
-
 from SpriteController import *
 
 
 class LevelReader:
-    def __init__(self, screen: pygame.Surface):
+    def __init__(self, screen: pygame.Surface, player):
         self.screen = screen
         self.amount_of_enemies, self.amount_of_waves, self.max_level, self.max_speed = None, None, None, None
         self.enemies = []
         self.sp_cont = SpriteController(self.screen)
-        self.en_cont = Enemy_controller(self.screen)
+        self.en_cont = Enemy_controller(self.screen, player)
         self.present_wave = 1
         # self.bd = pygame.image.tostring(pygame.transform.scale(pygame.image.load('../sprites/bg1.png'),
         #                                                       size), 'RGB')
@@ -76,7 +75,7 @@ if __name__ == '__main__':
     screen = pygame.display.set_mode(size)
     running = True
     pl = Player_ship(screen, 32, 32)
-    a = LevelReader(screen)
+    a = LevelReader(screen, pl)
     a.read_json('../LevelEditor/1.json')
     a.sp_cont.append(pl)
     clock = pygame.time.Clock()
@@ -89,9 +88,10 @@ if __name__ == '__main__':
                     pl.shoot()
         pl.move()
         a.sp_cont.draw_all()
+        a.en_cont.CoinController.update_all()
         if a.check_wave():
             a.generate_enemies()
-            a.en_cont.update_all(pl)
+            a.en_cont.update_all()
         a.en_cont.draw_bullets([pl])
         pl.draw_shoot(a.get_enemies())
         pygame.display.flip()
