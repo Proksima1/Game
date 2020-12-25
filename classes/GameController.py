@@ -21,7 +21,6 @@ if __name__ == '__main__':
     running = True
     clock = pygame.time.Clock()
     while running:
-        moving = pygame.key.get_pressed()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -29,15 +28,7 @@ if __name__ == '__main__':
                 if event.button == 1 and not a.dead:
                     a.shoot()
                     #shoot.play()
-        if not a.dead:
-            if moving[pygame.K_LEFT] or moving[pygame.K_a]:
-                a.left()
-            if moving[pygame.K_RIGHT] or moving[pygame.K_d]:
-                a.right()
-            if moving[pygame.K_UP] or moving[pygame.K_w]:
-                a.up()
-            if moving[pygame.K_DOWN] or moving[pygame.K_s]:
-                a.down()
+        a.move()
         cont.draw_all()
         a.draw_shoot(controller.get_enemies())
         controller.draw_bullets([a])

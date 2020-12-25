@@ -1,6 +1,7 @@
 from SpriteController import *
-
-pygame.mixer.init()
+from typing import Tuple
+from fregate import Player_ship
+#pygame.mixer.init()
 
 
 class Item(pygame.sprite.Sprite):
@@ -71,13 +72,30 @@ class Heal(Item):
             pass
 
 
-def plus(count):
+class ItemController:
+    def __init__(self, screen):
+        self.screen = screen
+        self.items = []
+
+    def append(self, value: Item):
+        self.items.append(value)
+
+    def update_all(self):
+        for i in self.items:
+            i.update()
+
+    def __delitem__(self, key):
+        del self.items[self[key]]
+
+    def __getitem__(self, item):
+        return self.items.index(item)
+
+"""def plus(count):
     font = pygame.font.Font(font_path, 40)
     text = font.render(f'{count}', True, (255, 0, 0))
-    screen.blit(text, pygame.Rect((80, 80), (90, 90)))
+    screen.blit(text, pygame.Rect((80, 80), (90, 90)))"""
 
-
-if __name__ == '__main__':
+"""if __name__ == '__main__':
     pygame.init()
     size = width, height = size
     screen = pygame.display.set_mode(size)
@@ -114,4 +132,4 @@ if __name__ == '__main__':
         # pl.draw_shoot(a.en_cont.get_enemies())
         pygame.display.flip()
         screen.fill((0, 0, 0))
-    pygame.quit()
+    pygame.quit()"""

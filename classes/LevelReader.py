@@ -41,22 +41,33 @@ class LevelReader:
 
     def generate_enemies(self):
         if self.present_wave < self.amount_of_waves + 1:
-            self.enemies = [[Enemy_ship(self.screen, randint(self.screen.get_width() // 2,
-                                                             self.screen.get_width() - 32),
-                                        randint(32, self.screen.get_height() - 32)), 1] for _ in
+            self.enemies = [Enemy_ship(self.screen, randint(self.screen.get_width() // 2,
+                                                            self.screen.get_width() - 32),
+                                       randint(32, self.screen.get_height() - 32)) for _ in
                             range(self.amount_of_waves)]
             for i in self.enemies:
-                self.sp_cont.append(i[0])
-                self.en_cont.append(i[0])
+                self.sp_cont.append(i)
+                self.en_cont.append(i)
             self.present_wave += 1
+
+    def get_enemies(self):
+        for i in self.enemies:
+            if i.hp <= 0:
+                del self[i]
+        return self.enemies
 
     def check_wave(self):
         if self.en_cont:
             return False
         return True
 
-    def get_enemies(self):
-        return self.enemies
+    def __delitem__(self, key):
+        """Удаление врага из списка врагов."""
+        del self.enemies[self[key]]
+
+    def __getitem__(self, item):
+        """Возвращает индекс элемента из списка."""
+        return self.enemies.index(item)
 
 
 if __name__ == '__main__':
@@ -68,31 +79,21 @@ if __name__ == '__main__':
     a = LevelReader(screen)
     a.read_json('../LevelEditor/1.json')
     a.sp_cont.append(pl)
-    b = Enemy_controller(screen)
-    b.update_all(pl)
     clock = pygame.time.Clock()
     while running:
-        b.append_list(a.get_enemies())
-        moving = pygame.key.get_pressed()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1:
+                if event.button == 1 and not pl.dead:
                     pl.shoot()
-        if moving[pygame.K_LEFT] or moving[pygame.K_a]:
-            pl.left()
-        if moving[pygame.K_RIGHT] or moving[pygame.K_d]:
-            pl.right()
-        if moving[pygame.K_UP] or moving[pygame.K_w]:
-            pl.up()
-        if moving[pygame.K_DOWN] or moving[pygame.K_s]:
-            pl.down()
+        pl.move()
         a.sp_cont.draw_all()
         if a.check_wave():
             a.generate_enemies()
-        b.draw_bullets([pl])
-        pl.draw_shoot(b.get_enemies())
+            a.en_cont.update_all(pl)
+        a.en_cont.draw_bullets([pl])
+        pl.draw_shoot(a.get_enemies())
         pygame.display.flip()
         a.draw_background()
     pygame.quit()

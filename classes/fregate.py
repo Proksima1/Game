@@ -101,6 +101,7 @@ class Enemy_ship(Generel_ship):
             else:
                 return True
         # запуск движения врага
+        #print(1)
         while self.hp > 0 and isValid(self.screen):
             if self.hp <= 0:
                 self.__del__()
@@ -319,6 +320,18 @@ class Player_ship(Generel_ship):
             if particle[2] <= 0:
                 self.particles.remove(particle)
 
+    def move(self):
+        if not self.dead:
+            moving = pygame.key.get_pressed()
+            if moving[pygame.K_LEFT] or moving[pygame.K_a]:
+                self.left()
+            if moving[pygame.K_RIGHT] or moving[pygame.K_d]:
+                self.right()
+            if moving[pygame.K_UP] or moving[pygame.K_w]:
+                self.up()
+            if moving[pygame.K_DOWN] or moving[pygame.K_s]:
+                self.down()
+
 
 class Enemy_controller:
     def __init__(self, screen):
@@ -332,6 +345,7 @@ class Enemy_controller:
 
     def append_list(self, value: list):
         for i in value:
+            #print(value)
             self.list_of_enemies.append(i)
 
     def update_all(self, player_ship):
@@ -344,13 +358,17 @@ class Enemy_controller:
         """Возвращает всех врагов, у которых хп больше 0."""
         for i in self.list_of_enemies:
             if i.hp <= 0:
-                del self[i]
+                i.__del__()
+                self.list_of_enemies.pop(self.list_of_enemies.index(i))
         return self.list_of_enemies
 
     def draw_bullets(self, player: list):
         """"Нанесение урона игроку"""
         for i in self.list_of_enemies:
-            i.player_damage(player)
+            if i.hp <= 0:
+                del self[i]
+            else:
+                i.player_damage(player)
 
     def __delitem__(self, key):
         """Удаление врага из списка врагов."""

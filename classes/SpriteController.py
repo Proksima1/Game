@@ -20,8 +20,9 @@ class SpriteController:
                 sou = choice(sprite.exp)
                 sou.set_volume(0.1)
                 sou.play()
+                print(1)
                 del self[sprite]
-            if isinstance(sprite, Enemy_ship):
+            elif isinstance(sprite, Enemy_ship):
                 sprite.update_bar()
             elif isinstance(sprite, Player_ship):
                 sprite.draw_heart()

@@ -1,7 +1,7 @@
 import sys
 from random import randint, choice
 from time import sleep
-
+#from items import *
 from ProjectTile import *
 from progressbar import ProgressBar
 
@@ -300,14 +300,14 @@ class Player_ship(Generel_ship):
         moving = pygame.key.get_pressed()
         if moving[pygame.K_LEFT] or moving[pygame.K_a]:
             self.particles.append([[self.rect.x + 3, self.rect.centery], [-2, 0], randint(4, 8)])
-        if moving[pygame.K_RIGHT] or moving[pygame.K_d]:
+        elif moving[pygame.K_RIGHT] or moving[pygame.K_d]:
             self.particles.append(
                 [[self.rect.x + 3, self.rect.centery], [-4, 0], randint(5, 10)])
-        if moving[pygame.K_UP] or moving[pygame.K_w]:
+        elif moving[pygame.K_UP] or moving[pygame.K_w]:
             self.particles.append([[self.rect.x + 3, self.rect.centery], [-2, randint(0, 10) / 7 - 1], randint(4, 8)])
-        if moving[pygame.K_DOWN] or moving[pygame.K_s]:
+        elif moving[pygame.K_DOWN] or moving[pygame.K_s]:
             self.particles.append([[self.rect.x + 3, self.rect.centery], [-2, randint(0, 10) / 7 - 1], randint(4, 8)])
-        if moving:
+        elif moving:
             self.particles.append([[self.rect.x + 3, self.rect.centery], [-0.5, 0], randint(2, 6)])
         # обновляет каждую частицу
         for particle in self.particles:
@@ -330,6 +330,11 @@ class Enemy_controller:
         """Добавляет врага в список врагов."""
         self.list_of_enemies.append(value)
 
+    def append_list(self, value: list):
+        for i in value:
+            #print(value)
+            self.list_of_enemies.append(i)
+
     def update_all(self, player_ship):
         """Запускает движение всех врагов."""
         for enemy in self.list_of_enemies:
@@ -340,7 +345,8 @@ class Enemy_controller:
         """Возвращает всех врагов, у которых хп больше 0."""
         for i in self.list_of_enemies:
             if i.hp <= 0:
-                del self[i]
+                i.__del__()
+                self.list_of_enemies.pop(self.list_of_enemies.index(i))
         return self.list_of_enemies
 
     def draw_bullets(self, player: list):

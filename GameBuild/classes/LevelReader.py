@@ -41,14 +41,17 @@ class LevelReader:
 
     def generate_enemies(self):
         if self.present_wave < self.amount_of_waves + 1:
-            self.enemies = [[Enemy_ship(self.screen, randint(self.screen.get_width() // 2,
-                                                             self.screen.get_width() - 32),
-                                        randint(32, self.screen.get_height() - 32)), 1] for _ in
+            self.enemies = [Enemy_ship(self.screen, randint(self.screen.get_width() // 2,
+                                                            self.screen.get_width() - 32),
+                                       randint(32, self.screen.get_height() - 32)) for _ in
                             range(self.amount_of_waves)]
             for i in self.enemies:
-                self.sp_cont.append(i[0])
-                self.en_cont.append(i[0])
+                self.sp_cont.append(i)
+                self.en_cont.append(i)
             self.present_wave += 1
+
+    def get_enemies(self):
+        return self.enemies
 
     def check_wave(self):
         if self.en_cont:
@@ -65,10 +68,13 @@ if __name__ == '__main__':
     a = LevelReader(screen)
     a.read_json('../LevelEditor/1.json')
     a.sp_cont.append(pl)
-    a.en_cont.update_all(pl)
-    # print(a.check_wave())
+    # b = Enemy_controller(screen)
+    # b.update_all(pl)
     clock = pygame.time.Clock()
     while running:
+        a.en_cont.append_list(a.get_enemies())
+        # print(a.get_enemies())
+        # print(a.get_enemies())
         moving = pygame.key.get_pressed()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -84,18 +90,12 @@ if __name__ == '__main__':
             pl.up()
         if moving[pygame.K_DOWN] or moving[pygame.K_s]:
             pl.down()
-        # print(a.check_wave())
         a.sp_cont.draw_all()
-        # print(a.check_wave())
         if a.check_wave():
             a.generate_enemies()
-        # print(a.en_cont)
-        # a.en_cont.update_all(pl)
         a.en_cont.draw_bullets([pl])
-        pl.draw_shoot(a.en_cont.get_enemies())
+        pl.draw_shoot(a.get_enemies())
         pygame.display.flip()
         a.draw_background()
-        # pygame.display.set_caption("fps: " + str(clock.get_fps()))
-        # clock.tick(120)
-        # screen.fill((0, 0, 0))
+        clock.tick(300)
     pygame.quit()
