@@ -1,7 +1,7 @@
 import pygame
-from classes.button import Button
+#from classes.button import Button
 from classes.MainMenu import MainMenu
-from classes.progressbar import ProgressBar
+#from classes.progressbar import ProgressBar
 
 show_menu = True
 show_setting = False
@@ -21,6 +21,7 @@ def start_game():
         global show_setting
         show_menu = False
         show_setting = False
+        """Добавить запуск уровня"""
 
     def return_to_menu():
         global show_menu

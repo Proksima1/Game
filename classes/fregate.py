@@ -1,9 +1,8 @@
-import sys
-from random import randint,choice
-from time import sleep
-from items import *
 from ProjectTile import *
+from items import *
 from progressbar import ProgressBar
+from time import sleep
+from random import choice
 
 
 # pygame.mixer.init()
@@ -82,7 +81,6 @@ class Enemy_ship(Generel_ship):
         self.enemy_shoot_count = 0
         self.movement = ""
 
-
     def update_all_systems(self):
         """Обновляет все заданные 'системы' корабля."""
         self.update_bar()
@@ -101,6 +99,7 @@ class Enemy_ship(Generel_ship):
                 return False
             else:
                 return True
+
         # запуск движения врага
         while self.hp > 0 and isValid(self.screen):
             if self.hp <= 0:
@@ -238,7 +237,7 @@ class Player_ship(Generel_ship):
         super().__init__(screen, x, y, Player_ship.filename)
         self.shoot_count = 0
         self.velocity = player_speed
-        #self.
+        # self.
         self.bullet_controller = TileController(screen)
         self.heart_drawer = self.Heart(screen)
         self.dead = False
@@ -351,7 +350,7 @@ class Enemy_controller:
 
     def append_list(self, value: list):
         for i in value:
-            #print(value)
+            # print(value)
             self.list_of_enemies.append(i)
 
     def update_all(self):
