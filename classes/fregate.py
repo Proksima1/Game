@@ -90,7 +90,7 @@ class Enemy_ship(Generel_ship):
     def random_move(self, player):
         """"Движение врага."""
         player_ship = player.rect
-        a = 1
+        a = randint(1, 2)
         flag = False
 
         def isValid(value: pygame.Surface):
@@ -110,44 +110,44 @@ class Enemy_ship(Generel_ship):
                     if not player.dead:
                         if a != 2:
                             if self.enemy_shoot_count == 0:
-                                if player_ship.y + 20 < self.rect.y + 30 < player_ship.y + player_ship.h + 10 and self.rect.x > player_ship.right:
+                                if player_ship.y + player_ship.h // 2 + 10 < self.rect.y + 30 < player_ship.y + player_ship.h // 2 + 35 and self.rect.x > player_ship.right:
                                     if not player.dead:
                                         self.enemy_shoot()
-                                    sleep(0.6)
+                                    sleep(0.3)
                                 else:
-                                    if player_ship.bottom < self.rect.y:
+                                    if player_ship.y + 30 < self.rect.y:
                                         self.up()
-                                    if player_ship.y > self.rect.bottom:
+                                    if player_ship.y + 30 > self.rect.y:
                                         self.down()
                             if self.enemy_shoot_count == 1:
-                                if player_ship.y + 10 < self.rect.y + 34 < player_ship.y + player_ship.h + 20 and self.rect.x > player_ship.right:
+                                if player_ship.y + player_ship.h // 2 + 10 < self.rect.y + 34 < player_ship.bottom - player_ship.h // 2 + 35 and self.rect.x > player_ship.right:
                                     if not player.dead:
                                         self.enemy_shoot()
-                                    sleep(0.6)
+                                    sleep(0.3)
                                 else:
-                                    if player_ship.bottom < self.rect.y:
+                                    if player_ship.y + 20 < self.rect.y:
                                         self.up()
-                                    if player_ship.y > self.rect.bottom:
+                                    if player_ship.y + 20 > self.rect.y:
                                         self.down()
                             if self.enemy_shoot_count == 2:
-                                if player_ship.y + 10 < self.rect.y + 68 < player_ship.y + player_ship.h + 20 and self.rect.x > player_ship.right:
+                                if player_ship.y + player_ship.h // 2 + 10 < self.rect.y + 68 < player_ship.bottom - player_ship.h // 2 + 35 and self.rect.x > player_ship.right:
                                     if not player.dead:
                                         self.enemy_shoot()
-                                    sleep(0.6)
+                                    sleep(0.3)
                                 else:
-                                    if player_ship.bottom < self.rect.y:
+                                    if player_ship.y - 20 < self.rect.y:
                                         self.up()
-                                    if player_ship.y > self.rect.bottom:
+                                    if player_ship.y - 20 > self.rect.y:
                                         self.down()
                             if self.enemy_shoot_count == 3:
-                                if player_ship.y - 20 < self.rect.y + 72 < player_ship.y + player_ship.h + 10 and self.rect.x > player_ship.right:
+                                if player_ship.y + player_ship.h // 2 + 10 < self.rect.y + 72 < player_ship.bottom - player_ship.h // 2 + 35 and self.rect.x > player_ship.right:
                                     if not player.dead:
                                         self.enemy_shoot()
-                                    sleep(0.6)
+                                    sleep(0.3)
                                 else:
-                                    if player_ship.bottom < self.rect.y:
+                                    if player_ship.y - 30 < self.rect.y:
                                         self.up()
-                                    if player_ship.y > self.rect.bottom:
+                                    if player_ship.y - 30 > self.rect.y:
                                         self.down()
                         if a == 1:
                             if player_ship.x + player_ship.w + 200 <= self.rect.x:
@@ -158,22 +158,22 @@ class Enemy_ship(Generel_ship):
                                 self.rect.x = self.x
                         elif a == 2:
                             if self.enemy_shoot_count == 0:
-                                if player_ship.y + 30 < self.rect.y + 30 < player_ship.y + player_ship.h + 10 and self.rect.x > player_ship.right:
+                                if player_ship.y + player_ship.h // 2 + 10 < self.rect.y + 30 < player_ship.y + player_ship.h // 2 + 35 and self.rect.x > player_ship.right:
                                     if not player.dead:
                                         self.enemy_shoot()
                                         sleep(0.3)
                             if self.enemy_shoot_count == 1:
-                                if player_ship.y + 30 < self.rect.y + 34 < player_ship.y + player_ship.h + 10 and self.rect.x > player_ship.right:
+                                if player_ship.y + player_ship.h // 2 + 10 < self.rect.y + 34 < player_ship.bottom - player_ship.h // 2 + 35 and self.rect.x > player_ship.right:
                                     if not player.dead:
                                         self.enemy_shoot()
                                         sleep(0.3)
                             if self.enemy_shoot_count == 2:
-                                if player_ship.y - 10 < self.rect.y + 68 < player_ship.y + player_ship.h - 10 and self.rect.x > player_ship.right:
+                                if player_ship.y + player_ship.h // 2 + 10 < self.rect.y + 68 < player_ship.bottom - player_ship.h // 2 + 35 and self.rect.x > player_ship.right:
                                     if not player.dead:
                                         self.enemy_shoot()
                                         sleep(0.3)
                             if self.enemy_shoot_count == 3:
-                                if player_ship.y - 10 < self.rect.y + 72 < player_ship.y + player_ship.h - 10 and self.rect.x > player_ship.right:
+                                if player_ship.y + player_ship.h // 2 + 10 < self.rect.y + 72 < player_ship.bottom - player_ship.h // 2 + 35 and self.rect.x > player_ship.right:
                                     if not player.dead:
                                         self.enemy_shoot()
                                         sleep(0.3)
@@ -187,6 +187,8 @@ class Enemy_ship(Generel_ship):
                                 self.rect.y = self.y
                                 if self.rect.y + self.rect.h >= self.screen.get_height():
                                     flag = False
+                            if self.rect.x < player_ship.left:
+                                a = 1
                         # print(self.rect)
                         sleep(0.00001)
                 except pygame.error:
@@ -301,7 +303,6 @@ class Player_ship(Generel_ship):
     def make_a_particle(self):
         """Рисует след за ракетой по направлению движения."""
         moving = pygame.key.get_pressed()
-        print(self.coins_count)
         if moving[pygame.K_LEFT] or moving[pygame.K_a]:
             self.particles.append([[self.rect.x + 3, self.rect.centery], [-2, 0], randint(4, 8)])
         elif moving[pygame.K_RIGHT] or moving[pygame.K_d]:
