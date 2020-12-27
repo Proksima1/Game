@@ -1,9 +1,8 @@
 from ProjectTile import *
 from items import *
-from progressbar import ProgressBar
+from widgets import ProgressBar
 from time import sleep
 from random import choice
-
 
 # pygame.mixer.init()
 

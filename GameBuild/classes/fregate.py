@@ -1,10 +1,8 @@
-import sys
-from random import randint, choice
+from classes.ProjectTile import *
+from classes.items import *
+from widgets import ProgressBar
 from time import sleep
-#from items import *
-from ProjectTile import *
-from progressbar import ProgressBar
-
+from random import choice
 
 # pygame.mixer.init()
 
@@ -22,7 +20,7 @@ class Generel_ship(pygame.sprite.Sprite):
         self.hp = hp
         self.piy = [pygame.mixer.Sound('../sounds/shoot/shoot1.wav'),
                     pygame.mixer.Sound('../sounds/shoot/shoot3.mp3')]
-        self.exp = [pygame.mixer.Sound('../sounds/explosion/expl1.wav')]
+        self.exp = pygame.mixer.Sound('../sounds/explosion/expl1.wav')
         self.shoots = []
         self.velocity = 0.05
         self.bar = ProgressBar(self.screen, "red", self.rect.x, self.rect.y + 10, 25, 5)
@@ -88,8 +86,37 @@ class Enemy_ship(Generel_ship):
 
     def random_move(self, player):
         """"Движение врага."""
+        pass
+
+    def player_damage(self, player_ship):
+        """Проверка коллизии с кораблём и движение пули."""
+        if not player_ship[0].dead:
+            self.enemy_bullet_controller.update_all()
+            self.enemy_bullet_controller.check_all_collision(player_ship, enemy_damage)
+        else:
+            self.enemy_bullet_controller.clear()
+
+    def enemy_shoot(self):
+        """Добавление выстреда в список и смена выстрела пушки"""
+        pass
+
+    def __del__(self):
+        """Переназначение метода __del___ на удаление себя."""
+        del self
+
+    def __repr__(self):
+        """Форматирует вывод."""
+        return f'<Enemy ship: hp-{self.hp}>'
+
+
+class Enemy_level1(Enemy_ship):
+    def __init__(self, screen, x, y):
+        """Враг, стреляющий пулями."""
+        super().__init__(screen, x, y)
+
+    def random_move(self, player):
         player_ship = player.rect
-        a = 1
+        a = randint(1, 2)
         flag = False
 
         def isValid(value: pygame.Surface):
@@ -100,6 +127,7 @@ class Enemy_ship(Generel_ship):
                 return False
             else:
                 return True
+
         # запуск движения врага
         while self.hp > 0 and isValid(self.screen):
             if self.hp <= 0:
@@ -107,46 +135,49 @@ class Enemy_ship(Generel_ship):
             else:
                 try:
                     if not player.dead:
+                        if pygame.sprite.collide_mask(self, player):
+                            player.hp = 0
+                            self.hp = 0
                         if a != 2:
                             if self.enemy_shoot_count == 0:
-                                if player_ship.y + 20 < self.rect.y + 30 < player_ship.y + player_ship.h + 10 and self.rect.x > player_ship.right:
+                                if player_ship.y + player_ship.h // 2 + 10 < self.rect.y + 30 < player_ship.y + player_ship.h // 2 + 35 and self.rect.x > player_ship.right:
                                     if not player.dead:
                                         self.enemy_shoot()
-                                    sleep(0.6)
+                                    sleep(0.3)
                                 else:
-                                    if player_ship.bottom < self.rect.y:
+                                    if player_ship.y + 30 < self.rect.y:
                                         self.up()
-                                    if player_ship.y > self.rect.bottom:
+                                    if player_ship.y + 30 > self.rect.y:
                                         self.down()
                             if self.enemy_shoot_count == 1:
-                                if player_ship.y + 10 < self.rect.y + 34 < player_ship.y + player_ship.h + 20 and self.rect.x > player_ship.right:
+                                if player_ship.y + player_ship.h // 2 + 10 < self.rect.y + 34 < player_ship.bottom - player_ship.h // 2 + 35 and self.rect.x > player_ship.right:
                                     if not player.dead:
                                         self.enemy_shoot()
-                                    sleep(0.6)
+                                    sleep(0.3)
                                 else:
-                                    if player_ship.bottom < self.rect.y:
+                                    if player_ship.y + 20 < self.rect.y:
                                         self.up()
-                                    if player_ship.y > self.rect.bottom:
+                                    if player_ship.y + 20 > self.rect.y:
                                         self.down()
                             if self.enemy_shoot_count == 2:
-                                if player_ship.y + 10 < self.rect.y + 68 < player_ship.y + player_ship.h + 20 and self.rect.x > player_ship.right:
+                                if player_ship.y + player_ship.h // 2 + 10 < self.rect.y + 68 < player_ship.bottom - player_ship.h // 2 + 35 and self.rect.x > player_ship.right:
                                     if not player.dead:
                                         self.enemy_shoot()
-                                    sleep(0.6)
+                                    sleep(0.3)
                                 else:
-                                    if player_ship.bottom < self.rect.y:
+                                    if player_ship.y - 20 < self.rect.y:
                                         self.up()
-                                    if player_ship.y > self.rect.bottom:
+                                    if player_ship.y - 20 > self.rect.y:
                                         self.down()
                             if self.enemy_shoot_count == 3:
-                                if player_ship.y - 20 < self.rect.y + 72 < player_ship.y + player_ship.h + 10 and self.rect.x > player_ship.right:
+                                if player_ship.y + player_ship.h // 2 + 10 < self.rect.y + 72 < player_ship.bottom - player_ship.h // 2 + 35 and self.rect.x > player_ship.right:
                                     if not player.dead:
                                         self.enemy_shoot()
-                                    sleep(0.6)
+                                    sleep(0.3)
                                 else:
-                                    if player_ship.bottom < self.rect.y:
+                                    if player_ship.y - 30 < self.rect.y:
                                         self.up()
-                                    if player_ship.y > self.rect.bottom:
+                                    if player_ship.y - 30 > self.rect.y:
                                         self.down()
                         if a == 1:
                             if player_ship.x + player_ship.w + 200 <= self.rect.x:
@@ -157,22 +188,22 @@ class Enemy_ship(Generel_ship):
                                 self.rect.x = self.x
                         elif a == 2:
                             if self.enemy_shoot_count == 0:
-                                if player_ship.y + 30 < self.rect.y + 30 < player_ship.y + player_ship.h + 10 and self.rect.x > player_ship.right:
+                                if player_ship.y + player_ship.h // 2 + 10 < self.rect.y + 30 < player_ship.y + player_ship.h // 2 + 35 and self.rect.x > player_ship.right:
                                     if not player.dead:
                                         self.enemy_shoot()
                                         sleep(0.3)
                             if self.enemy_shoot_count == 1:
-                                if player_ship.y + 30 < self.rect.y + 34 < player_ship.y + player_ship.h + 10 and self.rect.x > player_ship.right:
+                                if player_ship.y + player_ship.h // 2 + 10 < self.rect.y + 34 < player_ship.bottom - player_ship.h // 2 + 35 and self.rect.x > player_ship.right:
                                     if not player.dead:
                                         self.enemy_shoot()
                                         sleep(0.3)
                             if self.enemy_shoot_count == 2:
-                                if player_ship.y - 10 < self.rect.y + 68 < player_ship.y + player_ship.h - 10 and self.rect.x > player_ship.right:
+                                if player_ship.y + player_ship.h // 2 + 10 < self.rect.y + 68 < player_ship.bottom - player_ship.h // 2 + 35 and self.rect.x > player_ship.right:
                                     if not player.dead:
                                         self.enemy_shoot()
                                         sleep(0.3)
                             if self.enemy_shoot_count == 3:
-                                if player_ship.y - 10 < self.rect.y + 72 < player_ship.y + player_ship.h - 10 and self.rect.x > player_ship.right:
+                                if player_ship.y + player_ship.h // 2 + 10 < self.rect.y + 72 < player_ship.bottom - player_ship.h // 2 + 35 and self.rect.x > player_ship.right:
                                     if not player.dead:
                                         self.enemy_shoot()
                                         sleep(0.3)
@@ -186,47 +217,119 @@ class Enemy_ship(Generel_ship):
                                 self.rect.y = self.y
                                 if self.rect.y + self.rect.h >= self.screen.get_height():
                                     flag = False
+                            if self.rect.x < player_ship.left:
+                                a = 1
                         # print(self.rect)
                         sleep(0.00001)
                 except pygame.error:
                     sys.exit()
-        try:
-            sou = choice(self.exp)
-            sou.set_volume(0.1)
-            sou.play()
-        except pygame.error:
-            sys.exit()
-
-    def player_damage(self, player_ship):
-        """Проверка коллизии с кораблём и движение пули."""
-        self.enemy_bullet_controller.update_all()
-        self.enemy_bullet_controller.check_all_collision(player_ship)
 
     def enemy_shoot(self):
-        """Добавление выстреда в список и смена выстрела пушки"""
         if self.enemy_shoot_count == 0:
-            self.enemy_bullet_controller.append(Tile(self.screen, (self.rect.x + 7, self.rect.y + 9), 'E'))
+            self.enemy_bullet_controller.append(Tile(self.screen, (self.rect.x + 7, self.rect.y + 9), 'E', 0))
             self.enemy_shoot_count = 1
         elif self.enemy_shoot_count == 1:
-            self.enemy_bullet_controller.append(Tile(self.screen, (self.rect.x + 7, self.rect.y + 13), 'E'))
+            self.enemy_bullet_controller.append(Tile(self.screen, (self.rect.x + 7, self.rect.y + 13), 'E', 0))
             self.enemy_shoot_count = 2
         elif self.enemy_shoot_count == 2:
-            self.enemy_bullet_controller.append(Tile(self.screen, (self.rect.x + 7, self.rect.y + 51), 'E'))
+            self.enemy_bullet_controller.append(Tile(self.screen, (self.rect.x + 7, self.rect.y + 51), 'E', 0))
             self.enemy_shoot_count = 3
         else:
-            self.enemy_bullet_controller.append(Tile(self.screen, (self.rect.x + 7, self.rect.y + 55), 'E'))
+            self.enemy_bullet_controller.append(Tile(self.screen, (self.rect.x + 7, self.rect.y + 55), 'E', 0))
             self.enemy_shoot_count = 0
         # воспроизведение звука выстрела
         sou = choice(self.piy)
         sou.set_volume(0.1)
         sou.play()
 
-    def __del__(self):
-        """Переназначение метода __del___ на удаление себя."""
-        del self
 
-    def __repr__(self):
-        return f'<Enemy ship: hp-{self.hp}>'
+class Enemy_level2(Enemy_ship):
+    def __init__(self, screen, x, y):
+        """Враг, стреляющий лазером."""
+        super().__init__(screen, x, y)
+
+    def random_move(self, player):
+        player_ship = player.rect
+
+        def isValid(value: pygame.Surface):
+            """Проверка валидности экрана."""
+            try:
+                value.get_size()
+            except pygame.error:
+                return False
+            else:
+                return True
+
+        # запуск движения врага
+        while self.hp > 0 and isValid(self.screen):
+            if self.hp <= 0:
+                self.__del__()
+            else:
+                try:
+                    if not player.dead:
+                        if pygame.sprite.collide_mask(self, player):
+                            player.hp = 0
+                            self.hp = 0
+                        if self.enemy_shoot_count == 0:
+                            if player_ship.y + player_ship.h // 2 + 10 < self.rect.y + 30 < player_ship.y + player_ship.h // 2 + 35 and self.rect.x > player_ship.right:
+                                if not player.dead:
+                                    self.enemy_shoot()
+                                sleep(0.3)
+                            else:
+                                if player_ship.y + 30 < self.rect.y:
+                                    self.up()
+                                if player_ship.y + 30 > self.rect.y:
+                                    self.down()
+                        if self.enemy_shoot_count == 1:
+                            if player_ship.y + player_ship.h // 2 + 10 < self.rect.y + 34 < player_ship.bottom - player_ship.h // 2 + 35 and self.rect.x > player_ship.right:
+                                if not player.dead:
+                                    self.enemy_shoot()
+                                sleep(0.3)
+                            else:
+                                if player_ship.y + 20 < self.rect.y:
+                                    self.up()
+                                if player_ship.y + 20 > self.rect.y:
+                                    self.down()
+                        if self.enemy_shoot_count == 2:
+                            if player_ship.y + player_ship.h // 2 + 10 < self.rect.y + 68 < player_ship.bottom - player_ship.h // 2 + 35 and self.rect.x > player_ship.right:
+                                if not player.dead:
+                                    self.enemy_shoot()
+                                sleep(0.3)
+                            else:
+                                if player_ship.y - 20 < self.rect.y:
+                                    self.up()
+                                if player_ship.y - 20 > self.rect.y:
+                                    self.down()
+                        if self.enemy_shoot_count == 3:
+                            if player_ship.y + player_ship.h // 2 + 10 < self.rect.y + 72 < player_ship.bottom - player_ship.h // 2 + 35 and self.rect.x > player_ship.right:
+                                if not player.dead:
+                                    self.enemy_shoot()
+                                sleep(0.3)
+                            else:
+                                if player_ship.y - 30 < self.rect.y:
+                                    self.up()
+                                if player_ship.y - 30 > self.rect.y:
+                                    self.down()
+                        if player_ship.x + player_ship.w + 200 <= self.rect.x:
+                            self.x -= self.velocity
+                            self.rect.x = self.x
+                        if player_ship.x + player_ship.w + 200 >= self.rect.x:
+                            self.x += self.velocity
+                            self.rect.x = self.x
+                    sleep(0.00001)
+                except pygame.error:
+                    sys.exit()
+
+    def enemy_shoot(self):
+        if self.enemy_shoot_count == 0:
+            self.enemy_bullet_controller.append(Tile(self.screen, (self.rect.x + 7, self.rect.y + 13), 'E', 0))
+            self.enemy_shoot_count = 1
+        elif self.enemy_shoot_count == 1:
+            self.enemy_bullet_controller.append(Tile(self.screen, (self.rect.x + 7, self.rect.y + 51), 'E', 0))
+            self.enemy_shoot_count = 0
+        sou = choice(self.piy)
+        sou.set_volume(0.1)
+        sou.play()
 
 
 class Player_ship(Generel_ship):
@@ -237,6 +340,7 @@ class Player_ship(Generel_ship):
         super().__init__(screen, x, y, Player_ship.filename)
         self.shoot_count = 0
         self.velocity = player_speed
+        # self.
         self.bullet_controller = TileController(screen)
         self.heart_drawer = self.Heart(screen)
         self.dead = False
@@ -271,16 +375,19 @@ class Player_ship(Generel_ship):
 
     def draw_shoot(self, list_of_enemies):
         """Рисование выстрела, его исчезновение и урон по врагам."""
-        self.bullet_controller.update_all()
-        self.bullet_controller.check_all_collision(list_of_enemies)
+        if not self.dead:
+            self.bullet_controller.update_all()
+            self.bullet_controller.check_all_collision(list_of_enemies, player_damage)
+        else:
+            self.bullet_controller.clear()
 
     def shoot(self):
         """Добавление выстреда в список и смена выстрела пушки."""
         if self.shoot_count == 0:
-            self.bullet_controller.append(Tile(self.screen, (self.rect.x + 38, self.rect.y + 7), 'W'))
+            self.bullet_controller.append(Tile(self.screen, (self.rect.x + 38, self.rect.y + 7), 'W', 0))
             self.shoot_count = 1
         else:
-            self.bullet_controller.append(Tile(self.screen, (self.rect.x + 38, self.rect.y + 55), 'W'))
+            self.bullet_controller.append(Tile(self.screen, (self.rect.x + 38, self.rect.y + 55), 'W', 0))
             self.shoot_count = 0
         # поигрыш звука выстрела
         sou = choice(self.piy)
@@ -318,13 +425,28 @@ class Player_ship(Generel_ship):
             pygame.draw.circle(self.screen, a, [int(particle[0][0]), int(particle[0][1])], int(particle[2]))
             if particle[2] <= 0:
                 self.particles.remove(particle)
+        print(self.coins_count)
+
+    def move(self):
+        if not self.dead:
+            moving = pygame.key.get_pressed()
+            if moving[pygame.K_LEFT] or moving[pygame.K_a]:
+                self.left()
+            if moving[pygame.K_RIGHT] or moving[pygame.K_d]:
+                self.right()
+            if moving[pygame.K_UP] or moving[pygame.K_w]:
+                self.up()
+            if moving[pygame.K_DOWN] or moving[pygame.K_s]:
+                self.down()
 
 
 class Enemy_controller:
-    def __init__(self, screen):
+    def __init__(self, screen, player: Player_ship):
         """Контроллирует всех врагов."""
         self.list_of_enemies = []
+        self.player = player
         self.screen = screen
+        self.CoinController = ItemController(self.screen)
 
     def append(self, value: Enemy_ship):
         """Добавляет врага в список врагов."""
@@ -332,13 +454,13 @@ class Enemy_controller:
 
     def append_list(self, value: list):
         for i in value:
-            #print(value)
+            # print(value)
             self.list_of_enemies.append(i)
 
-    def update_all(self, player_ship):
+    def update_all(self):
         """Запускает движение всех врагов."""
         for enemy in self.list_of_enemies:
-            thread = threading.Thread(target=enemy.random_move, args=(player_ship,))
+            thread = threading.Thread(target=enemy.random_move, args=(self.player,))
             thread.start()
 
     def get_enemies(self):
@@ -352,7 +474,11 @@ class Enemy_controller:
     def draw_bullets(self, player: list):
         """"Нанесение урона игроку"""
         for i in self.list_of_enemies:
-            i.player_damage(player)
+            if i.hp <= 0:
+                del self[i]
+                self.CoinController.append(Coin(self.screen, i.get_pos(), self.player))
+            else:
+                i.player_damage(player)
 
     def __delitem__(self, key):
         """Удаление врага из списка врагов."""

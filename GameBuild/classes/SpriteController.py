@@ -1,6 +1,5 @@
 import pygame
 from fregate import *
-from items import Coin
 from random import choice
 
 
@@ -8,6 +7,7 @@ class SpriteController:
     def __init__(self, screen: pygame.Surface):
         self.screen = screen
         self.sprites = []
+
 
     def append(self, value):
         self.sprites.append(value)
@@ -17,7 +17,7 @@ class SpriteController:
         for sprite in self.sprites:
             if sprite.hp <= 0:
                 sprite.dead = True
-                sou = choice(sprite.exp)
+                sou = sprite.exp
                 sou.set_volume(0.1)
                 sou.play()
                 del self[sprite]

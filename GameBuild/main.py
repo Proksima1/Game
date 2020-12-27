@@ -1,8 +1,11 @@
+# from classes.button import Button
+# from classes.progressbar import ProgressBar
 import pygame
-from classes.button import Button
-from classes.MainMenu import MainMenu
-from classes.progressbar import ProgressBar
 
+from ProjectGame.Game.GameBuild.classes.LevelReader import LevelReader
+from ProjectGame.Game.GameBuild.classes.MainMenu import MainMenu
+from ProjectGame.Game.GameBuild.classes.fregate import Player_ship
+from ProjectGame.Game.GameBuild.classes.settings import size
 show_menu = True
 show_setting = False
 
@@ -12,8 +15,8 @@ def start_game():
     global show_setting
     pygame.init()
     pygame.display.set_caption('Тест')
-    size = width, height = 800, 400
-    screen = pygame.display.set_mode(size)
+    w_size = width, height = size
+    screen = pygame.display.set_mode(w_size)
     main = MainMenu(screen, height, width)
 
     def play():
@@ -21,6 +24,28 @@ def start_game():
         global show_setting
         show_menu = False
         show_setting = False
+        running = True
+        pl = Player_ship(screen, 32, 32)
+        a = LevelReader(screen, pl)
+        a.read_json('../LevelEditor/1.json')
+        a.sp_cont.append(pl)
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1 and not pl.dead:
+                        pl.shoot()
+            pl.move()
+            a.sp_cont.draw_all()
+            a.en_cont.CoinController.update_all()
+            if a.check_wave():
+                a.generate_enemies()
+                a.en_cont.update_all()
+            a.en_cont.draw_bullets([pl])
+            pl.draw_shoot(a.get_enemies())
+            pygame.display.flip()
+            a.draw_background()
 
     def return_to_menu():
         global show_menu
@@ -35,19 +60,21 @@ def start_game():
         show_setting = True
         screen.fill((0, 0, 0))
         while show_setting:
-            for event in pygame.event.get():
+            events = pygame.event.get()
+            for event in events:
                 if event.type == pygame.QUIT:
                     show_menu = False
                     show_setting = False
-            main.show_settings(return_to_menu)
+            main.show_settings(events, return_to_menu)
             pygame.display.flip()
 
     while show_menu:
-        for event in pygame.event.get():
+        events = pygame.event.get()
+        for event in events:
             if event.type == pygame.QUIT:
                 show_menu = False
                 show_setting = False
-        main.show_menu(play, settings, quit)
+        main.show_menu(events, play, settings, quit)
         pygame.display.flip()
 
 
