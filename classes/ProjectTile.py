@@ -1,11 +1,12 @@
 from typing import Tuple
 import pygame
 import threading
+from time import sleep
 from settings import *
 
 
 class Tile(pygame.sprite.Sprite):
-    def __init__(self, screen: pygame.Surface, pos: Tuple[int, int], dir: str):
+    def __init__(self, screen: pygame.Surface, pos: Tuple[int, int], dir: str, type_of: int):
         """Аттрибут dir означает направление пули в сторонах света."""
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load('../sprites/bullet/base/base.png').convert_alpha(screen)
@@ -14,22 +15,36 @@ class Tile(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.image)
         self.x = self.rect.x
         self.y = self.rect.y
+        self.type_of_bullet = type_of
         self.dir = dir
         self.count_anim = 1
         self.list_of_sprites = [pygame.image.load(f'../sprites/bullet/anim/{i + 1}.png') for i in range(10)]
 
     def draw_animation(self):
         """Рисует кадр анимации и считает следующий."""
-        if self.dir == 'SW':
-            self.screen.blit(pygame.transform.rotate(self.list_of_sprites[self.count_anim], -45), self.rect)
-        elif self.dir == 'W':
-            self.screen.blit(pygame.transform.rotate(self.list_of_sprites[self.count_anim], 0), self.rect)
-        elif self.dir == 'E':
-            self.screen.blit(pygame.transform.rotate(self.list_of_sprites[self.count_anim], 180), self.rect)
-        if self.count_anim < 9:
-            self.count_anim += 1
+        if self.type_of_bullet == 0:
+            if self.dir == 'SW':
+                self.screen.blit(pygame.transform.rotate(self.list_of_sprites[self.count_anim], -45), self.rect)
+            elif self.dir == 'W':
+                self.screen.blit(pygame.transform.rotate(self.list_of_sprites[self.count_anim], 0), self.rect)
+            elif self.dir == 'NW':
+                self.screen.blit(pygame.transform.rotate(self.list_of_sprites[self.count_anim], 45), self.rect)
+            elif self.dir == 'N':
+                self.screen.blit(pygame.transform.rotate(self.list_of_sprites[self.count_anim], 90), self.rect)
+            elif self.dir == 'NE':
+                self.screen.blit(pygame.transform.rotate(self.list_of_sprites[self.count_anim], 135), self.rect)
+            elif self.dir == 'E':
+                self.screen.blit(pygame.transform.rotate(self.list_of_sprites[self.count_anim], 180), self.rect)
+            elif self.dir == 'SN':
+                self.screen.blit(pygame.transform.rotate(self.list_of_sprites[self.count_anim], -135), self.rect)
+            elif self.dir == 'S':
+                self.screen.blit(pygame.transform.rotate(self.list_of_sprites[self.count_anim], -90), self.rect)
+            if self.count_anim < 9:
+                self.count_anim += 1
+            else:
+                self.count_anim = 0
         else:
-            self.count_anim = 0
+            pass
 
     def check_collision(self, other_objects: list, damage: int):
         for object in other_objects:
@@ -92,32 +107,35 @@ class TileController:
         if self.bullets is not bool:
             for bullet in self.bullets:
                 # print(bullet)
-                if bullet > self.screen.get_size() or bullet < self.screen.get_size():
-                    del self[self[bullet]]
-                else:
+                if bullet.type_of_bullet == 0:
+                    if bullet > self.screen.get_size() or bullet < self.screen.get_size():
+                        del self[self[bullet]]
+                    else:
+                        bullet.draw_animation()
+                    if bullet.dir == 'N':
+                        bullet.y -= self.velocity
+                    elif bullet.dir == 'NW':
+                        bullet.y -= self.velocity / speed_in_gradus
+                        bullet.x += self.velocity / speed_in_gradus
+                    elif bullet.dir == 'W':
+                        bullet.x += self.velocity
+                    elif bullet.dir == 'SW':
+                        bullet.y += self.velocity / speed_in_gradus
+                        bullet.x += self.velocity / speed_in_gradus
+                    elif bullet.dir == 'S':
+                        bullet.y += self.velocity
+                    elif bullet.dir == 'SE':
+                        bullet.y += self.velocity / speed_in_gradus
+                        bullet.x -= self.velocity / speed_in_gradus
+                    elif bullet.dir == 'E':
+                        bullet.x -= self.velocity
+                    elif bullet.dir == 'NE':
+                        bullet.y -= self.velocity / speed_in_gradus
+                        bullet.x -= self.velocity / speed_in_gradus
+                    bullet.rect.y = bullet.y
+                    bullet.rect.x = bullet.x
+                elif bullet.type_of_bullet == 1:
                     bullet.draw_animation()
-                if bullet.dir == 'N':
-                    bullet.y -= self.velocity
-                elif bullet.dir == 'NW':
-                    bullet.y -= self.velocity / speed_in_gradus
-                    bullet.x += self.velocity / speed_in_gradus
-                elif bullet.dir == 'W':
-                    bullet.x += self.velocity
-                elif bullet.dir == 'SW':
-                    bullet.y += self.velocity / speed_in_gradus
-                    bullet.x += self.velocity / speed_in_gradus
-                elif bullet.dir == 'S':
-                    bullet.y += self.velocity
-                elif bullet.dir == 'SE':
-                    bullet.y += self.velocity / speed_in_gradus
-                    bullet.x -= self.velocity / speed_in_gradus
-                elif bullet.dir == 'E':
-                    bullet.x -= self.velocity
-                elif bullet.dir == 'NE':
-                    bullet.y -= self.velocity / speed_in_gradus
-                    bullet.x -= self.velocity / speed_in_gradus
-                bullet.rect.y = bullet.y
-                bullet.rect.x = bullet.x
 
     def check_all_collision(self, ship: list, damage: int):
         for bullet in self.bullets:
@@ -133,8 +151,8 @@ if __name__ == '__main__':
     size = width, height = 400, 400
     screen = pygame.display.set_mode(size)
     a = TileController(screen)
-    b = Tile(screen, (80, 32), 'W')
-    c = Tile(screen, (90, 60), 'SW')
+    b = Tile(screen, (80, 32), 'W', 0)
+    c = Tile(screen, (90, 60), 'SW', 0)
     a.append(b)
     a.append(c)
     """ship = Player_ship(screen, 32, 32, '../sprites/fregate/player/player_ship.png')

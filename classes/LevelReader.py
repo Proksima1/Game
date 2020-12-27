@@ -40,7 +40,7 @@ class LevelReader:
 
     def generate_enemies(self):
         if self.present_wave < self.amount_of_waves + 1:
-            self.enemies = [Enemy_ship(self.screen, randint(self.screen.get_width() // 2,
+            self.enemies = [Enemy_level2(self.screen, randint(self.screen.get_width() // 2,
                                                             self.screen.get_width() - 32),
                                        randint(32, self.screen.get_height() - 32)) for _ in
                             range(self.amount_of_waves)]
