@@ -18,7 +18,7 @@ class SpriteController:
             if sprite.hp <= 0:
                 sprite.dead = True
                 sou = sprite.exp
-                sou.set_volume(0.1)
+                sou.set_volume(effects_volume / 100)
                 sou.play()
                 del self[sprite]
             elif isinstance(sprite, Enemy_ship):

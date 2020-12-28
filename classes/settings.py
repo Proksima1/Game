@@ -18,10 +18,8 @@ font_size = 30
 with open(os.path.join(path, 'data/config.json'), 'r+', encoding='utf-8') as conf:
     text = json.load(conf)
 try:
-    master_volume = int(text[0]['master_volume'])
     effects_volume = int(text[0]['effects_volume'])
     music_volume = int(text[0]['music_volume'])
 except KeyError:
-    master_volume = 100
     effects_volume = 100
     music_volume = 100

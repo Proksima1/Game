@@ -4,8 +4,9 @@ import pygame
 """from classes.LevelReader import LevelReader
 
 from classes.fregate import Player_ship"""
-from classes.MainMenu import MainMenu
-from classes.settings import *
+from MainMenu import MainMenu
+from settings import *
+from ProjectGame.Game.classes.LevelReader import *
 show_menu = True
 show_setting = False
 
@@ -24,28 +25,7 @@ def start_game():
         global show_setting
         show_menu = False
         show_setting = False
-        running = True
-        pl = Player_ship(screen, 32, 32)
-        a = LevelReader(screen, pl)
-        a.read_json('../LevelEditor/1.json')
-        a.sp_cont.append(pl)
-        while running:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    if event.button == 1 and not pl.dead:
-                        pl.shoot()
-            pl.move()
-            a.sp_cont.draw_all()
-            a.en_cont.CoinController.update_all()
-            if a.check_wave():
-                a.generate_enemies()
-                a.en_cont.update_all()
-            a.en_cont.draw_bullets([pl])
-            pl.draw_shoot(a.get_enemies())
-            pygame.display.flip()
-            a.draw_background()
+        setup('../LevelEditor/1.json')
 
     def return_to_menu():
         global show_menu

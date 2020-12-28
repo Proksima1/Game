@@ -239,7 +239,7 @@ class Enemy_level1(Enemy_ship):
             self.enemy_shoot_count = 0
         # воспроизведение звука выстрела
         sou = choice(self.piy)
-        sou.set_volume(0.1)
+        sou.set_volume(effects_volume // 100 / master_volume // 100)
         sou.play()
 
 
@@ -328,7 +328,8 @@ class Enemy_level2(Enemy_ship):
             self.enemy_bullet_controller.append(Tile(self.screen, (self.rect.x + 7, self.rect.y + 51), 'E', 0))
             self.enemy_shoot_count = 0
         sou = choice(self.piy)
-        sou.set_volume(0.1)
+        sou.set_volume((effects_volume / 100))
+        print(effects_volume)
         sou.play()
 
 
@@ -391,7 +392,7 @@ class Player_ship(Generel_ship):
             self.shoot_count = 0
         # поигрыш звука выстрела
         sou = choice(self.piy)
-        sou.set_volume(0.1)
+        sou.set_volume((effects_volume / 100))
         sou.play()
 
     def draw_heart(self):
@@ -425,7 +426,7 @@ class Player_ship(Generel_ship):
             pygame.draw.circle(self.screen, a, [int(particle[0][0]), int(particle[0][1])], int(particle[2]))
             if particle[2] <= 0:
                 self.particles.remove(particle)
-        print(self.coins_count)
+        #print(self.coins_count)
 
     def move(self):
         if not self.dead:

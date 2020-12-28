@@ -1,5 +1,6 @@
 import json
 from SpriteController import *
+from pygame_widgets import ButtonArray
 
 
 class LevelReader:
@@ -69,23 +70,34 @@ class LevelReader:
         return self.enemies.index(item)
 
 
-if __name__ == '__main__':
+def setup(filename):
     pygame.init()
-    size = width, height = size
-    screen = pygame.display.set_mode(size)
+    s_size = width, height = size
+    screen = pygame.display.set_mode(s_size)
+    pygame.display.set_caption('Кустик')
     running = True
     pl = Player_ship(screen, 32, 32)
     a = LevelReader(screen, pl)
-    a.read_json('../LevelEditor/1.json')
+    a.read_json(filename)
     a.sp_cont.append(pl)
-    clock = pygame.time.Clock()
+    pause = False
+    pause_menu = ButtonArray(screen, width // 2 - 400, height // 2 - 400, 400, 400, (1, 3),
+                             border=100, texts=('CONTINUE', 'OPTIONS', 'QUIT'))
     while running:
-        for event in pygame.event.get():
+        events = pygame.event.get()
+        for event in events:
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1 and not pl.dead:
                     pl.shoot()
+            if event.type == pygame.KEYDOWN:
+                if event.key == 27 and not pause:  # esc
+                    pause = True
+                    #continue
+                #else:
+                    #pause = False
+
         pl.move()
         a.sp_cont.draw_all()
         a.en_cont.CoinController.update_all()
@@ -96,4 +108,15 @@ if __name__ == '__main__':
         pl.draw_shoot(a.get_enemies())
         pygame.display.flip()
         a.draw_background()
+        while pause:
+            ev = pygame.event.get()
+            for event in ev:
+                if event.type == pygame.KEYDOWN:
+                    if event.key == 27:
+                        pause = False
+                if event.type == pygame.QUIT:
+                    running = False
+            print(1)
+            pause_menu.listen(events)
+            pause_menu.draw()
     pygame.quit()
