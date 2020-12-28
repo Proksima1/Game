@@ -6,7 +6,7 @@ import pygame
 from classes.fregate import Player_ship"""
 from MainMenu import MainMenu
 from settings import *
-from ProjectGame.Game.classes.LevelReader import *
+from Project_pygame.Game.classes.LevelReader import *
 show_menu = True
 show_setting = False
 

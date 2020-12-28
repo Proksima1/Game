@@ -3,6 +3,7 @@ from items import *
 from widgets import ProgressBar
 from time import sleep
 from random import choice
+from LevelReader import *
 
 # pygame.mixer.init()
 
@@ -239,7 +240,7 @@ class Enemy_level1(Enemy_ship):
             self.enemy_shoot_count = 0
         # воспроизведение звука выстрела
         sou = choice(self.piy)
-        sou.set_volume(effects_volume // 100 / master_volume // 100)
+        sou.set_volume(effects_volume / 100)
         sou.play()
 
 
@@ -341,7 +342,6 @@ class Player_ship(Generel_ship):
         super().__init__(screen, x, y, Player_ship.filename)
         self.shoot_count = 0
         self.velocity = player_speed
-        # self.
         self.bullet_controller = TileController(screen)
         self.heart_drawer = self.Heart(screen)
         self.dead = False

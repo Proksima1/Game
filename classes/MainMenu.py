@@ -3,7 +3,7 @@ import pygame
 from pygame_widgets.button import Button
 from pygame_widgets.slider import Slider
 
-from ProjectGame.Game.classes.settings import *
+from Project_pygame.Game.classes.settings import *
 
 
 class MainMenu:
@@ -13,7 +13,7 @@ class MainMenu:
         self.height = height
         self.width = width
         # загружаем картинку
-        self.backgroung = pygame.image.load('D:/testrepository/ProjectGame/Game/test_photo.png')
+        self.backgroung = pygame.image.load('../test_photo.png')
         self.effects_volume = Slider(self.screen, self.width // 2, self.height // 3 - 100,
                                      100, 10, min=0, max=100, step=1, colour=(255, 255, 255),
                                      handleRadius=10, initial=effects_volume)

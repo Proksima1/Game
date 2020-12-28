@@ -1,6 +1,8 @@
 import json
 from SpriteController import *
 from pygame_widgets import ButtonArray
+from MainMenu import *
+from time import sleep
 
 
 class LevelReader:
@@ -11,6 +13,7 @@ class LevelReader:
         self.sp_cont = SpriteController(self.screen)
         self.en_cont = Enemy_controller(self.screen, player)
         self.present_wave = 1
+        self.pause = False
         # self.bd = pygame.image.tostring(pygame.transform.scale(pygame.image.load('../sprites/bg1.png'),
         #                                                       size), 'RGB')
         self.list_of_bd = [pygame.image.tostring(
@@ -32,6 +35,11 @@ class LevelReader:
             self.max_level = int(text[0]['max_level'])
             self.max_speed = int(text[0]['max_speed'])
 
+    def world_pause(self):
+        if self.pause:
+            return True
+        return False
+
     def draw_background(self):
         if self.count < len(self.list_of_bd):
             self.screen.blit(pygame.image.frombuffer(self.list_of_bd[int(self.count)], size, 'RGB'), (0, 0))
@@ -41,7 +49,7 @@ class LevelReader:
 
     def generate_enemies(self):
         if self.present_wave < self.amount_of_waves + 1:
-            self.enemies = [Enemy_level2(self.screen, randint(self.screen.get_width() // 2,
+            self.enemies = [Enemy_level1(self.screen, randint(self.screen.get_width() // 2,
                                                             self.screen.get_width() - 32),
                                        randint(32, self.screen.get_height() - 32)) for _ in
                             range(self.amount_of_waves)]
@@ -80,8 +88,7 @@ def setup(filename):
     a = LevelReader(screen, pl)
     a.read_json(filename)
     a.sp_cont.append(pl)
-    pause = False
-    pause_menu = ButtonArray(screen, width // 2 - 400, height // 2 - 400, 400, 400, (1, 3),
+    pause_menu = ButtonArray(screen, width // 3, height // 6, 400, 400, (1, 3),
                              border=100, texts=('CONTINUE', 'OPTIONS', 'QUIT'))
     while running:
         events = pygame.event.get()
@@ -92,31 +99,31 @@ def setup(filename):
                 if event.button == 1 and not pl.dead:
                     pl.shoot()
             if event.type == pygame.KEYDOWN:
-                if event.key == 27 and not pause:  # esc
-                    pause = True
-                    #continue
-                #else:
-                    #pause = False
-
-        pl.move()
-        a.sp_cont.draw_all()
-        a.en_cont.CoinController.update_all()
-        if a.check_wave():
-            a.generate_enemies()
-            a.en_cont.update_all()
-        a.en_cont.draw_bullets([pl])
-        pl.draw_shoot(a.get_enemies())
+                if event.key == 27 and not a.pause:  # esc
+                    a.pause = True
+                    pause_menu.listen(events)
+                    pause_menu.draw()
+                    continue
+                else:
+                    a.pause = False
+        if not a.pause:
+            pl.move()
+            a.sp_cont.draw_all()
+            a.en_cont.CoinController.update_all()
+            if a.check_wave():
+                a.generate_enemies()
+                a.en_cont.update_all()
+            a.en_cont.draw_bullets([pl])
+            pl.draw_shoot(a.get_enemies())
         pygame.display.flip()
         a.draw_background()
-        while pause:
+        while a.pause:
             ev = pygame.event.get()
             for event in ev:
                 if event.type == pygame.KEYDOWN:
                     if event.key == 27:
-                        pause = False
+                        a.pause = False
                 if event.type == pygame.QUIT:
+                    a.pause = False
                     running = False
-            print(1)
-            pause_menu.listen(events)
-            pause_menu.draw()
     pygame.quit()
