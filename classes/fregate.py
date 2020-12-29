@@ -6,14 +6,12 @@ from time import sleep
 from random import choice
 from LevelReader import *
 
-# pygame.mixer.init()
-
 
 class Generel_ship(pygame.sprite.Sprite):
     def __init__(self, screen: pygame.Surface, x, y, filename):
         """Главный класс корабля."""
         pygame.sprite.Sprite.__init__(self)
-        self.image = (pygame.image.load(filename))
+        self.image = pygame.image.load(filename)
         self.rect = self.image.get_rect(center=(x, y))
         self.mask = pygame.mask.from_surface(self.image)
         self.x = self.rect.x
@@ -26,6 +24,7 @@ class Generel_ship(pygame.sprite.Sprite):
         self.shoots = []
         self.velocity = 0.05
         self.bar = ProgressBar(self.screen, "red", self.rect.x, self.rect.y + 10, 25, 5)
+        self.last_shoot = pygame.time.get_ticks()
 
     def update_bar(self):
         """Обновляет позицию бара и обновление количества Хп"""
@@ -72,11 +71,9 @@ class Generel_ship(pygame.sprite.Sprite):
 
 
 class Enemy_ship(Generel_ship):
-    filename = '../sprites/fregate/enemy/enemy_ship1.png'
-
-    def __init__(self, screen, x, y):
+    def __init__(self, screen, x, y, filename):
         """Класс врага."""
-        super().__init__(screen, x, y, Enemy_ship.filename)
+        super().__init__(screen, x, y, filename)
         self.enemy_bullet_controller = TileController(screen)
         self.velocity = enemy_speed
         self.enemy_shoot_count = 0
@@ -112,9 +109,12 @@ class Enemy_ship(Generel_ship):
 
 
 class Enemy_level1(Enemy_ship):
+    filename = '../sprites/fregate/enemy/enemy_level1.png'
+
     def __init__(self, screen, x, y):
         """Враг, стреляющий пулями."""
-        super().__init__(screen, x, y)
+        super().__init__(screen, x, y, Enemy_level1.filename)
+        self.current_time = pygame.time.get_ticks()
 
     def random_move(self, player):
         player_ship = player.rect
@@ -227,28 +227,27 @@ class Enemy_level1(Enemy_ship):
                     sys.exit()
 
     def enemy_shoot(self):
-        if self.enemy_shoot_count == 0:
-            self.enemy_bullet_controller.append(Tile(self.screen, (self.rect.x + 7, self.rect.y + 9), 'E', 0))
-            self.enemy_shoot_count = 1
-        elif self.enemy_shoot_count == 1:
-            self.enemy_bullet_controller.append(Tile(self.screen, (self.rect.x + 7, self.rect.y + 13), 'E', 0))
-            self.enemy_shoot_count = 2
-        elif self.enemy_shoot_count == 2:
-            self.enemy_bullet_controller.append(Tile(self.screen, (self.rect.x + 7, self.rect.y + 51), 'E', 0))
-            self.enemy_shoot_count = 3
-        else:
-            self.enemy_bullet_controller.append(Tile(self.screen, (self.rect.x + 7, self.rect.y + 55), 'E', 0))
-            self.enemy_shoot_count = 0
-        # воспроизведение звука выстрела
-        sou = choice(self.piy)
-        sou.set_volume(effects_volume / 100)
-        sou.play()
+        if self.current_time - self.last_shoot > 500:
+            if self.enemy_shoot_count == 0:
+                self.enemy_bullet_controller.append(Tile(self.screen, (self.rect.x + 7, self.rect.y + 13), 'E', 0))
+                self.enemy_shoot_count = 1
+            elif self.enemy_shoot_count == 1:
+                self.enemy_bullet_controller.append(Tile(self.screen, (self.rect.x + 7, self.rect.y + 51), 'E', 0))
+                self.enemy_shoot_count = 0
+            self.last_shoot = pygame.time.get_ticks()
+            # воспроизведение звука выстрела
+            sou = choice(self.piy)
+            sou.set_volume(effects_volume / 100)
+            sou.play()
+        self.current_time = pygame.time.get_ticks()
 
 
 class Enemy_level2(Enemy_ship):
+    filename = '../sprites/fregate/enemy/enemy_level2.png'
+
     def __init__(self, screen, x, y):
         """Враг, стреляющий лазером."""
-        super().__init__(screen, x, y)
+        super().__init__(screen, x, y, Enemy_level2.filename)
 
     def random_move(self, player):
         player_ship = player.rect
@@ -324,10 +323,16 @@ class Enemy_level2(Enemy_ship):
 
     def enemy_shoot(self):
         if self.enemy_shoot_count == 0:
-            self.enemy_bullet_controller.append(Tile(self.screen, (self.rect.x + 7, self.rect.y + 13), 'E', 0))
+            self.enemy_bullet_controller.append(Tile(self.screen, (self.rect.x + 7, self.rect.y + 9), 'E', 0))
             self.enemy_shoot_count = 1
         elif self.enemy_shoot_count == 1:
+            self.enemy_bullet_controller.append(Tile(self.screen, (self.rect.x + 7, self.rect.y + 13), 'E', 0))
+            self.enemy_shoot_count = 2
+        elif self.enemy_shoot_count == 2:
             self.enemy_bullet_controller.append(Tile(self.screen, (self.rect.x + 7, self.rect.y + 51), 'E', 0))
+            self.enemy_shoot_count = 3
+        else:
+            self.enemy_bullet_controller.append(Tile(self.screen, (self.rect.x + 7, self.rect.y + 55), 'E', 0))
             self.enemy_shoot_count = 0
         sou = choice(self.piy)
         sou.set_volume((effects_volume / 100))

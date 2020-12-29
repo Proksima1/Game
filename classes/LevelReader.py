@@ -1,8 +1,9 @@
+from random import randint
+
 from pygame_widgets import ButtonArray
 
 from MainMenu import *
 from SpriteController import *
-
 
 class LevelReader:
     def __init__(self, screen: pygame.Surface, player):
@@ -81,6 +82,7 @@ pygame.init()
 s_size = width, height = size
 screen = pygame.display.set_mode(s_size)
 pygame.display.set_caption('Кустик')
+clock = pygame.time.Clock()
 running = True
 pl = Player_ship(screen, 32, 32)
 a = LevelReader(screen, pl)
@@ -89,6 +91,7 @@ pause_menu = ButtonArray(screen, width // 3, height // 6, 400, 400, (1, 3),
                          border=100, texts=('CONTINUE', 'OPTIONS', 'QUIT'), onClicks=(1, 2, quit))
 end_buttons = ButtonArray(screen, width // 2, height // 2, 400, 400, (3, 1),
                           texts=('BACK', 'UPGRADE', 'NEXT'))
+last_shoot = pygame.time.get_ticks()
 
 
 def setup(filename):
@@ -99,19 +102,24 @@ def start():
     """global running
     while running:"""
     events = pygame.event.get()
+    global last_shoot
+    current_time = pygame.time.get_ticks()
     for event in events:
         if event.type == pygame.QUIT:
             pygame.quit()
             quit()
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1 and not pl.dead:
-                pl.shoot()
+                if current_time - last_shoot > 500:
+                    pl.shoot()
+                    last_shoot = pygame.time.get_ticks()
         if event.type == pygame.KEYDOWN:
             if event.key == 27 and not a.pause:  # esc
                 a.pause = True
                 pause_menu.listen(events)
                 pause_menu.draw()
                 continue
+
     # if not a.pause:
     pl.move()
     a.sp_cont.draw_all()
