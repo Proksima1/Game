@@ -6,7 +6,7 @@ import pygame
 from classes.fregate import Player_ship"""
 from MainMenu import MainMenu
 from settings import *
-from Project_pygame.Game.classes.LevelReader import *
+from LevelReader import *
 show_menu = True
 show_setting = False
 
@@ -26,6 +26,19 @@ def start_game():
         show_menu = False
         show_setting = False
         setup('../LevelEditor/1.json')
+        st = start()
+        while st:
+            if st == 'paused':
+                while True:
+                    pa = draw_pause()
+                    if type(pa) == tuple:
+                        st = start()
+                        continue
+                #st = start()
+            elif st == 'ended':
+                draw_end()
+            else:
+                st = start()
 
     def return_to_menu():
         global show_menu

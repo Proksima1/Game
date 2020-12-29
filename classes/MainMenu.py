@@ -3,7 +3,7 @@ import pygame
 from pygame_widgets.button import Button
 from pygame_widgets.slider import Slider
 
-from Project_pygame.Game.classes.settings import *
+from settings import *
 
 
 class MainMenu:
@@ -61,8 +61,8 @@ class MainMenu:
             conf.write(json.dumps([{'effects_volume': str(self.effects_volume.getValue()),
                                     'music_volume': str(self.music_volume.getValue())}],
                                   indent=4, separators=(',', ': '), sort_keys=True))
-            effects_volume = int(self.effects_volume.getValue())
-            music_volume = int(self.music_volume.getValue())
+        effects_volume = int(self.effects_volume.getValue())
+        music_volume = int(self.music_volume.getValue())
 
 
 # потом можно удалить
