@@ -1,3 +1,5 @@
+import pygame
+
 from SpriteController import *
 from typing import Tuple
 from random import randint
@@ -48,7 +50,7 @@ class Coin(Item):
             if self.pickup(self.player) and self.picked:
                 self.player.coins_count += self.coin_amount
                 self.pick_sound.play()
-                self.pick_sound.set_volume(0.1)
+                self.pick_sound.set_volume(effects_volume / 100)
                 return True
             return False
         except AttributeError:

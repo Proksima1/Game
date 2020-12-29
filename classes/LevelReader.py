@@ -92,6 +92,7 @@ pause_menu = ButtonArray(screen, width // 3, height // 6, 400, 400, (1, 3),
 end_buttons = ButtonArray(screen, width // 2, height // 2, 400, 400, (3, 1),
                           texts=('BACK', 'UPGRADE', 'NEXT'))
 last_shoot = pygame.time.get_ticks()
+ended = False
 
 
 def setup(filename):
@@ -103,6 +104,7 @@ def start():
     while running:"""
     events = pygame.event.get()
     global last_shoot
+    global ended
     current_time = pygame.time.get_ticks()
     for event in events:
         if event.type == pygame.QUIT:
@@ -119,8 +121,6 @@ def start():
                 pause_menu.listen(events)
                 pause_menu.draw()
                 continue
-
-    # if not a.pause:
     pl.move()
     a.sp_cont.draw_all()
     a.en_cont.CoinController.update_all()

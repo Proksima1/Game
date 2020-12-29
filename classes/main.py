@@ -28,14 +28,14 @@ def start_game():
         setup('../LevelEditor/1.json')
         st = start()
         while st:
-            print(start())
             if st == 'paused':
                 while st == "paused":
                     pa = draw_pause()
                     if type(pa) == tuple:
                         st = start()
             elif st == 'ended':
-                draw_end()
+                while st == 'ended':
+                    draw_end()
             else:
                 st = start()
 
