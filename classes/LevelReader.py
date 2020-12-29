@@ -133,7 +133,10 @@ def start():
         a.en_cont.update_all()
     if a.present_wave > a.amount_of_waves:
         return 'ended'
-    return True if not a.pause else 'paused'
+    elif not a.pause and not a.present_wave > a.amount_of_waves:
+        return True
+    else:
+        return 'paused'
 
 
 def draw_pause():
@@ -162,3 +165,4 @@ def draw_end():
     a.draw_background()
     end_buttons.listen(events)
     end_buttons.draw()
+    return True
