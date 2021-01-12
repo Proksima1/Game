@@ -94,14 +94,14 @@ def setup(filename):
     a.read_json(filename)
 
 
-def start(pause_b, end_b, should_continue=None):
+def start(pause_b, end_b, should_continue, control):
     """global running
     while running:"""
     events = pygame.event.get()
     global last_shoot
     global ended
     global state
-    if should_continue:
+    if should_continue and control == "running":
         state = 'running'
     current_time = pygame.time.get_ticks()
     for event in events:
@@ -146,6 +146,7 @@ def start(pause_b, end_b, should_continue=None):
             return True
         else:
             return 'paused'"""
+        print(state)
 
 
 def draw_pause(events, pause: ButtonArray):
