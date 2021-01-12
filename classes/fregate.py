@@ -189,6 +189,7 @@ class Enemy_level1(Enemy_ship):
                                 self.x += self.velocity
                                 self.rect.x = self.x
                         elif a == 2:
+                            # TODO переделать под корабль с 2 пушками
                             if self.enemy_shoot_count == 0:
                                 if player_ship.y + player_ship.h // 2 + 10 < self.rect.y + 30 < player_ship.y + player_ship.h // 2 + 35 and self.rect.x > player_ship.right:
                                     if not player.dead:
@@ -461,7 +462,6 @@ class Enemy_controller:
 
     def append_list(self, value: list):
         for i in value:
-            # print(value)
             self.list_of_enemies.append(i)
 
     def update_all(self):

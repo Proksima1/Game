@@ -144,36 +144,3 @@ class TileController:
 
     def __str__(self):
         return f'<TileController: {self.bullets}>'
-
-
-if __name__ == '__main__':
-    pygame.init()
-    size = width, height = 400, 400
-    screen = pygame.display.set_mode(size)
-    a = TileController(screen)
-    b = Tile(screen, (80, 32), 'W', 0)
-    c = Tile(screen, (90, 60), 'SW', 0)
-    a.append(b)
-    a.append(c)
-    """ship = Player_ship(screen, 32, 32, '../sprites/fregate/player/player_ship.png')
-    running = True
-    while running:
-        screen.fill('black')
-        moving = pygame.key.get_pressed()
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-        if moving[pygame.K_LEFT] or moving[pygame.K_a]:
-            ship.left()
-        if moving[pygame.K_RIGHT] or moving[pygame.K_d]:
-            ship.right()
-        if moving[pygame.K_UP] or moving[pygame.K_w]:
-            ship.up()
-        if moving[pygame.K_DOWN] or moving[pygame.K_s]:
-            ship.down()
-        ship.make_a_ship()
-        a.check_all_collision()
-        a.update_all()
-        # pygame.draw.rect(screen, 'red', c.rect)
-        pygame.display.flip()
-    pygame.quit()"""
