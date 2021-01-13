@@ -9,7 +9,6 @@ show_menu = True
 show_setting = False
 show_game = False
 clicked_on_return = None
-state = 'running'
 
 
 def quit_game():
@@ -71,16 +70,15 @@ def start_game():
         global show_setting
         global show_game
         global clicked_on_return
-        global state
         show_game = True
         show_menu = False
         show_setting = False
         setup('../LevelEditor/1.json')
         while show_game:
             if clicked_on_return is None:
-                start(pause_buttons, end_buttons, None, state)
+                start(pause_buttons, end_buttons)
             else:
-                start(pause_buttons, end_buttons, True, state)
+                start(pause_buttons, end_buttons, True)
                 clicked_on_return = None
 
     while show_menu:
