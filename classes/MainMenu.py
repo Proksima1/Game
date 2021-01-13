@@ -44,6 +44,8 @@ class MainMenu:
         quit.draw()
 
     def show_settings(self, events, *action):
+        global effects_volume
+        global music_volume
         self.screen.blit(pygame.transform.scale(self.backgroung, self.screen.get_size()), (0, 0))
         self.music_volume.listen(events)
         self.music_volume.draw()
@@ -55,8 +57,7 @@ class MainMenu:
                       text='BACK', margin=20, onClick=lambda: action[0](), font=pygame.font.Font(font_path, 25))
         back.listen(events)
         back.draw()
-        global effects_volume
-        global music_volume
+
         with open('../data/config.json', 'w+', encoding='utf-8') as conf:
             conf.write(json.dumps([{'effects_volume': str(self.effects_volume.getValue()),
                                     'music_volume': str(self.music_volume.getValue())}],

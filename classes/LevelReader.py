@@ -1,7 +1,5 @@
-from random import randint
 from pygame_widgets import ButtonArray
 
-from MainMenu import *
 from SpriteController import *
 
 
@@ -77,21 +75,32 @@ class LevelReader:
         return self.enemies.index(item)
 
 
-pygame.init()
-s_size = width, height = size
-screen = pygame.display.set_mode(s_size)
-pygame.display.set_caption('Кустик')
-clock = pygame.time.Clock()
-running = True
-pl = Player_ship(screen, 32, 32)
-a = LevelReader(screen, pl)
-a.sp_cont.append(pl)
-last_shoot = pygame.time.get_ticks()
-state = 'running'
+s_size = None
+screen = None
+clock = None
+running = None
+pl = None
+a = None
+last_shoot = None
+state = None
+level_number = None
 
 
 def setup(filename):
-    a.read_json(filename)
+    global s_size, screen, clock, running, pl, a, last_shoot, state
+    pygame.init()
+    s_size = width, height = size
+    screen = pygame.display.set_mode(s_size)
+    pygame.display.set_caption('Кустик')
+    clock = pygame.time.Clock()
+    running = True
+    pl = Player_ship(screen, 32, 32)
+    a = LevelReader(screen, pl)
+    a.sp_cont.append(pl)
+    last_shoot = pygame.time.get_ticks()
+    state = 'running'
+    a.read_json(os.path.join('../data/', filename))
+    level_number = filename[0]
 
 
 def start(pause_b, end_b, should_continue=None):
@@ -116,13 +125,14 @@ def start(pause_b, end_b, should_continue=None):
         if event.type == pygame.KEYDOWN:
             if event.key == 27 and state == 'running':  # esc
                 state = 'paused'
-                #pygame.mixer.stop()
+                # pygame.mixer.stop()
             elif event.key == 27 and state == 'paused':
                 state = 'running'
-                #pygame.mixer.unpause()
+                # pygame.mixer.unpause()
                 # continue
     else:
         if state == 'running':
+            channel.unpause()
             pl.move()
             a.sp_cont.draw_all()
             a.en_cont.CoinController.update_all()
@@ -138,8 +148,10 @@ def start(pause_b, end_b, should_continue=None):
                 a.en_cont.update_all()
         elif state == 'ended':
             draw_end(events, end_b)
+            channel.pause()
         elif state == 'paused':
             draw_pause(events, pause_b)
+            channel.pause()
         """if a.present_wave > a.amount_of_waves:
             return 'ended'
         elif not a.pause and not a.present_wave > a.amount_of_waves:
@@ -150,19 +162,6 @@ def start(pause_b, end_b, should_continue=None):
 
 def draw_pause(events, pause: ButtonArray):
     global state
-    # events = pygame.event.get()
-    # for event in events:
-    ##   if event.type == pygame.QUIT:
-    #     pygame.quit()
-    ##       quit()
-    #   if event.type == pygame.KEYDOWN:
-    #    if event.key == 27 and state == 'paused':  # esc
-    #       state = 'running'
-    #        #return tuple,
-    # continue
-    # d = Button(screen, 200, 300, 50, 50)
-    # d.draw()
-    # d.listen(events)
     a.draw_background()
     pause.draw()
     pause.listen(events)
@@ -170,13 +169,15 @@ def draw_pause(events, pause: ButtonArray):
 
 
 def draw_end(events, end: ButtonArray):
-    # events = pygame.event.get()
-    # for event in events:
-    #  if event.type == pygame.QUIT:
-    #     pygame.quit()
-    #   quit()
+    global level_number
     a.draw_background()
     end.listen(events)
     end.draw()
     pygame.display.flip()
-    # return True
+    with open('../data/save.json', 'w+', encoding='utf-8') as game_saver:
+        game_saver.write(json.dumps([{
+            'level': level_number,
+            'coins': pl.get_coins()
+        }, {
+            'upgrades': []
+        }], indent=4, separators=(',', ': '), sort_keys=True))

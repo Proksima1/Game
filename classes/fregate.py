@@ -72,10 +72,10 @@ class Generel_ship(pygame.sprite.Sprite):
 
 class Enemy_ship(Generel_ship):
     def __init__(self, screen, x, y, filename):
-        """Класс врага."""
+        """Класс врага для наследования."""
         super().__init__(screen, x, y, filename)
         self.enemy_bullet_controller = TileController(screen)
-        self.velocity = enemy_speed
+        self.velocity = None
         self.enemy_shoot_count = 0
         self.movement = ""
 
@@ -115,8 +115,10 @@ class Enemy_level1(Enemy_ship):
         """Враг, стреляющий пулями."""
         super().__init__(screen, x, y, Enemy_level1.filename)
         self.current_time = pygame.time.get_ticks()
+        self.velocity = enemy_speed_level1
 
     def random_move(self, player):
+        global channel
         player_ship = player.rect
         a = randint(1, 2)
         flag = False
@@ -238,8 +240,7 @@ class Enemy_level1(Enemy_ship):
             self.last_shoot = pygame.time.get_ticks()
             # воспроизведение звука выстрела
             sou = choice(self.piy)
-            sou.set_volume(effects_volume / 100)
-            sou.play()
+            channel.play(choice(self.piy))
         self.current_time = pygame.time.get_ticks()
 
 
@@ -249,6 +250,7 @@ class Enemy_level2(Enemy_ship):
     def __init__(self, screen, x, y):
         """Враг, стреляющий лазером."""
         super().__init__(screen, x, y, Enemy_level2.filename)
+        self.velocity = enemy_speed_level2
 
     def random_move(self, player):
         player_ship = player.rect
@@ -336,9 +338,7 @@ class Enemy_level2(Enemy_ship):
             self.enemy_bullet_controller.append(Tile(self.screen, (self.rect.x + 7, self.rect.y + 55), 'E', 0))
             self.enemy_shoot_count = 0
         sou = choice(self.piy)
-        sou.set_volume((effects_volume / 100))
-        print(effects_volume)
-        sou.play()
+        channel.play(choice(self.piy))
 
 
 class Player_ship(Generel_ship):
@@ -389,6 +389,9 @@ class Player_ship(Generel_ship):
         else:
             self.bullet_controller.clear()
 
+    def get_coins(self):
+        return self.coins_count
+
     def shoot(self):
         """Добавление выстреда в список и смена выстрела пушки."""
         if self.shoot_count == 0:
@@ -399,8 +402,7 @@ class Player_ship(Generel_ship):
             self.shoot_count = 0
         # поигрыш звука выстрела
         sou = choice(self.piy)
-        sou.set_volume((effects_volume / 100))
-        sou.play()
+        channel.play(choice(self.piy))
 
     def draw_heart(self):
         """Рисует хп игрока"""
@@ -433,7 +435,6 @@ class Player_ship(Generel_ship):
             pygame.draw.circle(self.screen, a, [int(particle[0][0]), int(particle[0][1])], int(particle[2]))
             if particle[2] <= 0:
                 self.particles.remove(particle)
-        #print(self.coins_count)
 
     def move(self):
         if not self.dead:

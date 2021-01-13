@@ -1,8 +1,8 @@
 [
     {
-        "amount_of_enemies": 2,
+        "amount_of_enemies": 3,
         "amount_of_waves": 3,
-        "max_level": 4,
+        "max_level": 1,
         "max_speed": 2
     }
 ]
