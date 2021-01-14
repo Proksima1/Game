@@ -57,7 +57,7 @@ def start_game():
             main.show_settings(events, return_to_menu_from_settings)
             pygame.display.flip()
 
-    def updstes_for_ship():
+    def updates():
         global update_menu
         global show_game
         while update_menu:

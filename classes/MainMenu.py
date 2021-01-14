@@ -66,6 +66,9 @@ class MainMenu:
         music_volume = int(self.music_volume.getValue())
         channel.set_volume(effects_volume / 100)
 
+    def update(self, events, *action):
+        pass
+
 
 # потом можно удалить
 if __name__ == '__main__':
