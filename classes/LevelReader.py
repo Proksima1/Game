@@ -87,7 +87,7 @@ level_number = None
 
 
 def setup(filename):
-    global s_size, screen, clock, running, pl, a, last_shoot, state
+    global s_size, screen, clock, running, pl, a, last_shoot, state, level_number
     pygame.init()
     s_size = width, height = size
     screen = pygame.display.set_mode(s_size)
@@ -100,7 +100,7 @@ def setup(filename):
     last_shoot = pygame.time.get_ticks()
     state = 'running'
     a.read_json(os.path.join('../data/', filename))
-    level_number = filename[0]
+    level_number = int(filename[0]) + 1
 
 
 def start(pause_b, end_b, should_continue=None):
@@ -152,12 +152,6 @@ def start(pause_b, end_b, should_continue=None):
         elif state == 'paused':
             draw_pause(events, pause_b)
             channel.pause()
-        """if a.present_wave > a.amount_of_waves:
-            return 'ended'
-        elif not a.pause and not a.present_wave > a.amount_of_waves:
-            return True
-        else:
-            return 'paused'"""
 
 
 def draw_pause(events, pause: ButtonArray):
@@ -180,4 +174,4 @@ def draw_end(events, end: ButtonArray):
             'coins': pl.get_coins()
         }, {
             'upgrades': []
-        }], indent=4, separators=(',', ': '), sort_keys=True))
+        }], indent=4, separators=(',', ': ')))

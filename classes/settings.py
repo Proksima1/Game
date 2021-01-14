@@ -27,5 +27,3 @@ except KeyError:
     effects_volume = 100
     music_volume = 100
 channel.set_volume(effects_volume / 100)
-#print(json.loads(open('../data/save.json', 'r+', encoding='utf-8').read()))
-#print(json.load(open('../data/save.json', 'r+', encoding='utf-8').read()))

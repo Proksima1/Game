@@ -11,6 +11,7 @@ _state = ''
 with open('../data/save.json', 'a+', encoding='utf-8') as _:
     pass
 
+
 def quit_game():
     pygame.quit()
     quit()

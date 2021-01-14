@@ -64,6 +64,7 @@ class MainMenu:
                                   indent=4, separators=(',', ': '), sort_keys=True))
         effects_volume = int(self.effects_volume.getValue())
         music_volume = int(self.music_volume.getValue())
+        channel.set_volume(effects_volume / 100)
 
 
 # потом можно удалить

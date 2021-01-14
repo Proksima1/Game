@@ -1,23 +1,23 @@
 import pygame
-
 from SpriteController import *
 from typing import Tuple
 from random import randint
 from settings import *
-#from fregate import Player_ship
-#pygame.mixer.init()
 
 
 class Item(pygame.sprite.Sprite):
     def __init__(self, screen: pygame.Surface, pos: Tuple[int, int], filename: str):
         pygame.sprite.Sprite.__init__(self)
-        self.image = (pygame.image.load(filename))
+        self.image = pygame.image.load(filename)
         self.rect = self.image.get_rect(center=pos)
         self.mask = pygame.mask.from_surface(self.image)
         self.x = self.rect.x
         self.y = self.rect.y
         self.screen = screen
         self.picked = False
+        self.pick_sound = None
+        self.count_anim = 1
+
 
     def pickup(self, player):
         if pygame.sprite.collide_mask(self, player):
@@ -36,21 +36,26 @@ class Item(pygame.sprite.Sprite):
 
 
 class Coin(Item):
-    filename = '../sprites/items/coin/coin.png'
+    basefile = '../sprites/items/coin/1.png'
+    f = [pygame.image.load(f'../sprites/items/coin/{i + 1}.png') for i in range(6)]
 
     def __init__(self, screen: pygame.Surface, pos: Tuple[int, int], player):
-        super().__init__(screen, pos, Coin.filename)
+        super().__init__(screen, pos, Coin.basefile)
         self.player = player
         self.coin_amount = randint(coin_amount[0], coin_amount[1])
-        self.pick_sound = pygame.mixer.Sound('../sounds/pickcoin/pick.mp3')
+        self.pick_sound = pygame.mixer.Sound('../sounds/pickitem/pickcoin.mp3')
 
     def update(self):
         try:
-            self.screen.blit(self.image, self.rect)
+            self.screen.blit(Coin.f[int(self.count_anim)], self.rect)
+            if self.count_anim < 5:
+                self.count_anim += 0.01
+            else:
+                self.count_anim = 0
             if self.pickup(self.player) and self.picked:
                 self.player.coins_count += self.coin_amount
                 self.pick_sound.play()
-                self.pick_sound.set_volume(effects_volume / 100)
+                channel.play(self.pick_sound)
                 return True
             return False
         except AttributeError:
@@ -64,12 +69,20 @@ class Heal(Item):
         super().__init__(screen, pos, Heal.filename)
         self.player = player
         self.heal_amount = heal_amount
+        self.pick_sound = pygame.mixer.Sound('../sounds/pickitem/pickheal.mp3')
 
     def update(self):
         try:
+            self.screen.blit(Heal.f[self.count_anim], self.rect)
+            if self.count_anim < 5:
+                self.count_anim += 1
+            else:
+                self.count_anim = 0
             self.screen.blit(self.image, self.rect)
             if self.pickup(self.player) and self.picked:
                 self.player.hp += self.heal_amount
+                self.pick_sound.play()
+                channel.play(self.pick_sound)
                 return True
             return False
         except AttributeError:
@@ -93,47 +106,3 @@ class ItemController:
 
     def __getitem__(self, item):
         return self.items.index(item)
-
-"""def plus(count):
-    font = pygame.font.Font(font_path, 40)
-    text = font.render(f'{count}', True, (255, 0, 0))
-    screen.blit(text, pygame.Rect((80, 80), (90, 90)))"""
-
-"""if __name__ == '__main__':
-    pygame.init()
-    size = width, height = size
-    screen = pygame.display.set_mode(size)
-    running = True
-    pl = Player_ship(screen, 32, 32)
-    clock = pygame.time.Clock()
-    cont = SpriteController(screen)
-    cont.append(pl)
-    coin = Coin(screen, (200, 200), pl)
-    coin1 = Coin(screen, (400, 400), pl)
-    counting = 0
-    while running:
-        moving = pygame.key.get_pressed()
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1:
-                    pl.shoot()
-        if coin.update():
-            counting += coin_amount
-        if coin1.update():
-            counting += coin_amount
-        plus(counting)
-        if moving[pygame.K_LEFT] or moving[pygame.K_a]:
-            pl.left()
-        if moving[pygame.K_RIGHT] or moving[pygame.K_d]:
-            pl.right()
-        if moving[pygame.K_UP] or moving[pygame.K_w]:
-            pl.up()
-        if moving[pygame.K_DOWN] or moving[pygame.K_s]:
-            pl.down()
-        cont.draw_all()
-        # pl.draw_shoot(a.en_cont.get_enemies())
-        pygame.display.flip()
-        screen.fill((0, 0, 0))
-    pygame.quit()"""
