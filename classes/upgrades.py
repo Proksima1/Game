@@ -46,7 +46,7 @@ class ButtonUpgrade(Button):
                     self.colour = self.inactiveColour
 
 
-class UpdateItem:
+class UpgrateItem:
     def __init__(self, screen, name, pos, filename=None):
         """Предмет улучшения корабля
         :param screen: На чем будет нарисован предмет
@@ -58,26 +58,24 @@ class UpdateItem:
         :type pos: Tuple[int, int, int, int]
         :param filename: Принимает путь к файлу иконки
         :type filename: str"""
+        self.screen = screen
         self.name = name
         self.filename = filename
         self.pos = pos
         self.inactive_color = (150, 150, 150)
-
-    def draw_button(self):
         if self.filename is None:
-            self.button = ButtonUpgrade(screen, self.pos[0], self.pos[1], self.pos[2], self.pos[3], text=self.name)
+            self.button = ButtonUpgrade(self.screen, self.pos[0], self.pos[1], self.pos[2], self.pos[3], text=self.name)
         else:
             try:
-                self.button = ButtonUpgrade(screen, self.pos[0], self.pos[1], self.pos[2], self.pos[3],
+                self.button = ButtonUpgrade(self.screen, self.pos[0], self.pos[1], self.pos[2], self.pos[3],
                                             image=pygame.transform.scale(pygame.image.load(self.filename),
                                                                          (self.pos[2], self.pos[3])),
                                             imageHAlign='centre', imageVAlign='centre',
                                             inactiveColour=self.inactive_color)
             except FileNotFoundError:
-                self.button = ButtonUpgrade(screen, self.pos[0], self.pos[1], self.pos[2], self.pos[3], text=self.name)
+                self.button = ButtonUpgrade(self.screen, self.pos[0], self.pos[1], self.pos[2], self.pos[3], text=self.name)
 
     def draw(self, events):
-        self.draw_button()
         self.button.listen(events)
         self.button.draw()
         print(self.button.click_count)
@@ -87,15 +85,16 @@ class UpdateItem:
             self.inactive_color = (150, 200, 150)
 
 
-class UpdateController:
+class UpgrateController:
     def __init__(self, screen):
         self.screen = screen
         self.damage = 40
         self.speed = 1
         self.health = 200
+        self.updatesItems = []
 
-    def append(self, value: UpdateItem):
-        pass
+    def append(self, value: UpgrateItem):
+        self.updatesItems.append(value)
 
     def damage_upg(self):
         with open('../data/save.json', 'w+', encoding='utf-8') as game_saver:
