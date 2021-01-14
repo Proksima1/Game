@@ -1,9 +1,19 @@
 [
     {
         "level": 2,
-        "coins": 0
+        "coins": 4
     },
     {
-        "upgrades": []
+        "upgrades": {
+            "damage_upg_1": false,
+            "damage_upg_2": false,
+            "damage_upg_3": false,
+            "speed_upg_1": false,
+            "speed_upg_2": false,
+            "speed_upg_3": false,
+            "health_upg_1": false,
+            "health_upg_2": false,
+            "health_upg_3": false
+        }
     }
 ]

@@ -1,8 +1,8 @@
 from SpriteController import *
 from fregate import *
 
-if __name__ == '__main__':
-    pygame.init()
+    if __name__ == '__main__':
+        pygame.init()
     # pygame.mixer.init()
     size = width, height = size
     screen = pygame.display.set_mode(size)

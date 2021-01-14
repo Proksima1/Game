@@ -2,11 +2,13 @@ from pygame_widgets import ButtonArray
 
 from LevelReader import *
 from MainMenu import MainMenu
+from upgrades import *
 
 show_menu = True
 show_setting = False
 show_game = False
 clicked_on_return = None
+update_menu = False
 _state = ''
 with open('../data/save.json', 'a+', encoding='utf-8') as _:
     pass
@@ -23,6 +25,12 @@ def start_game():
         global show_setting
         show_setting = False
         show_menu = True
+
+    def show_updates():
+        global update_menu
+        global show_game
+        show_game = False
+        update_menu = True
 
     def return_to_menu_from_game():
         global show_menu
@@ -49,6 +57,18 @@ def start_game():
             main.show_settings(events, return_to_menu_from_settings)
             pygame.display.flip()
 
+    def updstes_for_ship():
+        global update_menu
+        global show_game
+        while update_menu:
+            events = pygame.event.get()
+            for event in events:
+                if event.type == pygame.QUIT:
+                    update_menu = False
+                    show_game = False
+            main.Update(events, show_updates)
+            pygame.display.flip()
+
     global show_menu
     global show_setting
     global clicked_on_return
@@ -66,7 +86,7 @@ def start_game():
     pause_buttons = ButtonArray(screen, width // 3, height // 6, 400, 400, (1, 3),
                                 texts=('CONTINUE', 'OPTIONS', 'QUIT'), onClicks=(continue_game, settings, return_to_menu_from_game))
     end_buttons = ButtonArray(screen, width // 3, height // 6, 400, 400, (3, 1),
-                              texts=('BACK', 'UPGRADE', 'NEXT'), onClicks=(return_to_menu_from_game, quit_game, quit_game))
+                              texts=('BACK', 'UPGRADE', 'NEXT'), onClicks=(return_to_menu_from_game, updstes_for_ship, quit_game))
 
     def play():
         global show_menu

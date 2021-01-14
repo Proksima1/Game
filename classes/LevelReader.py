@@ -173,5 +173,14 @@ def draw_end(events, end: ButtonArray):
             'level': level_number,
             'coins': pl.get_coins()
         }, {
-            'upgrades': []
+            'upgrades': {
+                "damage_upg_1": False,
+                "damage_upg_2": False,
+                "damage_upg_3": False,
+                "speed_upg_1": False,
+                "speed_upg_2": False,
+                "speed_upg_3": False,
+                "health_upg_1": False,
+                "health_upg_2": False,
+                "health_upg_3": False}
         }], indent=4, separators=(',', ': ')))

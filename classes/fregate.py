@@ -5,6 +5,7 @@ from widgets import ProgressBar
 from time import sleep
 from random import choice
 from LevelReader import *
+from upgrades import *
 
 
 class Generel_ship(pygame.sprite.Sprite):
@@ -377,7 +378,7 @@ class Player_ship(Generel_ship):
                 self.screen.blit(self.hearts[1], pygame.Rect(x, 5, 19, 32))
                 x += 20
             # рисовка пустых сердечек
-            for i in range(int(5 - hp / 20)):
+            for i in range(int(Updates().health / 20 - hp / 20)):
                 self.screen.blit(self.hearts[2], pygame.Rect(x, 5, 19, 32))
                 x += 20
 
