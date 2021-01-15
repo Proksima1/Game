@@ -1,4 +1,3 @@
-import sys
 from ProjectTile import *
 from items import *
 from widgets import ProgressBar
@@ -485,9 +484,10 @@ class Enemy_controller:
         for i in self.list_of_enemies:
             if i.hp <= 0:
                 del self[i]
-                self.ItemController.append(Coin(self.screen, i.get_pos(), self.player))
-                if randint(1, 1) == 1:
-                    self.ItemController.append(Heal(self.screen, (i.get_pos()[0] - 10, i.get_pos()[1]), self.player))
+                if randint(1, 4) == 1:
+                    self.ItemController.append(Heal(self.screen, i.get_pos(), self.player))
+                else:
+                    self.ItemController.append(Coin(self.screen, i.get_pos(), self.player))
             else:
                 i.player_damage(player)
 

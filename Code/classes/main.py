@@ -72,7 +72,6 @@ def start_game():
 
     def next_level():
         global level, _state
-        level += 1
         _state = 'new_level'
         play()
 
@@ -97,10 +96,12 @@ def start_game():
 
     def play():
         global show_menu, show_setting, show_game
-        global clicked_on_return, _state
+        global clicked_on_return, _state, level
         show_game = True
         show_menu = False
         show_setting = False
+        with open('../data/save.json', 'r', encoding='utf-8') as level_picker:
+            level = json.loads(level_picker.read())[0]['level']
         setup(f'{level}.json')
         while show_game:
             if clicked_on_return is None:

@@ -1,6 +1,4 @@
 import json
-
-# from typing import Tuple
 import pygame
 from pygame_widgets import *
 

@@ -205,3 +205,11 @@ def draw_end(events, end: ButtonArray):
                 "health_upg_2": False,
                 "health_upg_3": False}
         }], indent=4, separators=(',', ': ')))
+
+
+def draw_loss(events, loss: ButtonArray):
+    a.draw_background()
+    loss.listen(events)
+    loss.draw()
+    pygame.display.flip()
+
