@@ -9,6 +9,7 @@ show_setting = False
 show_game = False
 clicked_on_return = None
 update_menu = False
+navigation_menu = False
 _state = ''
 level = 1
 with open('../data/save.json', 'a+', encoding='utf-8') as _:
@@ -24,7 +25,9 @@ def start_game():
     def return_to_menu_from_settings():
         global show_menu
         global show_setting
+        global navigation_menu
         show_setting = False
+        navigation_menu = False
         show_menu = True
 
     def show_updates():
@@ -57,6 +60,20 @@ def start_game():
                     show_setting = False
             main.show_settings(events, return_to_menu_from_settings)
             pygame.display.flip()
+
+    def navigation():
+        global navigation_menu
+        global show_menu
+        navigation_menu = True
+        while navigation_menu:
+            events = pygame.event.get()
+            for event in events:
+                if event.type == pygame.QUIT:
+                    show_menu = False
+                    navigation_menu = False
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        pygame.draw.rect(screen, "invisible", )
 
     def updates():
         global update_menu
@@ -119,7 +136,7 @@ def start_game():
             if event.type == pygame.QUIT:
                 show_menu = False
                 show_setting = False
-        main.show_menu(events, play, settings, quit)
+        main.show_menu(events, play, settings, quit, navigation)
         pygame.display.flip()
 
 
