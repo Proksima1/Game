@@ -93,8 +93,11 @@ def start_game():
                                 texts=('CONTINUE', 'OPTIONS', 'QUIT'), onClicks=(continue_game, settings, return_to_menu_from_game))
     end_buttons = ButtonArray(screen, width // 3, height // 6, 200, 200, (3, 1),
                               texts=('BACK', 'UPGRADE', 'NEXT'), onClicks=(return_to_menu_from_game, quit_game, next_level))
+    lost_buttons = ButtonArray(screen, 440, 160, 200, 200, (2, 1),
+                               texts=('BACK', 'AGAIN'), onClicks=(return_to_menu_from_game, quit_game))
 
     def play():
+        pygame.mixer.music.play(-1)
         global show_menu, show_setting, show_game
         global clicked_on_return, _state, level
         show_game = True
@@ -105,9 +108,9 @@ def start_game():
         setup(f'{level}.json')
         while show_game:
             if clicked_on_return is None:
-                start(pause_buttons, end_buttons)
+                start(pause_buttons, end_buttons, lost_buttons)
             else:
-                start(pause_buttons, end_buttons, True)
+                start(pause_buttons, end_buttons, lost_buttons, True)
                 clicked_on_return = None
             if _state != '':
                 _state = ''

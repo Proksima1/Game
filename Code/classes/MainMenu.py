@@ -1,7 +1,4 @@
-import pygame
 # from classes.button import Button
-from pygame_widgets.button import Button
-from pygame_widgets.slider import Slider
 
 from settings import *
 
@@ -13,7 +10,7 @@ class MainMenu:
         self.height = height
         self.width = width
         # загружаем картинку
-        self.backgroung = pygame.image.load('../test_photo.png')
+        self.backgroung = pygame.image.load('../sprites/mainmenu/bg.png')
         self.effects_volume = Slider(self.screen, self.width // 2, self.height // 3 - 100,
                                      100, 10, min=0, max=100, step=1, colour=(255, 255, 255),
                                      handleRadius=10, initial=effects_volume)
@@ -22,10 +19,10 @@ class MainMenu:
                                    handleRadius=10, initial=music_volume)
         self.effects_text = self.font.render('Effects volume', True, (0, 0, 0))
         self.effects_rect = self.effects_text.get_rect(center=(self.effects_volume.x - 130,
-                                                              self.effects_volume.y + 3))
+                                                               self.effects_volume.y + 3))
         self.music_text = self.font.render('Music volume', True, (0, 0, 0))
         self.music_rect = self.music_text.get_rect(center=(self.music_volume.x - 120,
-                                                            self.music_volume.y + 3))
+                                                           self.music_volume.y + 3))
 
     def show_menu(self, events, *action):
         play = Button(self.screen, self.width / 2 - 100, self.height / 2 - 150, 100, 50, text='PLAY',
@@ -65,6 +62,7 @@ class MainMenu:
         effects_volume = int(self.effects_volume.getValue())
         music_volume = int(self.music_volume.getValue())
         channel.set_volume(effects_volume / 100)
+        pygame.mixer.music.set_volume(music_volume / 100)
 
     def update(self, events, *action):
         pass

@@ -4,6 +4,7 @@ from widgets import ProgressBar
 from time import sleep
 from random import choice
 from LevelReader import *
+import sys
 from upgrades import *
 
 

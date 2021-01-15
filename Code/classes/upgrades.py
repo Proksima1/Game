@@ -1,6 +1,7 @@
 import json
 import pygame
 from pygame_widgets import *
+import os
 
 
 class ButtonUpgrade(Button):
@@ -16,36 +17,70 @@ class ButtonUpgrade(Button):
                 """
         now = pygame.time.get_ticks()
         if self.click_time is not None:
-            if now - self.click_time > 800 and self.click_count == 1:
+            if now - self.click_time > 8000 and self.click_count == 1:
                 self.click_count = 0
                 self.click_time = None
-            if not self.hidden:
-                pressed = pygame.mouse.get_pressed()[0]
-                x, y = pygame.mouse.get_pos()
-
-                if self.contains(x, y):
-                    if pressed:
-                        self.colour = self.pressedColour
-                        if not self.clicked:
-                            self.clicked = True
-                            self.onClick(*self.onClickParams)
-                            if self.click_count < 2:
-                                self.click_count += 1
-                            self.click_time = pygame.time.get_ticks()
-                    elif self.clicked:
-                        self.clicked = False
-                        self.onRelease(*self.onReleaseParams)
-
-                    else:
-                        self.colour = self.hoverColour
-
-                elif not pressed:
+        if not self.hidden:
+            pressed = pygame.mouse.get_pressed()[0]
+            x, y = pygame.mouse.get_pos()
+            if self.contains(x, y):
+                if pressed:
+                    self.colour = self.pressedColour
+                    if not self.clicked:
+                        self.clicked = True
+                        self.onClick(*self.onClickParams)
+                        if self.click_count < 2:
+                            self.click_count += 1
+                        self.click_time = pygame.time.get_ticks()
+                elif self.clicked:
                     self.clicked = False
-                    self.colour = self.inactiveColour
+                    self.onRelease(*self.onReleaseParams)
+
+                else:
+                    self.colour = self.hoverColour
+
+            elif not pressed:
+                self.clicked = False
+                self.colour = self.inactiveColour
+
+    def blit_text(self, surface, text, pos, font, color=pygame.Color('black')):
+        words = [word.split(' ') for word in text.splitlines()]  # 2D array where each row is a list of words.
+        space = font.size(' ')[0]  # The width of a space.
+        max_width, max_height = surface.get_size()
+        x, y = pos
+        for line in words:
+            for word in line:
+                word_surface = font.render(word, 0, color)
+                word_width, word_height = word_surface.get_size()
+                if x + word_width >= max_width:
+                    x = pos[0]  # Reset the x.
+                    y += word_height  # Start on new row.
+                surface.blit(word_surface, (x, y))
+                x += word_width + space
+            x = pos[0]  # Reset the x.
+            y += word_height  # Start on new row.
+
+    def change_color(self, desc):
+        font = pygame.font.Font(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'fonts/SuperLegendBoy-4w8Y.ttf'), 15)
+        if self.click_count == 0:
+            self.inactiveColour = (150, 150, 150)
+        elif self.click_count == 1:
+            self.inactiveColour = (120, 120, 120)
+            a = pygame.Surface((100, 200))
+            #text = font.render(desc, True, (255, 0, 0))
+            #rect = text.get_rect(center=(a.get_rect().width // 2, a.get_rect().height))
+            a.fill((220, 220, 220))
+            #print(a.get_rect().width)
+            self.blit_text(a, desc, (0, 0), font)
+            self.win.blit(a, pygame.Rect(self.x - 10, self.y + self.height + 5, a.get_rect().width, a.get_rect().height))
+            #self.win.blit(text, rect)
+        elif self.click_count == 2:
+            self.inactiveColour = (100, 100, 100)
+        self.hoverColour = self.inactiveColour
 
 
 class UpgrateItem:
-    def __init__(self, screen, name, pos, filename=None):
+    def __init__(self, screen, name, pos, description, filename=None):
         """Предмет улучшения корабля
         :param screen: На чем будет нарисован предмет
         :type screen: pygame.Surface
@@ -54,12 +89,15 @@ class UpgrateItem:
         :param pos: принимает 4 значения: позиция по x,
         позиция по y, ширина и высота соответственно.
         :type pos: Tuple[int, int, int, int]
+        :param description: Описание улучшения.
+        :type description: str
         :param filename: Принимает путь к файлу иконки
         :type filename: str"""
         self.screen = screen
         self.name = name
         self.filename = filename
         self.pos = pos
+        self.desc = description
         self.inactive_color = (150, 150, 150)
         if self.filename is None:
             self.button = ButtonUpgrade(self.screen, self.pos[0], self.pos[1], self.pos[2], self.pos[3], text=self.name)
@@ -76,11 +114,7 @@ class UpgrateItem:
     def draw(self, events):
         self.button.listen(events)
         self.button.draw()
-        print(self.button.click_count)
-        if self.button.click_count == 0:
-            self.inactive_color = (150, 150, 150)
-        elif self.button.click_count == 1:
-            self.inactive_color = (150, 200, 150)
+        self.button.change_color(self.desc)
 
 
 class UpgrateController:
@@ -267,7 +301,7 @@ if __name__ == '__main__':
     pygame.init()
     size = width, height = 500, 500
     screen = pygame.display.set_mode(size)
-    a = UpdateItem(screen, 'fasfas', (10, 20, 200, 200), filename='../sprites/upgrades/damage_upgrade.png')
+    a = UpgrateItem(screen, 'fasfas', (20, 20, 80, 80), "Improves player's cannon damage.", filename='../sprites/upgrades/damage_upgrade.png')
     running = True
     while running:
         events = pygame.event.get()
@@ -276,3 +310,4 @@ if __name__ == '__main__':
                 running = False
         a.draw(events)
         pygame.display.flip()
+        screen.fill((0, 0, 0))

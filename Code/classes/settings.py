@@ -20,6 +20,7 @@ heal_amount = 20
 coin_amount = (2, 10)
 font_size = 30
 channel = pygame.mixer.Channel(1)
+mus_channel = pygame.mixer.Channel(1)
 with open(os.path.join(path, 'data/config.json'), 'r+', encoding='utf-8') as conf:
     text = json.load(conf)
 try:
@@ -28,4 +29,6 @@ try:
 except KeyError:
     effects_volume = 100
     music_volume = 100
+pygame.mixer.music.load("../sounds/music/mus.mp3")
+pygame.mixer.music.set_volume(music_volume / 100)
 channel.set_volume(effects_volume / 100)

@@ -121,7 +121,7 @@ def setup(filename):
     font = pygame.font.Font(font_path, 20)
 
 
-def start(pause_b, end_b, should_continue=None):
+def start(pause_b, end_b, loss, should_continue=None):
     events = pygame.event.get()
     global last_shoot, state, ended_count, end_time, s_size
     if should_continue:
@@ -149,8 +149,15 @@ def start(pause_b, end_b, should_continue=None):
             a.en_cont.ItemController.update_all()
             a.en_cont.draw_bullets([pl])
             pl.draw_shoot(a.get_enemies())
+            if pl.hp <= 0:
+                state = 'dead'
             pygame.display.flip()
             a.draw_background()
+            coins = font.render(
+                f'You collected {pl.get_coins()} riddilions.',
+                True, (249, 166, 2))
+            coin_rect = coins.get_rect(center=(s_size[0] - 200, 20))
+            screen.blit(coins, coin_rect)
             if not a.check_wave():
                 if a.generate_enemies():
                     pass
@@ -162,7 +169,7 @@ def start(pause_b, end_b, should_continue=None):
             if end_time is not None:
                 text = font.render(
                     f'You have another {10 - int(int(pygame.time.get_ticks() - end_time) / 1000)} seconds to collect all the rewards.',
-                    True, (0, 0, 0))
+                    True, (249, 166, 2))
                 rect = text.get_rect(center=(s_size[0] / 2, 50))
                 screen.blit(text, rect)
                 if pygame.time.get_ticks() - end_time > 10000:
@@ -173,6 +180,8 @@ def start(pause_b, end_b, should_continue=None):
         elif state == 'paused':
             draw_pause(events, pause_b)
             channel.pause()
+        #elif state == 'dead':
+            #sdraw_loss(events, loss)
 
 
 def draw_pause(events, pause: ButtonArray):
@@ -208,8 +217,12 @@ def draw_end(events, end: ButtonArray):
 
 
 def draw_loss(events, loss: ButtonArray):
-    a.draw_background()
-    loss.listen(events)
-    loss.draw()
-    pygame.display.flip()
+    #self.music_text = self.font.render('Music volume', True, (0, 0, 0))
+    #self.music_rect = self.music_text.get_rect(center=(self.music_volume.x - 120,
+     #                                                  self.music_volume.y + 3))
+    #a.draw_background()
+    #loss.listen(events)
+    pass
+   # loss.draw()
+    #pygame.display.flip()
 

@@ -5,11 +5,6 @@ from pygame_widgets.slider import Slider
 from pygame_widgets.textbox import TextBox
 
 
-class TextBoxUpdated(Slider):
-    def __init__(self, win, x, y, width, height):
-        super().__init__(win, x, y, width, height)
-
-
 class ProgressBar:
     def __init__(self, screen: pygame.Surface, color: str, x: int, y: int, width: int, height: int):
         self.screen = screen
