@@ -10,6 +10,7 @@ show_game = False
 clicked_on_return = None
 update_menu = False
 _state = ''
+level = 1
 with open('../data/save.json', 'a+', encoding='utf-8') as _:
     pass
 
@@ -66,8 +67,14 @@ def start_game():
                 if event.type == pygame.QUIT:
                     update_menu = False
                     show_game = False
-            main.Update(events, show_updates)
+            main.update(events, show_updates)
             pygame.display.flip()
+
+    def next_level():
+        global level, _state
+        level += 1
+        _state = 'new_level'
+        play()
 
     global show_menu
     global show_setting
@@ -85,19 +92,16 @@ def start_game():
 
     pause_buttons = ButtonArray(screen, width // 3, height // 6, 400, 400, (1, 3),
                                 texts=('CONTINUE', 'OPTIONS', 'QUIT'), onClicks=(continue_game, settings, return_to_menu_from_game))
-    end_buttons = ButtonArray(screen, width // 3, height // 6, 400, 400, (3, 1),
-                              texts=('BACK', 'UPGRADE', 'NEXT'), onClicks=(return_to_menu_from_game, updstes_for_ship, quit_game))
+    end_buttons = ButtonArray(screen, width // 3, height // 6, 200, 200, (3, 1),
+                              texts=('BACK', 'UPGRADE', 'NEXT'), onClicks=(return_to_menu_from_game, quit_game, next_level))
 
     def play():
-        global show_menu
-        global show_setting
-        global show_game
-        global clicked_on_return
-        global _state
+        global show_menu, show_setting, show_game
+        global clicked_on_return, _state
         show_game = True
         show_menu = False
         show_setting = False
-        setup('1.json')
+        setup(f'{level}.json')
         while show_game:
             if clicked_on_return is None:
                 start(pause_buttons, end_buttons)
@@ -105,9 +109,8 @@ def start_game():
                 start(pause_buttons, end_buttons, True)
                 clicked_on_return = None
             if _state != '':
+                _state = ''
                 break
-        else:
-            _state = ''
 
     while show_menu:
         events = pygame.event.get()

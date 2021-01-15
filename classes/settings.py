@@ -3,13 +3,13 @@ import json
 import pygame
 from upgrades import *
 pygame.mixer.init()
-upds = Updates()
+#upds = Updates()
 path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 enemy_speed_level1 = 0.3
 enemy_speed_level2 = 0.8
 player_speed = 1
 tile_speed = 2
-hp = upds.health
+hp = 100
 enemy_level1_hp = 1000
 size = (1280, 720)
 player_damage = 1000

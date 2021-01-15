@@ -38,7 +38,7 @@ def start_game():
                         pl.shoot()
             pl.move()
             a.sp_cont.draw_all()
-            a.en_cont.CoinController.update_all()
+            a.en_cont.ItemController.update_all()
             if a.check_wave():
                 a.generate_enemies()
                 a.en_cont.update_all()

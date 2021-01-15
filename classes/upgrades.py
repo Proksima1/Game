@@ -265,15 +265,16 @@ class UpgrateController:
         pygame.display.flip()
         screen.fill((0, 0, 0))
     pygame.quit()"""
-pygame.init()
-size = width, height = 500, 500
-screen = pygame.display.set_mode(size)
-a = UpdateItem(screen, 'fasfas', (10, 20, 200, 200), filename='../sprites/upgrades/damage_upgrade.png')
-running = True
-while running:
-    events = pygame.event.get()
-    for event in events:
-        if event.type == pygame.QUIT:
-            running = False
-    a.draw(events)
-    pygame.display.flip()
+if __name__ == '__main__':
+    pygame.init()
+    size = width, height = 500, 500
+    screen = pygame.display.set_mode(size)
+    a = UpdateItem(screen, 'fasfas', (10, 20, 200, 200), filename='../sprites/upgrades/damage_upgrade.png')
+    running = True
+    while running:
+        events = pygame.event.get()
+        for event in events:
+            if event.type == pygame.QUIT:
+                running = False
+        a.draw(events)
+        pygame.display.flip()

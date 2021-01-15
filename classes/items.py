@@ -54,7 +54,6 @@ class Coin(Item):
                 self.count_anim = 0
             if self.pickup(self.player) and self.picked:
                 self.player.coins_count += self.coin_amount
-                self.pick_sound.play()
                 channel.play(self.pick_sound)
                 return True
             return False
@@ -63,25 +62,28 @@ class Coin(Item):
 
 
 class Heal(Item):
-    filename = ''
+    basefile = '../sprites/items/heal/healing01.png'
+    f = [pygame.image.load(f'../sprites/items/heal/healing0{i + 1}.png') for i in range(2)]
 
     def __init__(self, screen: pygame.Surface, pos: Tuple[int, int], player):
-        super().__init__(screen, pos, Heal.filename)
+        super().__init__(screen, pos, Heal.basefile)
         self.player = player
         self.heal_amount = heal_amount
         self.pick_sound = pygame.mixer.Sound('../sounds/pickitem/pickheal.mp3')
 
     def update(self):
         try:
-            self.screen.blit(Heal.f[self.count_anim], self.rect)
-            if self.count_anim < 5:
-                self.count_anim += 1
+            self.screen.blit(Heal.f[int(self.count_anim)], self.rect)
+            if self.count_anim < 1:
+                self.count_anim += 0.1
             else:
                 self.count_anim = 0
             self.screen.blit(self.image, self.rect)
             if self.pickup(self.player) and self.picked:
-                self.player.hp += self.heal_amount
-                self.pick_sound.play()
+                if self.player.hp < 100:
+                    self.player.hp += self.heal_amount
+                    if self.player.hp > 100:
+                        self.player.hp = 100
                 channel.play(self.pick_sound)
                 return True
             return False

@@ -100,6 +100,7 @@ class TileController:
             return None
 
     def clear(self):
+        """Очищает список пуль."""
         self.bullets.clear()
 
     def update_all(self):

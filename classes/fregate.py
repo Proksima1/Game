@@ -378,7 +378,7 @@ class Player_ship(Generel_ship):
                 self.screen.blit(self.hearts[1], pygame.Rect(x, 5, 19, 32))
                 x += 20
             # рисовка пустых сердечек
-            for i in range(int(Updates().health / 20 - hp / 20)):
+            for i in range(int(5 - hp / 20)):
                 self.screen.blit(self.hearts[2], pygame.Rect(x, 5, 19, 32))
                 x += 20
 
@@ -456,7 +456,7 @@ class Enemy_controller:
         self.list_of_enemies = []
         self.player = player
         self.screen = screen
-        self.CoinController = ItemController(self.screen)
+        self.ItemController = ItemController(self.screen)
 
     def append(self, value: Enemy_ship):
         """Добавляет врага в список врагов."""
@@ -485,7 +485,9 @@ class Enemy_controller:
         for i in self.list_of_enemies:
             if i.hp <= 0:
                 del self[i]
-                self.CoinController.append(Coin(self.screen, i.get_pos(), self.player))
+                self.ItemController.append(Coin(self.screen, i.get_pos(), self.player))
+                if randint(1, 1) == 1:
+                    self.ItemController.append(Heal(self.screen, (i.get_pos()[0] - 10, i.get_pos()[1]), self.player))
             else:
                 i.player_damage(player)
 

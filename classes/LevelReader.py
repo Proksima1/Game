@@ -56,12 +56,14 @@ class LevelReader:
             return False
 
     def get_enemies(self):
+        """Очищает список от мертвых врагов и возвращает список."""
         for i in self.enemies:
             if i.hp <= 0:
                 del self[i]
         return self.enemies
 
     def check_wave(self):
+        """Возвращает True, если контроллер врагов не пуст, иначе False."""
         if self.en_cont:
             return True
         return False
@@ -84,10 +86,25 @@ a = None
 last_shoot = None
 state = None
 level_number = None
+ended_count = 0
+end_time = None
+font = None
 
 
 def setup(filename):
-    global s_size, screen, clock, running, pl, a, last_shoot, state, level_number
+    global s_size, screen, clock, running, pl, a, last_shoot, state, level_number, font, end_time, ended_count
+    s_size = None
+    screen = None
+    clock = None
+    running = None
+    pl = None
+    a = None
+    last_shoot = None
+    state = None
+    level_number = None
+    ended_count = 0
+    end_time = None
+    font = None
     pygame.init()
     s_size = width, height = size
     screen = pygame.display.set_mode(s_size)
@@ -101,15 +118,12 @@ def setup(filename):
     state = 'running'
     a.read_json(os.path.join('../data/', filename))
     level_number = int(filename[0]) + 1
+    font = pygame.font.Font(font_path, 20)
 
 
 def start(pause_b, end_b, should_continue=None):
-    """global running
-    while running:"""
     events = pygame.event.get()
-    global last_shoot
-    global ended
-    global state
+    global last_shoot, state, ended_count, end_time, s_size
     if should_continue:
         state = 'running'
     current_time = pygame.time.get_ticks()
@@ -125,17 +139,14 @@ def start(pause_b, end_b, should_continue=None):
         if event.type == pygame.KEYDOWN:
             if event.key == 27 and state == 'running':  # esc
                 state = 'paused'
-                # pygame.mixer.stop()
             elif event.key == 27 and state == 'paused':
                 state = 'running'
-                # pygame.mixer.unpause()
-                # continue
     else:
         if state == 'running':
             channel.unpause()
             pl.move()
             a.sp_cont.draw_all()
-            a.en_cont.CoinController.update_all()
+            a.en_cont.ItemController.update_all()
             a.en_cont.draw_bullets([pl])
             pl.draw_shoot(a.get_enemies())
             pygame.display.flip()
@@ -144,8 +155,18 @@ def start(pause_b, end_b, should_continue=None):
                 if a.generate_enemies():
                     pass
                 else:
-                    state = 'ended'
+                    if not ended_count:
+                        end_time = pygame.time.get_ticks()
+                        ended_count += 1
                 a.en_cont.update_all()
+            if end_time is not None:
+                text = font.render(
+                    f'You have another {10 - int(int(pygame.time.get_ticks() - end_time) / 1000)} seconds to collect all the rewards.',
+                    True, (0, 0, 0))
+                rect = text.get_rect(center=(s_size[0] / 2, 50))
+                screen.blit(text, rect)
+                if pygame.time.get_ticks() - end_time > 10000:
+                    state = 'ended'
         elif state == 'ended':
             draw_end(events, end_b)
             channel.pause()
