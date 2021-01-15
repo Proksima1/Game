@@ -27,7 +27,6 @@ class MainMenu:
         self.music_rect = self.music_text.get_rect(center=(self.music_volume.x - 120,
                                                            self.music_volume.y + 3))
         self.navig_text = self.font.render("Для управления кораблём используйте WASD. Для стрельбы используйте ЛКМ.", True, (0, 0, 0))
-        self.rect_text = self.navig_text.get_rect(center=(self.width - 100, self.height - 100, 75, 75))
 
     def show_menu(self, events, *action):
         play = Button(self.screen, self.width / 2 - 100, self.height / 2 - 150, 100, 50, text='PLAY',
@@ -50,7 +49,7 @@ class MainMenu:
         about.draw()
 
     def navigation_menu(self):
-        
+        pass
 
     def show_settings(self, events, *action):
         global effects_volume

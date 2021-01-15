@@ -108,7 +108,7 @@ def start_game():
 
     pause_buttons = ButtonArray(screen, width // 3, height // 6, 400, 400, (1, 3),
                                 texts=('CONTINUE', 'OPTIONS', 'QUIT'), onClicks=(continue_game, settings, return_to_menu_from_game))
-    end_buttons = ButtonArray(screen, width // 3, height // 6, 200, 200, (3, 1),
+    end_buttons = ButtonArray(screen, width // 2.5, height // 4, 300, 200, (3, 1),
                               texts=('BACK', 'UPGRADE', 'NEXT'), onClicks=(return_to_menu_from_game, quit_game, next_level))
 
     def play():
