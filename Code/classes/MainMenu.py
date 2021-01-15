@@ -23,6 +23,7 @@ class MainMenu:
         self.music_text = self.font.render('Music volume', True, (0, 0, 0))
         self.music_rect = self.music_text.get_rect(center=(self.music_volume.x - 120,
                                                            self.music_volume.y + 3))
+        self.navig_text = self.font.render("Для управления кораблём используйте WASD. Для стрельбы используйте ЛКМ.", True, (0, 0, 0))
 
     def show_menu(self, events, *action):
         play = Button(self.screen, self.width / 2 - 100, self.height / 2 - 150, 100, 50, text='PLAY',
@@ -39,6 +40,13 @@ class MainMenu:
                       text='QUIT', margin=20, onClick=lambda: action[2](), font=pygame.font.Font(font_path, 25))
         quit.listen(events)
         quit.draw()
+        about = Button(self.screen, self.width - 100, self.height - 100, 75, 75,
+                       text='?', margin=20, onClick=lambda: action[3](), radius=50, font=pygame.font.Font(font_path, 40))
+        about.listen(events)
+        about.draw()
+
+    def navigation_menu(self):
+        pass
 
     def show_settings(self, events, *action):
         global effects_volume
@@ -63,9 +71,6 @@ class MainMenu:
         music_volume = int(self.music_volume.getValue())
         channel.set_volume(effects_volume / 100)
         pygame.mixer.music.set_volume(music_volume / 100)
-
-    def update(self, events, *action):
-        pass
 
 
 # потом можно удалить
