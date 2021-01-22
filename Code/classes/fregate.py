@@ -1,82 +1,85 @@
-from ProjectTile import *
-from items import *
-from widgets import ProgressBar
-from time import sleep
-from random import choice
-from LevelReader import *
 import sys
+from random import choice
+from time import sleep
+
+from items import *
 from upgrades import *
+from widgets import ProgressBar
 
 
 class Generel_ship(pygame.sprite.Sprite):
     def __init__(self, screen: pygame.Surface, x, y, filename):
         """Главный класс корабля."""
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load(filename)
-        self.rect = self.image.get_rect(center=(x, y))
-        self.mask = pygame.mask.from_surface(self.image)
-        self.x = self.rect.x
-        self.y = self.rect.y
-        self.screen = screen
-        self.hp = hp
+        self.image = pygame.image.load(filename)  # установка картинки корабля
+        self.rect = self.image.get_rect(center=(x, y))  # создание коллизии корабля
+        self.mask = pygame.mask.from_surface(self.image)  # создание маски картинки
+        self.x = self.rect.x  # создание x корабля
+        self.y = self.rect.y  # создание y корабля
+        self.screen = screen  # переменная экрана корабля
+        self.hp = hp  # переменная хп корабля
+        # список звуков выстрела
         self.piy = [pygame.mixer.Sound('../sounds/shoot/shoot1.wav'),
                     pygame.mixer.Sound('../sounds/shoot/shoot3.mp3')]
+        # звук взрыва
         self.exp = pygame.mixer.Sound('../sounds/explosion/expl1.wav')
-        self.shoots = []
-        self.velocity = 0.05
+        self.velocity = 0.05  # начальная скорость
+        # инициализация прогресс бара
         self.bar = ProgressBar(self.screen, "red", self.rect.x, self.rect.y + 10, 25, 5)
+        # время последнего выстрела
         self.last_shoot = pygame.time.get_ticks()
 
     def update_bar(self):
         """Обновляет позицию бара и обновление количества Хп"""
-        self.bar.x = self.rect.x
-        self.bar.y = self.rect.y
-        self.bar.draw(self.hp)
+        self.bar.x = self.rect.x  # позиция прогресс бара по x
+        self.bar.y = self.rect.y  # позиция прогресс бара по y
+        self.bar.draw(self.hp)  # отрисовка прогресс бара
 
     def down(self):
         """Перемещение вниз."""
-        if int(self.rect.y) + 59 <= self.screen.get_height():
-            self.y += self.velocity
-            self.rect.y = self.y
+        if int(self.rect.y) + 59 <= self.screen.get_height():  # проверка, что корабль не выходит за экран
+            self.y += self.velocity  # перемещение корабля
+            self.rect.y = self.y  # установка коллизии по y
 
     def up(self):
         """Перемещение вверх."""
-        if int(self.y) + 5 >= 0:
-            self.y -= self.velocity
-            self.rect.y = self.y
+        if int(self.y) + 5 >= 0:  # проверка, что корабль не выходит за экран
+            self.y -= self.velocity  # перемещение корабля
+            self.rect.y = self.y  # установка коллизии по y
 
     def left(self):
         """Перемещение налево."""
-        if int(self.x) + 2 >= 0:
-            self.x -= self.velocity
-            self.rect.x = self.x
+        if int(self.x) + 2 >= 0:  # проверка, что корабль не выходит за экран
+            self.x -= self.velocity  # перемещение корабля
+            self.rect.x = self.x  # установка коллизии по x
 
     def right(self):
         """Перемещение направо."""
+        # проверка, что корабль не выходит за экран
         if int(self.rect.x) + 64 <= self.screen.get_width():
-            self.x += self.velocity
-            self.rect.x = self.x
+            self.x += self.velocity  # перемещение корабля
+            self.rect.x = self.x  # установка коллизии по x
 
     def make_a_ship(self):
         """Рисует корабль на переданном экране"""
-        self.screen.blit(self.image, self.rect)
+        self.screen.blit(self.image, self.rect)  # Отрисовка корабля на экране
 
     def get_damage(self, amount_number):
         """Отнимает количество переданного урона от хп и обновляет бар"""
-        self.hp -= amount_number
-        self.update_bar()
+        self.hp -= amount_number  # отнимание урона от хп
+        self.update_bar()  # обновление прогресс бара
 
     def get_pos(self):
         """Возвращает позицию игрока."""
-        return self.x, self.y
+        return self.x, self.y  # возвращает позицию корабля
 
 
 class Enemy_ship(Generel_ship):
     def __init__(self, screen, x, y, filename):
         """Класс врага для наследования."""
         super().__init__(screen, x, y, filename)
-        self.enemy_bullet_controller = TileController(screen)
-        self.velocity = None
+        self.enemy_bullet_controller = TileController(screen)  # инициализация контроллера пуль
+        self.velocity = None  # инициализация скорости
         self.enemy_shoot_count = 0
         self.movement = ""
 
@@ -91,9 +94,11 @@ class Enemy_ship(Generel_ship):
     def player_damage(self, player_ship):
         """Проверка коллизии с кораблём и движение пули."""
         if not player_ship[0].dead:
-            self.enemy_bullet_controller.update_all()
+            self.enemy_bullet_controller.update_all()  # обновление контроллера пуль
+            # проверка всех пуль на соприкосновение с кораблем
             self.enemy_bullet_controller.check_all_collision(player_ship, enemy_damage)
         else:
+            # очистка контроллера пуль
             self.enemy_bullet_controller.clear()
 
     def enemy_shoot(self):
@@ -115,13 +120,13 @@ class Enemy_level1(Enemy_ship):
     def __init__(self, screen, x, y):
         """Враг, стреляющий пулями."""
         super().__init__(screen, x, y, Enemy_level1.filename)
-        self.current_time = pygame.time.get_ticks()
-        self.velocity = enemy_speed_level1
+        self.current_time = pygame.time.get_ticks()  # нынешнее время в тиках
+        self.velocity = enemy_speed_level1  # скорость врага уровня 1
 
     def random_move(self, player):
         global channel
         player_ship = player.rect
-        a = randint(1, 2)
+        a = randint(1, 2)  # выбор тактики движения
         flag = False
 
         def isValid(value: pygame.Surface):
@@ -231,17 +236,20 @@ class Enemy_level1(Enemy_ship):
                     sys.exit()
 
     def enemy_shoot(self):
-        if self.current_time - self.last_shoot > 500:
-            if self.enemy_shoot_count == 0:
+        if self.current_time - self.last_shoot > 500:  # таймер на 5 секунд
+            if self.enemy_shoot_count == 0:  # проверка на то, что стрелят 1 пушка
+                # добавление новой пули
                 self.enemy_bullet_controller.append(Tile(self.screen, (self.rect.x + 7, self.rect.y + 13), 'E', 0))
                 self.enemy_shoot_count = 1
-            elif self.enemy_shoot_count == 1:
+            elif self.enemy_shoot_count == 1:  # проверка на то, что стреляет 2 пушка
+                # добавление новой пули
                 self.enemy_bullet_controller.append(Tile(self.screen, (self.rect.x + 7, self.rect.y + 51), 'E', 0))
                 self.enemy_shoot_count = 0
             self.last_shoot = pygame.time.get_ticks()
             # воспроизведение звука выстрела
             sou = choice(self.piy)
             channel.play(choice(self.piy))
+        # нынешнее время в тиках
         self.current_time = pygame.time.get_ticks()
 
 
@@ -251,6 +259,7 @@ class Enemy_level2(Enemy_ship):
     def __init__(self, screen, x, y):
         """Враг, стреляющий лазером."""
         super().__init__(screen, x, y, Enemy_level2.filename)
+        # скорость врага
         self.velocity = enemy_speed_level2
 
     def random_move(self, player):
@@ -326,18 +335,23 @@ class Enemy_level2(Enemy_ship):
                     sys.exit()
 
     def enemy_shoot(self):
-        if self.enemy_shoot_count == 0:
+        if self.enemy_shoot_count == 0:  # проверка на то, что стреляет 1 пушка
+            # добавление новой пули
             self.enemy_bullet_controller.append(Tile(self.screen, (self.rect.x + 7, self.rect.y + 9), 'E', 0))
             self.enemy_shoot_count = 1
-        elif self.enemy_shoot_count == 1:
+        elif self.enemy_shoot_count == 1:  # проверка на то, что стреляет 2 пушка
+            # добавление новой пули
             self.enemy_bullet_controller.append(Tile(self.screen, (self.rect.x + 7, self.rect.y + 13), 'E', 0))
             self.enemy_shoot_count = 2
-        elif self.enemy_shoot_count == 2:
+        elif self.enemy_shoot_count == 2:  # проверка на то, что стреляет 3 пушка
+            # добавление новой пули
             self.enemy_bullet_controller.append(Tile(self.screen, (self.rect.x + 7, self.rect.y + 51), 'E', 0))
             self.enemy_shoot_count = 3
         else:
+            # добавление новой пули
             self.enemy_bullet_controller.append(Tile(self.screen, (self.rect.x + 7, self.rect.y + 55), 'E', 0))
             self.enemy_shoot_count = 0
+        # воспроизведение звука выстрела
         sou = choice(self.piy)
         channel.play(choice(self.piy))
 
@@ -349,12 +363,12 @@ class Player_ship(Generel_ship):
         """Главный корабль игрока."""
         super().__init__(screen, x, y, Player_ship.filename)
         self.shoot_count = 0
-        self.velocity = player_speed
-        self.bullet_controller = TileController(screen)
-        self.heart_drawer = self.Heart(screen)
-        self.dead = False
-        self.particles = []
-        self.coins_count = 0
+        self.velocity = player_speed  # скорость игрока
+        self.bullet_controller = TileController(screen)  # инициализация контроллера пуль
+        self.heart_drawer = self.Heart(screen)  # рисует количество хп
+        self.dead = False  # переменная обозначающая живучесть игрока, True если мертв
+        self.particles = []  # список частиц корабля
+        self.coins_count = 0  # счетчик монеток
 
     class Heart(pygame.sprite.Sprite):
         def __init__(self, screen: pygame.Surface):
@@ -385,20 +399,24 @@ class Player_ship(Generel_ship):
     def draw_shoot(self, list_of_enemies):
         """Рисование выстрела, его исчезновение и урон по врагам."""
         if not self.dead:
-            self.bullet_controller.update_all()
+            self.bullet_controller.update_all()  # обновление контроллера пуль
+            # проверка коллизий всех пуль
             self.bullet_controller.check_all_collision(list_of_enemies, player_damage)
         else:
             self.bullet_controller.clear()
 
     def get_coins(self):
+        """Возвращает количества монет"""
         return self.coins_count
 
     def shoot(self):
         """Добавление выстреда в список и смена выстрела пушки."""
         if self.shoot_count == 0:
+            # добавляет пулю в контроллер пуль
             self.bullet_controller.append(Tile(self.screen, (self.rect.x + 38, self.rect.y + 7), 'W', 0))
             self.shoot_count = 1
         else:
+            # добавляет пулю в контроллер пуль
             self.bullet_controller.append(Tile(self.screen, (self.rect.x + 38, self.rect.y + 55), 'W', 0))
             self.shoot_count = 0
         # поигрыш звука выстрела
@@ -416,6 +434,7 @@ class Player_ship(Generel_ship):
     def make_a_particle(self):
         """Рисует след за ракетой по направлению движения."""
         moving = pygame.key.get_pressed()
+        # выбор направления рисовки частиц
         if moving[pygame.K_LEFT] or moving[pygame.K_a]:
             self.particles.append([[self.rect.x + 3, self.rect.centery], [-2, 0], randint(4, 8)])
         elif moving[pygame.K_RIGHT] or moving[pygame.K_d]:
@@ -438,8 +457,8 @@ class Player_ship(Generel_ship):
                 self.particles.remove(particle)
 
     def move(self):
-        if not self.dead:
-            moving = pygame.key.get_pressed()
+        if not self.dead:  # проверка на то, что игрок не мертв
+            moving = pygame.key.get_pressed()  # получение клавиш нажатия
             if moving[pygame.K_LEFT] or moving[pygame.K_a]:
                 self.left()
             if moving[pygame.K_RIGHT] or moving[pygame.K_d]:
@@ -453,16 +472,17 @@ class Player_ship(Generel_ship):
 class Enemy_controller:
     def __init__(self, screen, player: Player_ship):
         """Контроллирует всех врагов."""
-        self.list_of_enemies = []
-        self.player = player
-        self.screen = screen
-        self.ItemController = ItemController(self.screen)
+        self.list_of_enemies = []  # список врагов
+        self.player = player  # корабль игрока
+        self.screen = screen  # экран, для рисовки на нём врагов
+        self.ItemController = ItemController(self.screen)  # контроллер предметов
 
     def append(self, value: Enemy_ship):
         """Добавляет врага в список врагов."""
         self.list_of_enemies.append(value)
 
     def append_list(self, value: list):
+        # добавление врагов в список
         for i in value:
             self.list_of_enemies.append(i)
 
