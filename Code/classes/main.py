@@ -118,7 +118,7 @@ def start_game():
                 clicked_on_return = None
             if _state != '':
                 _state = ''
-                break
+                breakв
 
     while show_menu:
         events = pygame.event.get()
