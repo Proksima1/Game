@@ -255,50 +255,50 @@ class Enemy_level2(Enemy_ship):
                         if pygame.sprite.collide_mask(self, player):
                             player.hp = 0
                             self.hp = 0
-                        if self.enemy_shoot_count == 0:
-                            if player_ship.y + player_ship.h // 2 + 10 < self.rect.y + 30 < player_ship.y + player_ship.h // 2 + 35 and self.rect.x > player_ship.right:
+                        if self.enemy_shoot_count == 0:  # проверка на кол-во выстрелов
+                            if player_ship.y + player_ship.h // 2 + 10 < self.rect.y + 30 < player_ship.y + player_ship.h // 2 + 35 and self.rect.x > player_ship.right:  # если пушка на одной высоте, что и игрок
                                 if not player.dead:
-                                    self.enemy_shoot()
+                                    self.enemy_shoot()  # стреляет
                                 sleep(0.3)
-                            else:
+                            else:  # иначе подстраивается под игрока
                                 if player_ship.y + 30 < self.rect.y:
                                     self.up()
                                 if player_ship.y + 30 > self.rect.y:
                                     self.down()
-                        if self.enemy_shoot_count == 1:
-                            if player_ship.y + player_ship.h // 2 + 10 < self.rect.y + 34 < player_ship.bottom - player_ship.h // 2 + 35 and self.rect.x > player_ship.right:
+                        if self.enemy_shoot_count == 1:  # проверка на кол-во выстрелов
+                            if player_ship.y + player_ship.h // 2 + 10 < self.rect.y + 34 < player_ship.bottom - player_ship.h // 2 + 35 and self.rect.x > player_ship.right:  # если пушка на одной высоте, что и игрок
                                 if not player.dead:
-                                    self.enemy_shoot()
+                                    self.enemy_shoot()  # стреляет
                                 sleep(0.3)
-                            else:
+                            else:  # иначе подстраивается под игрока
                                 if player_ship.y + 20 < self.rect.y:
                                     self.up()
                                 if player_ship.y + 20 > self.rect.y:
                                     self.down()
-                        if self.enemy_shoot_count == 2:
-                            if player_ship.y + player_ship.h // 2 + 10 < self.rect.y + 68 < player_ship.bottom - player_ship.h // 2 + 35 and self.rect.x > player_ship.right:
+                        if self.enemy_shoot_count == 2:  # проверка на кол-во выстрелов
+                            if player_ship.y + player_ship.h // 2 + 10 < self.rect.y + 68 < player_ship.bottom - player_ship.h // 2 + 35 and self.rect.x > player_ship.right:  # если пушка на одной высоте, что и игрок
                                 if not player.dead:
-                                    self.enemy_shoot()
+                                    self.enemy_shoot()  # стреляет
                                 sleep(0.3)
-                            else:
+                            else:  # иначе подстраивается под игрока
                                 if player_ship.y - 20 < self.rect.y:
                                     self.up()
                                 if player_ship.y - 20 > self.rect.y:
                                     self.down()
-                        if self.enemy_shoot_count == 3:
-                            if player_ship.y + player_ship.h // 2 + 10 < self.rect.y + 72 < player_ship.bottom - player_ship.h // 2 + 35 and self.rect.x > player_ship.right:
+                        if self.enemy_shoot_count == 3:  # проверка на кол-во выстрелов
+                            if player_ship.y + player_ship.h // 2 + 10 < self.rect.y + 72 < player_ship.bottom - player_ship.h // 2 + 35 and self.rect.x > player_ship.right:  # если пушка на одной высоте, что и игрок
                                 if not player.dead:
-                                    self.enemy_shoot()
+                                    self.enemy_shoot()  # стреляет
                                 sleep(0.3)
-                            else:
+                            else:  # иначе подстраивается под игрока
                                 if player_ship.y - 30 < self.rect.y:
                                     self.up()
                                 if player_ship.y - 30 > self.rect.y:
                                     self.down()
-                        if player_ship.x + player_ship.w + 200 <= self.rect.x:
+                        if player_ship.x + player_ship.w + 200 <= self.rect.x:  # движение вправо, если игрок далеко
                             self.x -= self.velocity
                             self.rect.x = self.x
-                        if player_ship.x + player_ship.w + 200 >= self.rect.x:
+                        if player_ship.x + player_ship.w + 200 >= self.rect.x:  # движение влево, если игрок близко или за кораблём противника
                             self.x += self.velocity
                             self.rect.x = self.x
                     sleep(0.00001)
