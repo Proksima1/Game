@@ -61,7 +61,6 @@ def start_game():
             main.show_settings(events, return_to_menu_from_settings)
             pygame.display.flip()
 
-
     def updates():
         global update_menu
         global show_game
@@ -94,11 +93,14 @@ def start_game():
         clicked_on_return = True
 
     pause_buttons = ButtonArray(screen, width // 3, height // 6, 400, 400, (1, 3),
-                                texts=('CONTINUE', 'OPTIONS', 'QUIT'), onClicks=(continue_game, settings, return_to_menu_from_game))
+                                texts=('CONTINUE', 'OPTIONS', 'QUIT'), onClicks=(continue_game, settings,
+                                                                                 return_to_menu_from_game))
     end_buttons = ButtonArray(screen, width // 2.7, height // 4.5, 300, 200, (3, 1),
-                              texts=('BACK', 'UPGRADE', 'NEXT'), onClicks=(return_to_menu_from_game, quit_game, next_level))
+                              texts=('BACK', 'UPGRADE', 'NEXT'), onClicks=(return_to_menu_from_game,
+                                                                           quit_game, next_level))
     lost_buttons = ButtonArray(screen, 440, 160, 200, 200, (2, 1),
-                               texts=('BACK', 'AGAIN'), onClicks=(return_to_menu_from_game, quit_game))
+                               texts=('BACK', 'AGAIN'), onClicks=(return_to_menu_from_game,
+                                                                  quit_game))
 
     def play():
         pygame.mixer.music.play(-1)
@@ -118,7 +120,7 @@ def start_game():
                 clicked_on_return = None
             if _state != '':
                 _state = ''
-                breakв
+                break
 
     while show_menu:
         events = pygame.event.get()
