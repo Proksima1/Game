@@ -150,11 +150,11 @@ if __name__ == '__main__':
     pygame.init()
     size = width, height = 400, 400
     screen = pygame.display.set_mode(size)
-    a = TileController(screen)
+    lreader = TileController(screen)
     b = Tile(screen, (80, 32), 'W', 0)
     c = Tile(screen, (90, 60), 'SW', 0)
-    a.append(b)
-    a.append(c)
+    lreader.append(b)
+    lreader.append(c)
     """ship = Player_ship(screen, 32, 32, '../sprites/fregate/player/player_ship.png')
     running = True
     while running:

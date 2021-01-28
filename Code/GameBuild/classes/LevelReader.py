@@ -77,9 +77,9 @@ if __name__ == '__main__':
     screen = pygame.display.set_mode(size)
     running = True
     pl = Player_ship(screen, 32, 32)
-    a = LevelReader(screen, pl)
-    a.read_json('../LevelEditor/1.json')
-    a.sp_cont.append(pl)
+    lreader = LevelReader(screen, pl)
+    lreader.read_json('../LevelEditor/1.json')
+    lreader.sp_cont.append(pl)
     clock = pygame.time.Clock()
     while running:
         for event in pygame.event.get():
@@ -89,13 +89,13 @@ if __name__ == '__main__':
                 if event.button == 1 and not pl.dead:
                     pl.shoot()
         pl.move()
-        a.sp_cont.draw_all()
-        a.en_cont.CoinController.update_all()
-        if a.check_wave():
-            a.generate_enemies()
-            a.en_cont.update_all()
-        a.en_cont.draw_bullets([pl])
-        pl.draw_shoot(a.get_enemies())
+        lreader.sp_cont.draw_all()
+        lreader.en_cont.CoinController.update_all()
+        if lreader.check_wave():
+            lreader.generate_enemies()
+            lreader.en_cont.update_all()
+        lreader.en_cont.draw_bullets([pl])
+        pl.draw_shoot(lreader.get_enemies())
         pygame.display.flip()
-        a.draw_background()
+        lreader.draw_background()
     pygame.quit()

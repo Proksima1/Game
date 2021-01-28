@@ -301,13 +301,13 @@ if __name__ == '__main__':
     pygame.init()
     size = width, height = 500, 500
     screen = pygame.display.set_mode(size)
-    a = UpgrateItem(screen, 'fasfas', (20, 20, 80, 80), "Improves player's cannon damage.", filename='../sprites/upgrades/damage_upgrade.png')
+    lreader = UpgrateItem(screen, 'fasfas', (20, 20, 80, 80), "Improves player's cannon damage.", filename='../sprites/upgrades/damage_upgrade.png')
     running = True
     while running:
         events = pygame.event.get()
         for event in events:
             if event.type == pygame.QUIT:
                 running = False
-        a.draw(events)
+        lreader.draw(events)
         pygame.display.flip()
         screen.fill((0, 0, 0))

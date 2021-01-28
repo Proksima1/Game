@@ -82,23 +82,24 @@ screen = None
 clock = None
 running = None
 pl = None
-a = None
+lreader = None
 last_shoot = None
 state = None
 level_number = None
 ended_count = 0
 end_time = None
 font = None
+coins_count = 0
 
 
 def setup(filename):
-    global s_size, screen, clock, running, pl, a, last_shoot, state, level_number, font, end_time, ended_count
+    global s_size, screen, clock, running, pl, lreader, last_shoot, state, level_number, font, end_time, ended_count
     s_size = None
     screen = None
     clock = None
     running = None
     pl = None
-    a = None
+    lreader = None
     last_shoot = None
     state = None
     level_number = None
@@ -112,11 +113,11 @@ def setup(filename):
     clock = pygame.time.Clock()
     running = True
     pl = Player_ship(screen, 32, 32)
-    a = LevelReader(screen, pl)
-    a.sp_cont.append(pl)
+    lreader = LevelReader(screen, pl)
+    lreader.sp_cont.append(pl)
     last_shoot = pygame.time.get_ticks()
     state = 'running'
-    a.read_json(os.path.join('../data/', filename))
+    lreader.read_json(os.path.join('../data/', filename))
     level_number = int(filename[0]) + 1
     font = pygame.font.Font(font_path, 20)
 
@@ -145,30 +146,31 @@ def start(pause_b, end_b, loss, should_continue=None):
         if state == 'running':
             channel.unpause()
             pl.move()
-            a.sp_cont.draw_all()
-            a.en_cont.ItemController.update_all()
-            a.en_cont.draw_bullets([pl])
-            pl.draw_shoot(a.get_enemies())
+            lreader.sp_cont.draw_all()
+            lreader.en_cont.ItemController.update_all()
+            lreader.en_cont.draw_bullets([pl])
+            pl.draw_shoot(lreader.get_enemies())
             if pl.hp <= 0:
                 state = 'dead'
             pygame.display.flip()
-            a.draw_background()
+            lreader.draw_background()
             coins = font.render(
                 f'You collected {pl.get_coins()} riddilions.',
                 True, (249, 166, 2))
             coin_rect = coins.get_rect(center=(s_size[0] - 200, 20))
             screen.blit(coins, coin_rect)
-            if not a.check_wave():
-                if a.generate_enemies():
+            if not lreader.check_wave():
+                if lreader.generate_enemies():
                     pass
                 else:
                     if not ended_count:
                         end_time = pygame.time.get_ticks()
                         ended_count += 1
-                a.en_cont.update_all()
+                lreader.en_cont.update_all()
             if end_time is not None:
                 text = font.render(
-                    f'You have another {10 - int(int(pygame.time.get_ticks() - end_time) / 1000)} seconds to collect all the rewards.',
+                    f'You have another {10 - int(int(pygame.time.get_ticks() - end_time) / 1000)}'
+                    f' seconds to collect all the rewards.',
                     True, (249, 166, 2))
                 rect = text.get_rect(center=(s_size[0] / 2, 50))
                 screen.blit(text, rect)
@@ -180,49 +182,54 @@ def start(pause_b, end_b, loss, should_continue=None):
         elif state == 'paused':
             draw_pause(events, pause_b)
             channel.pause()
-        #elif state == 'dead':
-            #sdraw_loss(events, loss)
 
 
 def draw_pause(events, pause: ButtonArray):
     global state
-    a.draw_background()
+    lreader.draw_background()
     pause.draw()
     pause.listen(events)
     pygame.display.flip()
 
 
 def draw_end(events, end: ButtonArray):
-    global level_number
-    a.draw_background()
+    global level_number, coins_count
+    lreader.draw_background()
     end.listen(events)
     end.draw()
     pygame.display.flip()
+    with open('../data/save.json', 'r+', encoding='utf-8') as read_coins:
+        coins = json.loads(read_coins.read())[0]['coins']
+        if coins_count == 0:
+            end_count_of_coins = coins + pl.get_coins()
+            print(end_count_of_coins)
+            coins_count += 1
     with open('../data/save.json', 'w+', encoding='utf-8') as game_saver:
-        game_saver.write(json.dumps([{
-            'level': level_number,
-            'coins': pl.get_coins()
-        }, {
-            'upgrades': {
-                "damage_upg_1": False,
-                "damage_upg_2": False,
-                "damage_upg_3": False,
-                "speed_upg_1": False,
-                "speed_upg_2": False,
-                "speed_upg_3": False,
-                "health_upg_1": False,
-                "health_upg_2": False,
-                "health_upg_3": False}
-        }], indent=4, separators=(',', ': ')))
+        if coins_count == 0:
+            game_saver.write(json.dumps([{
+                'level': level_number,
+                'coins': end_count_of_coins
+            }, {
+                'upgrades': {
+                    "damage_upg_1": False,
+                    "damage_upg_2": False,
+                    "damage_upg_3": False,
+                    "speed_upg_1": False,
+                    "speed_upg_2": False,
+                    "speed_upg_3": False,
+                    "health_upg_1": False,
+                    "health_upg_2": False,
+                    "health_upg_3": False}
+            }], indent=4, separators=(',', ': ')))
 
 
 def draw_loss(events, loss: ButtonArray):
     #self.music_text = self.font.render('Music volume', True, (0, 0, 0))
     #self.music_rect = self.music_text.get_rect(center=(self.music_volume.x - 120,
-     #                                                  self.music_volume.y + 3))
+    #                                                  self.music_volume.y + 3))
     #a.draw_background()
     #loss.listen(events)
     pass
-   # loss.draw()
+    # loss.draw()
     #pygame.display.flip()
 

@@ -6,14 +6,14 @@ from fregate import *
     # pygame.mixer.init()
     size = width, height = size
     screen = pygame.display.set_mode(size)
-    a = Player_ship(screen, 32, 32)
+    lreader = Player_ship(screen, 32, 32)
     b = Enemy_ship(screen, 350, 320)
     c = Enemy_ship(screen, 300, 320)
     cont = SpriteController(screen)
-    cont.append(a)
+    cont.append(lreader)
     # cont.append(b)
     cont.append(c)
-    controller = Enemy_controller(screen, a)
+    controller = Enemy_controller(screen, lreader)
     # controller.append(b)
     controller.append(c)
     # shoot = pygame.mixer.Sound('../sounds/shoot/shoot1.wav')
@@ -25,13 +25,13 @@ from fregate import *
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1 and not a.dead:
-                    a.shoot()
+                if event.button == 1 and not lreader.dead:
+                    lreader.shoot()
                     # shoot.play()
-        a.move()
+        lreader.move()
         cont.draw_all()
-        a.draw_shoot(controller.get_enemies())
-        controller.draw_bullets([a])
+        lreader.draw_shoot(controller.get_enemies())
+        controller.draw_bullets([lreader])
         pygame.display.flip()
         # pygame.display.update([i.rect for i in controller.list_of_enemies])
         # pygame.display.update(a.rect)

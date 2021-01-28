@@ -109,8 +109,26 @@ def start_game():
         show_game = True
         show_menu = False
         show_setting = False
-        with open('../data/save.json', 'r', encoding='utf-8') as level_picker:
-            level = json.loads(level_picker.read())[0]['level']
+        try:
+            with open('../data/save.json', 'r', encoding='utf-8') as level_picker:
+                level = json.loads(level_picker.read())[0]['level']
+        except json.decoder.JSONDecodeError:
+            with open('../data/save.json', 'w', encoding='utf-8') as level_picker:
+                level_picker.write(json.dumps([{
+                    'level': 1,
+                    'coins': 0
+                }, {
+                    'upgrades': {
+                        "damage_upg_1": False,
+                        "damage_upg_2": False,
+                        "damage_upg_3": False,
+                        "speed_upg_1": False,
+                        "speed_upg_2": False,
+                        "speed_upg_3": False,
+                        "health_upg_1": False,
+                        "health_upg_2": False,
+                        "health_upg_3": False}
+                }], indent=4, separators=(',', ': ')))
         setup(f'{level}.json')
         while show_game:
             if clicked_on_return is None:

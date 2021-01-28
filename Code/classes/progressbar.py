@@ -36,15 +36,15 @@ if __name__ == '__main__':
     screen = pygame.display.set_mode(size)
     running = True
     per = 100
-    a = ProgressBar(screen, "red", 60, 100, 200, 50)
+    lreader = ProgressBar(screen, "red", 60, 100, 200, 50)
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
         screen.fill((0, 255, 0))
-        a.draw(per)
-        a.x += 0.1
+        lreader.draw(per)
+        lreader.x += 0.1
         #a.y += 0.01
         #per -= 0.008
-        pygame.display.update(a.rect)
+        pygame.display.update(lreader.rect)
     pygame.quit()

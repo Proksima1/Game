@@ -47,13 +47,13 @@ if __name__ == '__main__':
     size = width, height = 800, 400
     screen = pygame.display.set_mode(size)
     running = True
-    a = Button((60, 30), 'hello', screen)
+    lreader = Button((60, 30), 'hello', screen)
     clock = pygame.time.Clock()
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
         screen.fill((0, 0, 0))
-        a.draw()
+        lreader.draw()
         pygame.display.flip()
     pygame.quit()
